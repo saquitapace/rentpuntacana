@@ -34,12 +34,6 @@ const solutions: SolutionItem[] = [
     href: "/listing-car",
     icon: IconThree,
   },
-  {
-    name: "Experiences",
-    description: "Tour and experiences",
-    href: "/listing-experiences",
-    icon: IconFour,
-  },
 ];
 
 export default function DropdownTravelers() {
@@ -59,6 +53,16 @@ export default function DropdownTravelers() {
                 aria-hidden="true"
               />
             </div>
+            <Link
+                    href="/author"
+                    className="flow-root px-2 py-2 space-y-0.5 transition duration-150 ease-in-out rounded-md focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                  >
+                    <span className="flex items-center">
+                      <span className="text-sm font-medium ">
+                        Buiness Landing Page
+                      </span>
+                    </span>
+                  </Link>
           </Popover.Button>
           <Transition
             as={Fragment}
