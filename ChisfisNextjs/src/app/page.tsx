@@ -75,10 +75,10 @@ const DEMO_CATS_2: TaxonomyType[] = [
 function PageHome2() {
   return (
     <main className="nc-PageHome2 relative overflow-hidden">
-      <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
+      <div className="container relative space-y-20 mb-20 lg:space-y-24 lg:mb-24">
         <SectionHero2 className="" />
 
-        <div className="relative py-16">
+        <div className="relative py-1">
           <BackgroundSection />
           <SectionGridFeatureProperty />
         </div>

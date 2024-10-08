@@ -3,6 +3,7 @@ import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import SearchDropdown from "./SearchDropdown";
 import ButtonPrimary from "@/shared/ButtonPrimary";
+import ButtonSecondary from "@/shared/ButtonSecondary";
 import MenuBar from "@/shared/MenuBar";
 import SwitchDarkMode from "@/shared/SwitchDarkMode";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
@@ -32,9 +33,12 @@ const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
             <SwitchDarkMode />
             <SearchDropdown className="flex items-center" />
             <div className="px-1" />
-            <ButtonPrimary className="self-center" href="/login">
-              Sign up
+            <ButtonPrimary className="self-center" href="/signup">
+              Register
             </ButtonPrimary>
+            <ButtonSecondary className="self-center" href="/login">
+              Sign In
+            </ButtonSecondary>
           </div>
 
           <div className="flex xl:hidden items-center">

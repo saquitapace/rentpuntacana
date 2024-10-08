@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import Logo from "@/shared/Logo";
 import MenuBar from "@/shared/MenuBar";
 import LangDropdown from "./LangDropdown";
-import NotifyDropdown from "./NotifyDropdown";
+import NotifyDropdown from "./NotifyDropdown";  
 import AvatarDropdown from "./AvatarDropdown";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import Link from "next/link";
