@@ -175,13 +175,6 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 	},
 	{
 		id: ncNanoId(),
-		href: '/',
-		name: 'Five columns',
-		type: 'megaMenu',
-		megaMenu: megaMenuDemo,
-	},
-	{
-		id: ncNanoId(),
 		href: '/listing-stay',
 		name: 'Listing Page',
 		type: 'dropdown',

@@ -21,7 +21,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "", children }) => {
               children
             ) : (
               <h2 className="font-semibold text-4xl md:text-5xl xl:text-7xl !leading-[110%]">
-                Find Your Best <br /> Rental in Punta Cana
+                Find Your Next <br /> Rental in Punta Cana
               </h2>
             )}
           </div>
