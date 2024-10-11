@@ -1,4 +1,9 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState  } from "react";
+import axios from "axios";
+
+
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
 import googleSvg from "@/images/Google.svg";
@@ -27,7 +32,37 @@ const loginSocials = [
   },
 ];
 
+
 const PageLogin: FC<PageLoginProps> = ({}) => {
+  
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try 
+    {
+      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/sign-in`, {
+        email,
+        password,
+      });
+      
+      if (response.status === 200) {
+        console.log( response.data );
+      }
+    } 
+    catch ( err ) 
+    {
+      if (axios.isAxiosError(err)) {
+        console.log(err.response?.data?.message || "An error occurred");
+      } else {
+        console.log("An unknown error occurred");
+      }
+    }
+  };
+
+
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
@@ -36,7 +71,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
-          <form className="grid grid-cols-1 gap-6" action="#" method="post">
+          <form onSubmit={ handleSubmit } className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address
@@ -45,6 +80,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 type="email"
                 placeholder="example@example.com"
                 className="mt-1"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </label>
             <label className="block">
@@ -54,7 +91,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" />
+              <Input type="password" className="mt-1" value={password} onChange={(e) => setPassword(e.target.value)}/>
             </label>
             <ButtonPrimary type="submit"
             >Continue</ButtonPrimary>
