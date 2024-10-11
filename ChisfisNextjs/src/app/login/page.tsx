@@ -55,7 +55,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
     catch ( err ) 
     {
       if (axios.isAxiosError(err)) {
-        console.log(err.response?.data?.message || "An error occurred");
+        console.log(err.response?.data?.msg || "An error occurred");
       } else {
         console.log("An unknown error occurred");
       }
