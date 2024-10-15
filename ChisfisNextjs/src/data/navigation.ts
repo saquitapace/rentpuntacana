@@ -151,9 +151,6 @@ const templatesChildrenMenus: NavItemType[] = [
 		],
 	},
 	//
-	{ id: ncNanoId(), href: '/checkout', name: 'Checkout' },
-	{ id: ncNanoId(), href: '/pay-done', name: 'Pay done' },
-	//
 	{ id: ncNanoId(), href: '/author', name: 'Author page' },
 	{ id: ncNanoId(), href: '/account', name: 'Account page' },
 	//
@@ -193,45 +190,6 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 					{ id: ncNanoId(), href: '/listing-stay-detail', name: 'Stay Detail' },
 				],
 			},
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-experiences',
-				name: 'Experiences listings',
-				type: 'dropdown',
-				children: [
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences',
-						name: 'Experiences page',
-					},
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences-map',
-						name: 'Experiences page (map)',
-					},
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences-detail',
-						name: 'Experiences Detail',
-					},
-				],
-			},
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-car',
-				name: 'Cars listings',
-				type: 'dropdown',
-				children: [
-					{ id: ncNanoId(), href: '/listing-car', name: 'Cars page' },
-					{ id: ncNanoId(), href: '/listing-car-map', name: 'Cars page (map)' },
-					{ id: ncNanoId(), href: '/listing-car-detail', name: 'Car Detail' },
-				],
-			},
-
 			//
 			{
 				id: ncNanoId(),
@@ -252,11 +210,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 				],
 			},
 			//
-			{
-				id: ncNanoId(),
-				href: '/listing-flights',
-				name: 'Flights listings',
-			},
+
 		],
 	},
 	{
@@ -265,14 +219,6 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 		name: 'Templates',
 		type: 'dropdown',
 		children: templatesChildrenMenus,
-	},
-
-	{
-		id: ncNanoId(),
-		href: '/blog',
-		name: 'Other pages',
-		type: 'dropdown',
-		children: otherPageChildMenus,
 	},
 ]
 

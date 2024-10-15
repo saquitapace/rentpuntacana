@@ -1,13 +1,12 @@
 "use client";
 
-import React, { FC, useState, useEffect  } from "react";
+import React, { FC, useState, useEffect } from "react";
 import axios from "axios";
-
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import  sessionState from "../../utils/sessionState";
 export interface PageLoginProps {}
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
@@ -21,15 +20,35 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   const [generalError, setGeneralError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [user, setUser] = useState([]);
-
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+    
+    const redirect = () => {
+      const account_type = sessionState.getAccountType();
+
+      switch(account_type) {
+        case 'renter':
+          router.push("/listing-stay" as any); // Redirect to listing page
+          break;
+        case 'property':
+          router.push("/author" as any); // Redirect to listing page
+          break;
+        default:
+          router.push("/listing-stay" as any); // Redirect to listing page
+        }
+    }
+    
+    if (sessionStorage.getItem('user')){
+      console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
+      redirect()
+      return;
+    } else {
+      console.log("user is not known");
+    }
+
     setEmailError(""); // Reset email error
     setPasswordError(""); // Reset password error
     setGeneralError(""); // Reset general error
-
 
       // Validate inputs
       let isValid = true;
@@ -50,30 +69,38 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
           email,
           password,
-        });
-
-        if (response.data) {
-          console.log("response", response.data);
-
-         // create global function to store, stringify and parse localstorage 
-         //useEffect(() => {
-          sessionStorage.setItem('user', JSON.stringify(response.data));
-
-          //console.log("userObject: ");
-          //console.log(JSON.parse(sessionStorage.getItem('user')));
-          // }, [response.data]);
-
-          if(response.data.account_type == "renter") {
-            router.push("/listing-stay"); // Redirect to listing page
-          } else {
-            router.push("author" as any);  // Redirect to Author page 1
-            //todo: switch site header
+        })
+        .then((response) => {
+          console.log(response);
+          switch(response.status) {
+            case 200 :
+              console.log("Results of post response", response);
+              sessionStorage.setItem('user', JSON.stringify(response.data));  
+            break;
+            default:
+              console.log(response.status)
           }
-        } else {
-          setGeneralError("Invalid email or password.");
-        }
+          console.log(response);
+          //200 = data.result.code
+          //400 failed
+          //401 auth failure
+          //404 not found
+          //405 method not allowed
+          //500 cannot find
+          //data.result.code
+         
+        }).then((response) => {
+          sessionState.init();
+        }).then((response) => {
+          console.log("redirecting");
+          redirect();
+        }).catch(function (error) {
+          console.log("error");
+          console.log(error.response.data.message);
+          setGeneralError(error.response.data.message);
+        });
       } catch {
-        setGeneralError("User does not exist");
+       // setGeneralError("User does not exist"); todo: remove after testing
       } finally {
         setLoading(false);
       }
@@ -87,7 +114,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
-          <form onSubmit={ handleLogin } className="grid grid-cols-1 gap-6" method="post">
+          <form onSubmit={ handleLogin }
+          className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address

@@ -6,6 +6,7 @@ import CommentListing from "@/components/CommentListing";
 import ExperiencesCard from "@/components/ExperiencesCard";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
+
 import {
   DEMO_CAR_LISTINGS,
   DEMO_EXPERIENCES_LISTINGS,
@@ -15,11 +16,17 @@ import React, { FC, Fragment, useState } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
+import sessionState from "../../utils/sessionState";
 
 export interface AuthorPageProps {}
 
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
   let [categories] = useState(["Stays", "Experiences", "Car for rent"]);
+  
+  sessionState.init();
+  const fullName = sessionState.getFullName();
+  
+  //console.log(fullName);
 
   const renderSidebar = () => {
     return (
@@ -32,7 +39,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">Kevin Francis</h2>
+          <h2 className="text-3xl font-semibold">{ fullName }</h2>
           <StartRating className="!text-base" />
         </div>
 
@@ -120,7 +127,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold">{`Kevin Francis's listings`}</h2>
+          <h2 className="text-2xl font-semibold"> { fullName }'s Listings</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
             {`Kevin Francis's listings is very rich, 5 star reviews help him to be
             more branded.`}

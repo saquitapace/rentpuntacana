@@ -18,14 +18,6 @@ const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
 
   const [signupPrimary, setsignupPrimary] = useState("true");
 
-  /*
-  const handleSignUpClick => {
-    console.log(1)
-   // e.preventDefault();
-    const [signupPrimary, setsignupPrimary] = useState("false");
-
-  } */
-
   const handleSignInClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
