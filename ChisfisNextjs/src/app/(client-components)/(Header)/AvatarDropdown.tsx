@@ -1,8 +1,8 @@
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Avatar from "@/shared/Avatar";
-import SwitchDarkMode2 from "@/shared/SwitchDarkMode2";
 import Link from "next/link";
+import clearSession from "@/utils/clearSession";
 interface Props {
   className?: string;
 }
@@ -195,7 +195,6 @@ export default function AvatarDropdown({ className = "" }: Props) {
                           <p className="text-sm font-medium ">{"Dark theme"}</p>
                         </div>
                       </div>
-                      <SwitchDarkMode2 />
                     </div>
 
                     {/* ------------------ 2 --------------------- */}
@@ -299,7 +298,9 @@ export default function AvatarDropdown({ className = "" }: Props) {
                         </svg>
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium ">{"Log out"}</p>
+                      <Link
+                      href={"/"}
+                       className="text-sm font-medium" onClick={() => clearSession()}>{"Log out"}</Link>
                       </div>
                     </Link>
                   </div>

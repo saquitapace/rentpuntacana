@@ -1,11 +1,12 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState } from "react";
 import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import SearchDropdown from "./SearchDropdown";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import MenuBar from "@/shared/MenuBar";
-import SwitchDarkMode from "@/shared/SwitchDarkMode";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdown from "./LangDropdown";
 
@@ -14,6 +15,22 @@ export interface MainNav1Props {
 }
 
 const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
+
+  const [signupPrimary, setsignupPrimary] = useState("true");
+
+  /*
+  const handleSignUpClick => {
+    console.log(1)
+   // e.preventDefault();
+    const [signupPrimary, setsignupPrimary] = useState("false");
+
+  } */
+
+  const handleSignInClick = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+  }
+
   return (
     <div className={`nc-MainNav1 relative z-10 ${className}`}>
       <div className="px-4 lg:container h-20 relative flex justify-between">
@@ -30,19 +47,35 @@ const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
 
         <div className="hidden md:flex flex-shrink-0 justify-end flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
           <div className="hidden xl:flex space-x-0.5">
-            <SwitchDarkMode />
             <SearchDropdown className="flex items-center" />
             <div className="px-1" />
-            <ButtonPrimary className="self-center" href="/signup">
-              Register
-            </ButtonPrimary>
-            <ButtonSecondary className="self-center" href="/login">
-              Sign In
+
+            {signupPrimary == "true" ? (
+              <ButtonPrimary className="self-center" href="/signup"
+              onClick={() => setsignupPrimary("true")}>
+                Sign Up
+              </ButtonPrimary>
+            ) : (
+              <ButtonSecondary className="self-center" href="/signup"
+            onClick={() => setsignupPrimary("true")}>
+              Sign Up
             </ButtonSecondary>
+            )}
+
+            {signupPrimary == "true" ? (
+              <ButtonSecondary className="self-center" href="/login"
+              onClick={() => setsignupPrimary("false")}>
+                Sign In
+              </ButtonSecondary>
+            ) : (
+              <ButtonPrimary className="self-center" href="/login"
+              onClick={() => setsignupPrimary("false")}>
+                Sign In
+              </ButtonPrimary>
+              )}
           </div>
 
           <div className="flex xl:hidden items-center">
-            <SwitchDarkMode />
             <div className="px-0.5" />
             <MenuBar />
           </div>

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import MainNav1 from "./MainNav1";
 import MainNav2 from "./MainNav2";
+import { checkSession } from "../../../utils/checkSession";
 
 export interface HeaderProps {
   navType?: "MainNav1" | "MainNav2";
@@ -9,6 +10,14 @@ export interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ navType = "MainNav1", className = "" }) => {
   const renderNav = () => {
+    if (checkSession()) {
+     // const user = sessionStorage.getItem('user');  // todo move to setSession
+      //console.log(user);
+      navType = "MainNav2";
+    }
+
+    console.log("session active: ", checkSession());
+
     switch (navType) {
       case "MainNav1":
         return <MainNav1 />;

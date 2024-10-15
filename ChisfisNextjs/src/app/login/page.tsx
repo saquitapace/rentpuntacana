@@ -1,13 +1,12 @@
 "use client";
 
-import React, { FC, useState  } from "react";
+import React, { FC, useState, useEffect  } from "react";
 import axios from "axios";
 
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 
 export interface PageLoginProps {}
 
@@ -21,6 +20,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   const [passwordError, setPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [user, setUser] = useState([]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,8 +53,22 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         });
 
         if (response.data) {
-          console.log(response.data);
-          router.push("/"); // Redirect to home page
+          console.log("response", response.data);
+
+         // create global function to store, stringify and parse localstorage 
+         //useEffect(() => {
+          sessionStorage.setItem('user', JSON.stringify(response.data));
+
+          //console.log("userObject: ");
+          //console.log(JSON.parse(sessionStorage.getItem('user')));
+          // }, [response.data]);
+
+          if(response.data.account_type == "renter") {
+            router.push("/listing-stay"); // Redirect to listing page
+          } else {
+            router.push("author" as any);  // Redirect to Author page 1
+            //todo: switch site header
+          }
         } else {
           setGeneralError("Invalid email or password.");
         }
