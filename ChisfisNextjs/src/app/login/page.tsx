@@ -3,65 +3,66 @@
 import React, { FC, useState  } from "react";
 import axios from "axios";
 
-
-import facebookSvg from "@/images/Facebook.svg";
-import twitterSvg from "@/images/Twitter.svg";
-import googleSvg from "@/images/Google.svg";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 export interface PageLoginProps {}
 
-const loginSocials = [
-  {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
-  },
-  {
-    name: "Continue with Twitter",
-    href: "#",
-    icon: twitterSvg,
-  },
-  {
-    name: "Continue with Google",
-    href: "#",
-    icon: googleSvg,
-  },
-];
-
-
 const PageLogin: FC<PageLoginProps> = ({}) => {
-  
+  const router = useRouter();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
+    setEmailError(""); // Reset email error
+    setPasswordError(""); // Reset password error
+    setGeneralError(""); // Reset general error
 
-    try 
-    {
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
-        email,
-        password,
-      });
-      
-      if (response.status === 200) {
-        console.log( response.data );
+
+      // Validate inputs
+      let isValid = true;
+      if (!email) {
+        setEmailError("Email is required.");
+        isValid = false;
       }
-    } 
-    catch ( err ) 
-    {
-      if (axios.isAxiosError(err)) {
-        console.log(err.response?.data?.message || "An error occurred");
-      } else {
-        console.log("An unknown error occurred");
+      if (!password) {
+        setPasswordError("Password is required.");
+        isValid = false;
       }
-    }
+  
+      if (!isValid) return; // Stop if validation fails
+  
+      setLoading(true);
+  
+      try {
+        const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+          email,
+          password,
+        });
+
+        if (response.data) {
+          console.log(response.data);
+          router.push("/"); // Redirect to home page
+        } else {
+          setGeneralError("Invalid email or password.");
+        }
+      } catch {
+        setGeneralError("User does not exist");
+      } finally {
+        setLoading(false);
+      }
   };
-
 
   return (
     <div className={`nc-PageLogin`}>
@@ -71,7 +72,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
-          <form onSubmit={ handleSubmit } className="grid grid-cols-1 gap-6" method="post">
+          <form onSubmit={ handleLogin } className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address
@@ -83,6 +84,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+                {emailError && <div className="text-red-600 text-sm">{emailError}</div>} {/* Email error message */}
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
@@ -92,7 +94,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 </Link>
               </span>
               <Input type="password" className="mt-1" value={password} onChange={(e) => setPassword(e.target.value)}/>
+              {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>} {/* Password error message */}
             </label>
+            {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
             <ButtonPrimary type="submit"
             >Continue</ButtonPrimary>
           </form>
