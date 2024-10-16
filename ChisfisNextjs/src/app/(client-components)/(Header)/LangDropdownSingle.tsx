@@ -22,12 +22,6 @@ export const headerLanguage = [
   {
     id: "Francais",
     name: "Francais",
-    description: "Belgique",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
     description: "Canada",
     href: "##",
   },

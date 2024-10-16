@@ -118,8 +118,9 @@ const PageSignUp: FC<PageSignUpProps> = () => {
                 value={accountType}
                 onChange={handleChange}
               >
-                <option value="property">Rental Property</option>
+                <option value=""></option>
                 <option value="renter">Renter</option>
+                <option value="property">Rental Property Manager</option>
               </select>
             </label>
 

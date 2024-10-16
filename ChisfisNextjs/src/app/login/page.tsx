@@ -81,13 +81,6 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               console.log(response.status)
           }
           console.log(response);
-          //200 = data.result.code
-          //400 failed
-          //401 auth failure
-          //404 not found
-          //405 method not allowed
-          //500 cannot find
-          //data.result.code
          
         }).then((response) => {
           sessionState.init();
@@ -132,7 +125,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Password
-                <Link href="/login" className="text-sm underline font-medium">
+                <Link href="/forgotPassword" className="text-sm underline font-medium">
                   Forgot password?
                 </Link>
               </span>

@@ -82,7 +82,7 @@ function PageHome2() {
           <BackgroundSection />
           <SectionGridFeatureProperty />
         </div>
-        <div className="relative py-16">
+        <div className="relative py-16"> saquita
           <SectionGridFilterCard className="pb-24 lg:pb-28" />
         </div>
 

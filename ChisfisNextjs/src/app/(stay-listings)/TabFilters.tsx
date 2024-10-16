@@ -16,6 +16,7 @@ import ButtonThird from '@/shared/ButtonThird'
 import ButtonClose from '@/shared/ButtonClose'
 import Checkbox from '@/shared/Checkbox'
 import Slider from 'rc-slider'
+import Link from 'next/link'
 import convertNumbThousand from '@/utils/convertNumbThousand'
 
 // DEMO DATA
@@ -678,6 +679,9 @@ const TabFilters = () => {
 				{renderTabsPriceRage()}
 				{renderTabsRoomAndBeds()}
 				{renderTabMoreFilter()}
+				<Link href="/listing-stay-map">map view</Link>
+				<Link href="/listing-stay">close view</Link>
+
 			</div>
 			{renderTabMoreFilterMobile()}
 		</div>

@@ -8,8 +8,6 @@ import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 
 import {
-  DEMO_CAR_LISTINGS,
-  DEMO_EXPERIENCES_LISTINGS,
   DEMO_STAY_LISTINGS,
 } from "@/data/listings";
 import React, { FC, Fragment, useState } from "react";
@@ -26,7 +24,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   sessionState.init();
   const fullName = sessionState.getFullName();
   
-  //console.log(fullName);
+  console.log(fullName);
 
   const renderSidebar = () => {
     return (
@@ -135,27 +133,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
-        <div>
-          <Tab.Group>
-            <Tab.List className="flex space-x-1 overflow-x-auto">
-              {categories.map((item) => (
-                <Tab key={item} as={Fragment}>
-                  {({ selected }) => (
-                    <button
-                      className={`flex-shrink-0 block !leading-none font-medium px-5 py-2.5 text-sm sm:text-base sm:px-6 sm:py-3 capitalize rounded-full focus:outline-none ${
-                        selected
-                          ? "bg-secondary-900 text-secondary-50 "
-                          : "text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-100 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      } `}
-                    >
-                      {item}
-                    </button>
-                  )}
-                </Tab>
-              ))}
-            </Tab.List>
-            <Tab.Panels>
-              <Tab.Panel className="">
+            
                 <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
                   {DEMO_STAY_LISTINGS.filter((_, i) => i < 4).map((stay) => (
                     <StayCard key={stay.id} data={stay} />
@@ -164,32 +142,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
                 <div className="flex mt-11 justify-center items-center">
                   <ButtonSecondary>Show me more</ButtonSecondary>
                 </div>
-              </Tab.Panel>
-              <Tab.Panel className="">
-                <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
-                  {DEMO_EXPERIENCES_LISTINGS.filter((_, i) => i < 4).map(
-                    (stay) => (
-                      <ExperiencesCard key={stay.id} data={stay} />
-                    )
-                  )}
-                </div>
-                <div className="flex mt-11 justify-center items-center">
-                  <ButtonSecondary>Show me more</ButtonSecondary>
-                </div>
-              </Tab.Panel>
-              <Tab.Panel className="">
-                <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
-                  {DEMO_CAR_LISTINGS.filter((_, i) => i < 4).map((stay) => (
-                    <CarCard key={stay.id} data={stay} />
-                  ))}
-                </div>
-                <div className="flex mt-11 justify-center items-center">
-                  <ButtonSecondary>Show me more</ButtonSecondary>
-                </div>
-              </Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
-        </div>
+          
       </div>
     );
   };
