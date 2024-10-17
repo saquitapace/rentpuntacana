@@ -153,53 +153,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 		name: 'Home',
 		children: demoChildMenus,
 		isNew: true,
-	},
-	{
-		id: ncNanoId(),
-		href: '/listing-stay',
-		name: 'Listing Page',
-		type: 'dropdown',
-		children: [
-			{
-				id: ncNanoId(),
-				href: '/listing-stay',
-				name: 'Stay listings',
-				type: 'dropdown',
-				children: [
-					{ id: ncNanoId(), href: '/listing-stay', name: 'Stay page' },
-					{
-						id: ncNanoId(),
-						href: '/listing-stay-map',
-						name: 'Stay page (map)',
-					},
-					{ id: ncNanoId(), href: '/listing-stay-detail', name: 'Stay Detail' },
-				],
-			},
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-real-estate',
-				name: 'Real Estate Listings',
-				type: 'dropdown',
-				children: [
-					{
-						id: ncNanoId(),
-						href: '/listing-real-estate-map',
-						name: 'Real Estate Maps',
-					},
-				],
-			},
-			//
-
-		],
-	},
-	{
-		id: ncNanoId(),
-		href: '/author',
-		name: 'Templates',
-		type: 'dropdown',
-		children: templatesChildrenMenus,
-	},
+	}
 ]
 
 export const NAVIGATION_DEMO_2: NavItemType[] = [

@@ -28,6 +28,8 @@ const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
       <div className="px-4 lg:container h-20 relative flex justify-between">
         <div className="hidden md:flex justify-start flex-1 space-x-4 sm:space-x-10">
           <Logo className="w-24 self-center" />
+          <div className="hidden lg:block self-center h-10 border-l border-neutral-300 dark:border-neutral-500"></div>
+
           <Navigation />
         </div>
 
@@ -39,7 +41,6 @@ const MainNav1: FC<MainNav1Props> = ({ className = "" }) => {
 
         <div className="hidden md:flex flex-shrink-0 justify-end flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
           <div className="hidden xl:flex space-x-0.5">
-            <SearchDropdown className="flex items-center" />
             <div className="px-1" />
 
             {signupPrimary == "true" ? (

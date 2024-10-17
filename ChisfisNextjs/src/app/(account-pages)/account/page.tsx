@@ -45,17 +45,11 @@ const AccountPage = () => {
         </div>
         <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
           <div>
-            <Label>Name</Label>
-            <Input className="mt-1.5" defaultValue="Eden Tuan" />
-          </div>
-          {/* ---- */}
-          <div>
-            <Label>Gender</Label>
-            <Select className="mt-1.5">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </Select>
+            <Label>First Name</Label>
+            <Input className="mt-1.5" defaultValue="Eden" />
+            <Label>Last Name</Label>
+            <Input className="mt-1.5" defaultValue="Tuan" />
+
           </div>
           {/* ---- */}
           <div>
@@ -66,12 +60,7 @@ const AccountPage = () => {
           <div>
             <Label>Email</Label>
             <Input className="mt-1.5" defaultValue="example@email.com" />
-          </div>
-          {/* ---- */}
-          <div className="max-w-lg">
-            <Label>Date of birth</Label>
-            <Input className="mt-1.5" type="date" defaultValue="1990-07-22" />
-          </div>
+          </div>          
           {/* ---- */}
           <div>
             <Label>Addess</Label>
@@ -80,7 +69,7 @@ const AccountPage = () => {
           {/* ---- */}
           <div>
             <Label>Phone number</Label>
-            <Input className="mt-1.5" defaultValue="003 888 232" />
+            <Input className="mt-1.5" defaultValue="809 888 2322" />
           </div>
           {/* ---- */}
           <div>

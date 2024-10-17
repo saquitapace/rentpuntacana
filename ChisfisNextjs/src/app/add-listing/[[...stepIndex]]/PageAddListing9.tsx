@@ -26,13 +26,6 @@ const PageAddListing9: FC<PageAddListing9Props> = () => {
       </div>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       {/* FORM */}
-      <div className="space-y-7">
-        {/* ITEM */}
-        <NcInputNumber label="Nights min" defaultValue={1} />
-        <NcInputNumber label="Nights max" defaultValue={99} />
-      </div>
-
-      {/*  */}
       <div>
         <h2 className="text-2xl font-semibold">Set your availability</h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">

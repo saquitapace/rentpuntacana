@@ -1,9 +1,7 @@
 "use client";
 
 import { Tab } from "@headlessui/react";
-import CarCard from "@/components/CarCard";
 import CommentListing from "@/components/CommentListing";
-import ExperiencesCard from "@/components/ExperiencesCard";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 
@@ -21,11 +19,6 @@ export interface AuthorPageProps {}
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
   let [categories] = useState(["Stays", "Experiences", "Car for rent"]);
   
-  sessionState.init();
-  const fullName = sessionState.getFullName();
-  
-  console.log(fullName);
-
   const renderSidebar = () => {
     return (
       <div className=" w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
@@ -37,7 +30,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">{ fullName }</h2>
+          <h2 className="text-3xl font-semibold">full name</h2>
           <StartRating className="!text-base" />
         </div>
 
@@ -125,15 +118,13 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold"> { fullName }'s Listings</h2>
+          <h2 className="text-2xl font-semibold"> fullName 's Listings</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
             {`Kevin Francis's listings is very rich, 5 star reviews help him to be
             more branded.`}
           </span>
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-
-            
                 <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
                   {DEMO_STAY_LISTINGS.filter((_, i) => i < 4).map((stay) => (
                     <StayCard key={stay.id} data={stay} />

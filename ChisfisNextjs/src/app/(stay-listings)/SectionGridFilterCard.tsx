@@ -18,12 +18,9 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   data = DEMO_DATA,
 }) => {
   return (
-    <div
-      className={`nc-SectionGridFilterCard ${className}`}
-      data-nc-id="SectionGridFilterCard"
+    <div className={`nc-SectionGridFilterCard ${className}`} data-nc-id="SectionGridFilterCard"
     >
       <Heading2 />
-
       <div className="mb-8 lg:mb-11">
         <TabFilters />
       </div>

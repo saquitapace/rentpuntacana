@@ -8,7 +8,7 @@ const PageAddListing6: FC<PageAddListing6Props> = () => {
     <>
       <div>
         <h2 className="text-2xl font-semibold">
-          Your place description for client
+          Your Propety Listing description
         </h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
           Mention the best features of your accommodation, any special amenities
@@ -16,7 +16,6 @@ const PageAddListing6: FC<PageAddListing6Props> = () => {
           neighborhood.
         </span>
       </div>
-
       <Textarea placeholder="..." rows={14} />
     </>
   );

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import Input from "@/shared/Input";
 import Select from "@/shared/Select";
+import Checkbox from "@/shared/Checkbox";
 import FormItem from "../FormItem";
 
 export interface PageAddListing1Props {}
@@ -15,33 +16,29 @@ const PageAddListing1: FC<PageAddListing1Props> = () => {
         {/* ITEM */}
         <FormItem
           label="Choose a property type"
-          desc="Hotel: Professional hospitality businesses that usually have a unique style or theme defining their brand and decor"
         >
           <Select>
+            <option value=""></option>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
             <option value="Hotel">Hotel</option>
-            <option value="Cottage">Cottage</option>
-            <option value="Villa">Villa</option>
-            <option value="Cabin">Cabin</option>
-            <option value="Farm stay">Farm stay</option>
-            <option value="Houseboat">Houseboat</option>
-            <option value="Lighthouse">Lighthouse</option>
           </Select>
         </FormItem>
         <FormItem
           label="Place name"
           desc="A catchy name usually includes: House name + Room name + Featured property + Tourist destination"
         >
-          <Input placeholder="Places name" />
+          <Input placeholder="Places name (**Cannot be the Complex Name)" />
         </FormItem>
         <FormItem
-          label="Rental form"
-          desc="Entire place: Guests have the whole place to themselves—there's a private entrance and no shared spaces. A bedroom, bathroom, and kitchen are usually included."
+          label="Rental form (Check all that apply)"
         >
-          <Select>
-            <option value="Hotel">Entire place</option>
-            <option value="Private room">Private room</option>
-            <option value="Share room">Share room</option>
-          </Select>
+        <div>
+          <input type="checkbox" name="12" /><span> 12 Mos   </span>
+          <input type="checkbox" name="9" /><span> 6 Mos    </span>
+          <input type="checkbox" name="9" /><span> 9 Mos    </span>
+          <input type="checkbox" name="1" /><span> Monthly    </span>
+        </div>
         </FormItem>
       </div>
     </>

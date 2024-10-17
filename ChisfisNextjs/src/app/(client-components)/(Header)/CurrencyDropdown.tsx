@@ -14,35 +14,17 @@ import { Fragment } from "react";
 
 export const headerCurrency = [
   {
-    id: "EUR",
-    name: "EUR",
-    href: "##",
-    icon: CurrencyEuroIcon,
-    active: true,
-  },
-  {
     id: "USD",
     name: "USD",
     href: "##",
     icon: CurrencyDollarIcon,
+    active: true,
   },
   {
-    id: "GBF",
-    name: "GBF",
+    id: "RD",
+    name: "RD",
     href: "##",
-    icon: CurrencyBangladeshiIcon,
-  },
-  {
-    id: "SAR",
-    name: "SAR",
-    href: "##",
-    icon: CurrencyPoundIcon,
-  },
-  {
-    id: "QAR",
-    name: "QAR",
-    href: "##",
-    icon: CurrencyRupeeIcon,
+    icon: CurrencyDollarIcon,
   },
 ];
 

@@ -22,11 +22,11 @@ const PageAddListing3: FC<PageAddListing3Props> = () => {
             <option value="500">500</option>
           </Select>
         </FormItem>
-        <NcInputNumber label="Guests" defaultValue={4} />
-        <NcInputNumber label="Bedroom" defaultValue={4} />
-        <NcInputNumber label="Beds" defaultValue={4} />
+        <NcInputNumber label="Guests" defaultValue={2} />
+        <NcInputNumber label="Bedroom" defaultValue={2} />
+        <NcInputNumber label="Beds" defaultValue={2} />
         <NcInputNumber label="Bathroom" defaultValue={2} />
-        <NcInputNumber label="Kitchen" defaultValue={2} />
+        <NcInputNumber label="Kitchen" defaultValue={1} />
       </div>
     </>
   );
