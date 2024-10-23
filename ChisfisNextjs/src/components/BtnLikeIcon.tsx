@@ -1,19 +1,85 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import axios from "axios";
+import  sessionState from "../utils/sessionState";
 
 export interface BtnLikeIconProps {
   className?: string;
   colorClass?: string;
   isLiked?: boolean;
+  id?: string;
 }
 
 const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   className = "",
   colorClass = "text-white bg-black bg-opacity-30 hover:bg-opacity-50",
   isLiked = false,
+  id = "",
 }) => {
   const [likedState, setLikedState] = useState(isLiked);
+
+  const postLike = async(id: number)=>{
+    const activeUser = sessionState.getUserId();
+    const user_id = activeUser;
+    const property_id = id;
+
+    const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/postLike`, {
+      user_id,
+      property_id,
+    })
+    .then((response) => {
+      console.log("Response Received:");
+      console.log(response);
+      setLikedState(!likedState);
+      sessionState.updateData('likes',response.data)
+
+    }).catch(function (error) {
+      console.log("Error Received from post Like");
+      console.log(error.response.data.message);
+    });
+
+  }
+
+  const deleteLike = async(id: number)=>{
+    const activeUser = sessionState.getUserId();
+    const user_id = activeUser;
+    const property_id = id;
+    
+    const arr = sessionState.getLikes();
+    const matchingLike = arr.filter(val => val['property_id'] ==(id));
+    const deleteId = parseInt(matchingLike[0].id);
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/deleteLike`,{
+      params: { id: 2 },
+    })
+    .then((response) => {
+      console.log("Response Received:");
+      console.log(response);
+
+      setLikedState(!likedState);
+    }).catch(function (error) {
+      console.log("Error Received from login entry:");
+      console.log(error.response.data.message);
+    });
+  } 
+
+  const handleChangeData = (e: { currentTarget: { id: any; }; }) => {
+    const activeUser = sessionState.getUserId();
+    const property_id  = e.currentTarget.id;
+    if(activeUser){
+      if(!likedState){
+        postLike(property_id);
+      } else {
+        deleteLike(property_id);
+      }
+    } else {
+     alert("login modal");
+    }
+  }
+
+  const saveProperty = () => {
+    alert("modal goes here for login prompt");
+  }
 
   return (
     <div
@@ -22,7 +88,8 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
       }  ${colorClass} ${className}`}
       data-nc-id="BtnLikeIcon"
       title="Save"
-      onClick={() => setLikedState(!likedState)}
+      id={id}
+      onClick= {handleChangeData}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

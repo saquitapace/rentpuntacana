@@ -17,7 +17,16 @@ import sessionState from "../../utils/sessionState";
 export interface AuthorPageProps {}
 
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
-  let [categories] = useState(["Stays", "Experiences", "Car for rent"]);
+
+  if (!sessionStorage.getItem('user')){
+    console.log("user does not logged in redirect to home");
+    window.location.href = "/";
+  }
+  
+  const fullName = sessionState.getFullName();
+  const about = sessionState.getAbout();
+  const dateJoined = sessionState.getDateJoined();
+  const languages = sessionState.getLanguages();
   
   const renderSidebar = () => {
     return (
@@ -30,19 +39,18 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">full name</h2>
+          <h2 className="text-3xl font-semibold">{fullName}</h2>
           <StartRating className="!text-base" />
         </div>
 
         {/* ---- */}
         <p className="text-neutral-500 dark:text-neutral-400">
-          Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides
-          accommodation, an outdoor.
+          {about}
         </p>
 
         {/* ---- */}
         <SocialsList
-          className="!space-x-3"
+          className="!space-x-3 hidden"
           itemClass="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xl"
         />
 
@@ -51,7 +59,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 text-neutral-400"
@@ -86,7 +94,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              Speaking English
+              Speaking English {languages}
             </span>
           </div>
 
@@ -106,7 +114,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              Joined in March 2016
+              Joined in {dateJoined}
             </span>
           </div>
         </div>
@@ -118,7 +126,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold"> fullName 's Listings</h2>
+          <h2 className="text-2xl font-semibold">{fullName}'s Listings</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
             {`Kevin Francis's listings is very rich, 5 star reviews help him to be
             more branded.`}

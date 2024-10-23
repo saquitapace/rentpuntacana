@@ -10,6 +10,7 @@ import Link from "next/link";
 
 export interface PropertyCardHProps {
   className?: string;
+  id?:string;
   data?: StayDataType;
 }
 
@@ -130,7 +131,7 @@ const PropertyCardH: FC<PropertyCardHProps> = ({
   return (
     <div
       className={`nc-PropertyCardH group relative bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-700 rounded-3xl overflow-hidden ${className}`}
-    >
+    >    
       <Link href={href} className="absolute inset-0"></Link>
       <div className="h-full w-full flex flex-col sm:flex-row sm:items-center">
         {renderSliderGallery()}
@@ -139,6 +140,7 @@ const PropertyCardH: FC<PropertyCardHProps> = ({
       <BtnLikeIcon
         colorClass={` bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 hover:bg-opacity-70 text-neutral-6000 dark:text-neutral-400`}
         isLiked={like}
+        id={id}
         className="absolute right-5 top-5 sm:right-3 sm:top-3 "
       />
     </div>

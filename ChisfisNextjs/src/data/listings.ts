@@ -48,10 +48,10 @@ const DEMO_STAY_LISTINGS = __stayListing.map((post, index): StayDataType => {
   const category = DEMO_STAY_CATEGORIES.filter(
     (taxonomy) => taxonomy.id === post.listingCategoryId
   )[0];
-
+  
   return {
     ...post,
-    id: `stayListing_${index}_`,
+    id: (post.id).toString(), //`stayListing_${post.id}_`,
     saleOff: !index ? "-20% today" : post.saleOff,
     isAds: !index ? true : post.isAds,
     author: DEMO_AUTHORS.filter((user) => user.id === post.authorId)[0],

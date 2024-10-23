@@ -5,98 +5,129 @@ import axios from "axios";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import  sessionState from "../../utils/sessionState";
+import { useRouter } from "next/navigation"; // useRouter is causing an issue in some place when the page isnt fully rendered.
+import sessionState from "../../utils/sessionState";
+
 export interface PageLoginProps {}
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
-  const router = useRouter();
+  
+  const router = useRouter(); 
+  
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const { email, password } = formData;
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [generalError, setGeneralError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  // general errors
+  const [generalError, setGeneralError] = useState<string>("");
+  //animations
   const [loading, setLoading] = useState(false);
 
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+ 
+    // Clear field-specific errors on change
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  // need to put this into a global component
+  const redirect = () => {
+    const account_type = sessionState.getAccountType();
+
+    switch(account_type) {
+      case 'renter':
+        router.push("/listing-stay" as any);
+        break;
+      case 'property':
+        router.push("/author" as any);
+        break;
+      default:
+        router.push("/" as any);
+      }
+  }
+
+  if (sessionStorage.getItem('user')){
+    console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
+    redirect();
+  } else {
+    console.log("User is not logged, redirect from login page");
+  }
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    const redirect = () => {
-      const account_type = sessionState.getAccountType();
 
-      switch(account_type) {
-        case 'renter':
-          router.push("/listing-stay" as any); // Redirect to listing page
-          break;
-        case 'property':
-          router.push("/author" as any); // Redirect to listing page
-          break;
-        default:
-          router.push("/listing-stay" as any); // Redirect to listing page
-        }
-    }
-    
-    if (sessionStorage.getItem('user')){
-      console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
-      redirect()
-      return;
-    } else {
-      console.log("user is not known");
-    }
+    const validateForm = () => {
+      const errors: any = {};
+      let isValid = false;
 
-    setEmailError(""); // Reset email error
-    setPasswordError(""); // Reset password error
-    setGeneralError(""); // Reset general error
-
-      // Validate inputs
-      let isValid = true;
       if (!email) {
-        setEmailError("Email is required.");
-        isValid = false;
+        errors.email = "Email address is required."; 
       }
+
       if (!password) {
-        setPasswordError("Password is required.");
-        isValid = false;
+         errors.password = "Password is required.";
       }
-  
-      if (!isValid) return; // Stop if validation fails
-  
+      
+      setFieldErrors(errors);
+      
+      if(Object.keys(errors).length === 0){
+        isValid = true;
+      }
+      return isValid;
+    };
+
+    const resetErrors = () => {
+      setGeneralError(""); // Reset general error  
+    }
+
+    const makeRequests = async () => {
+      
+      resetErrors();
       setLoading(true);
-  
-      try {
-        const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
-          email,
-          password,
-        })
-        .then((response) => {
-          console.log(response);
-          switch(response.status) {
-            case 200 :
-              console.log("Results of post response", response);
-              sessionStorage.setItem('user', JSON.stringify(response.data));  
-            break;
-            default:
-              console.log(response.status)
-          }
-          console.log(response);
-         
-        }).then((response) => {
-          sessionState.init();
-        }).then((response) => {
-          console.log("redirecting");
-          redirect();
-        }).catch(function (error) {
-          console.log("error");
-          console.log(error.response.data.message);
-          setGeneralError(error.response.data.message);
-        });
-      } catch {
-       // setGeneralError("User does not exist"); todo: remove after testing
-      } finally {
-        setLoading(false);
-      }
+
+      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+        email,
+        password,
+      })
+      .then((response) => {
+        console.log("Response Received:");
+        console.log(response);
+        switch(response.status) {
+          case 200 :
+            console.log("Storing user to session storage");
+            sessionStorage.setItem('user', JSON.stringify(response.data));  
+          break;
+          default:
+            alert("check login response an unknown error code received");
+        }
+      }).then((response) => {
+        sessionState.init();
+      }).then((response) => {
+        console.log("Redirecting User to their landing page");
+        
+       // var timeout = redirect();
+        const myTimeout = setTimeout(redirect, 1000);
+       
+      }).catch(function (error) {
+        console.log("Error Received from login entry:");
+        console.log(error.response.data.message);
+        setGeneralError(error.response.data.message);
+      });
+    }
+
+    if(validateForm()){
+      console.log("Form is validated proceed to post request");
+      makeRequests();
+    }
+    setLoading(false);
   };
 
   return (
@@ -106,21 +137,25 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
+        {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
           {/* FORM */}
           <form onSubmit={ handleLogin }
           className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
-                Email address
+                Email
               </span>
               <Input
+                name="email"
                 type="email"
                 placeholder="example@example.com"
                 className="mt-1"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange}
               />
-                {emailError && <div className="text-red-600 text-sm">{emailError}</div>} {/* Email error message */}
+              {fieldErrors.email && (
+                  <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+              )}
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
@@ -129,12 +164,20 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" value={password} onChange={(e) => setPassword(e.target.value)}/>
-              {passwordError && <div className="text-red-600 text-sm">{passwordError}</div>} {/* Password error message */}
+              <Input 
+              name="password"
+              type="password" className="mt-1" 
+              value={password} 
+              onChange={handleChange}
+              />
+
+              {fieldErrors.password && (
+                  <p className="text-red-500 text-sm">{fieldErrors.password}</p>
+              )}
             </label>
-            {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
-            <ButtonPrimary type="submit"
-            >Continue</ButtonPrimary>
+            <ButtonPrimary type="submit" disabled={loading}>
+              {loading ? "Loading..." : "Continue"}
+            </ButtonPrimary>
           </form>
 
           {/* ==== */}

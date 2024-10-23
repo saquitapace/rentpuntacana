@@ -1,4 +1,4 @@
-// app/api/auth/signin/route.js
+//app/api/auth/signin/route.js
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import pool from '../../../../lib/db';
@@ -11,7 +11,7 @@ export async function POST(request) {
 
   if (existingUser.length === 0) {
     return new NextResponse(
-      JSON.stringify({ message: 'No acouunt found matching this email address' }),
+      JSON.stringify({ message: 'No account found matching this email address' }),
       {
         status: 401,
         headers: { 'content-type': 'application/json' }
@@ -35,9 +35,11 @@ export async function POST(request) {
     else {
       const [userInfo] = await pool.query('SELECT * FROM users WHERE user_id = ?', existingUser[0].user_id);
       const userInfoClean = userInfo[0];
-      // Razu - add nested sql gt user likes; get likes ? add to object 
-      // {id: 123}
-      // select all from likes table; {likes}  id | user_id | property_id| like | timestamp
+      const [likes] = await pool.query('SELECT id, property_id FROM saved_properties WHERE user_id = ?', existingUser[0].user_id);
+      userInfoClean.email = email;
+      userInfoClean.likes = [];
+      userInfoClean.likes.push(likes);
+
       return NextResponse.json(userInfoClean);
     }
   }

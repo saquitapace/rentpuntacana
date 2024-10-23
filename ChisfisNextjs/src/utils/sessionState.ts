@@ -1,6 +1,6 @@
 var sessionState = (function() {
 
-  var user = ""; 
+  var user = "";
 
   var userObject = {
     user_id: '',
@@ -8,45 +8,110 @@ var sessionState = (function() {
     first_name : '',
     last_name : '',
     account_type : '',
+    avatar : '',
+    phone_number : '',
+    about : '',
+    languages : [],
+    created_at : '',
     likes : []
   };
 
   var init = function() {
+    
       let user : string = sessionStorage.getItem('user') ?? '';
-
-      if(user === '' ){
-        console.log("no user");
-        console.log("return");
+      if(user === ''){
+        console.log("no user, so calling return");
         return;
       } else {
-        console.log("initializing sessionStorage");
-        userObject.user_id = JSON.parse(user).user_id; // initialize empty object
-        userObject.full_name = JSON.parse(user).first_name + " " + JSON.parse(user).last_name;
-        userObject.first_name = JSON.parse(user).first_name; // initialize empty object
-        userObject.last_name = JSON.parse(user).first_name;
-        userObject.account_type = JSON.parse(user).account_type;
-        console.log(userObject);
+        let userObj = JSON.parse(user);
+        //set all fields to use local storage
+        sessionStorage.setItem("userId", userObj.user_id);
+        sessionStorage.setItem("firstName", userObj.first_name);
+        sessionStorage.setItem("lastName", userObj.last_name);
+        sessionStorage.setItem("email", userObj.email);
+        sessionStorage.setItem("fullName", userObj.first_name +" "+ userObj.last_name);
+        sessionStorage.setItem("accountType", userObj.account_type);
+        sessionStorage.setItem("phoneNumber", userObj.phone_number);
+        sessionStorage.setItem("avatar", userObj.avatar);
+        sessionStorage.setItem("about", userObj.about);
+        sessionStorage.setItem("languages", userObj.languages);
+        sessionStorage.setItem("created_at", userObj.created_at);
+        sessionStorage.setItem("company_name", userObj.company_name);
+        
+        if(JSON.parse(user).likes) {
+          userObj.likes = JSON.parse(user).likes[0];
+        }
       }
     };
     
+    var updateData = function (id,obj){
+      console.log(userObject);
+      var id = id;
+      userObject[id] = obj;
+      sessionStorage.setItem(id, obj);
+    }
+
     var getUserId = function() {
-      return userObject.user_id;
+      return sessionStorage.getItem("userId");
     };
 
     var getFirstName = function() {
-      return userObject.first_name;
+      return sessionStorage.getItem("firstName");
+    };
+
+    var getEmail = function() {
+      return sessionStorage.getItem("email");
     };
 
     var getFullName = function() {
-      return userObject.full_name;
+      return sessionStorage.getItem("fullName");
     };
 
     var getLastName = function() {
-      return userObject.last_name;
+      return sessionStorage.getItem("lastName");
     };
 
     var getAccountType = function() {
-      return userObject.account_type;
+      return sessionStorage.getItem("accountType");
+    };
+
+    var getLikes = function() {
+     // return sessionStorage.getItem("likes");
+     return [];
+    };
+
+    var getAvatar = function() {
+      return sessionStorage.getItem("avatar");
+    };
+
+    var getLanguages = function() {
+      const lang = sessionStorage.getItem("languages");
+      let parsedLanguages = "";
+
+      if(lang) {
+        parsedLanguages = JSON.parse(lang);
+      }
+      return parsedLanguages;
+    };
+
+    var getAbout = function() {
+      return sessionStorage.getItem("about");
+    };
+    
+    var getCompanyName = function() {
+      return sessionStorage.getItem("company_name");
+    };
+
+    var getDateJoined = function() {
+      const date = new Date(sessionStorage.getItem("created_at"));
+      const year = date.getFullYear();
+      const month = date.toLocaleString('us-US', { month: 'long' });
+      return month +" "+ year;
+    };
+
+    var getPhoneNumber = function() {
+      var ph = parseInt(sessionStorage.getItem("phoneNumber"));
+      return ph;
     };
   
     return {
@@ -55,7 +120,16 @@ var sessionState = (function() {
       getFirstName: getFirstName,
       getFullName: getFullName,
       getLastName: getLastName,
-      getAccountType:getAccountType
+      getEmail: getEmail,
+      getAccountType : getAccountType,
+      getLikes : getLikes,
+      updateData : updateData,
+      getAvatar : getAvatar,
+      getPhoneNumber : getPhoneNumber,
+      getAbout : getAbout,
+      getLanguages : getLanguages,
+      getDateJoined : getDateJoined,
+      getCompanyName: getCompanyName,
     }
   })();
   

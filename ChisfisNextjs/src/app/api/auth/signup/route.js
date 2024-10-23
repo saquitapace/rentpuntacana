@@ -10,7 +10,13 @@ export async function POST(request) {
   const [existingUser] = await pool.query('SELECT * FROM login_cred WHERE email = ?', [email]);
 
   if (existingUser.length > 0) {
-    return NextResponse.json({ message: 'User already exists' });
+    return new NextResponse(
+      JSON.stringify({ message: 'An account with this email already exists' }),
+      {
+        status: 401,
+        headers: { 'content-type': 'application/json' }
+      }
+    );  
   }
 
   // Hash the password
@@ -27,12 +33,17 @@ export async function POST(request) {
     .substring(2, 8); // start at index 2 to skip decimal point
 
   const uniqueId = (dateStr+randomStr).toUpperCase();
-  
+  const avatar = "http://localhost:8888/images/avatars/default.png";
   // Insert the new user into the database
   await pool.query('INSERT INTO login_cred (user_id, email, password) VALUES (?, ?, ?)', [uniqueId, email, hashedPassword]);
-  await pool.query('INSERT INTO users (user_id, account_type, first_name, last_name, company_name) VALUES (?, ?, ?, ?, ?)', [uniqueId, accountType, firstName, lastName, companyName]);
+  await pool.query('INSERT INTO users (user_id, account_type, first_name, last_name, company_name, avatar) VALUES (?, ?, ?, ?, ?,?)', [uniqueId, accountType, firstName, lastName, companyName, avatar]);
 
   const [userInfo] = await pool.query('SELECT * FROM users WHERE user_id = ?', uniqueId);
   const userInfoClean = userInfo[0];
+  userInfoClean.likes = [];
+  userInfoClean.languages = [];
+  userInfoClean.email = email;
+
+  // todo: send welcome email
   return NextResponse.json(userInfoClean);
 }

@@ -1,16 +1,20 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect} from "react";
+import axios from "axios";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import sessionState from "@/utils/sessionState";
 
 export interface PageSignUpProps {}
 
+
 const PageSignUp: FC<PageSignUpProps> = () => {
+  
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     accountType: "",
     companyName: "",
@@ -21,7 +25,19 @@ const PageSignUp: FC<PageSignUpProps> = () => {
     confirmPassword: "",
   });
 
+
+  const {
+    accountType,
+    companyName,
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+  } = formData;
+
   const [fieldErrors, setFieldErrors] = useState({
+    accountType: "",
     companyName: "",
     firstName: "",
     lastName: "",
@@ -30,35 +46,112 @@ const PageSignUp: FC<PageSignUpProps> = () => {
     confirmPassword: "",
   });
 
+  // general errors
+  const [generalError, setGeneralError] = useState<string>("");
+  //animations
+  const [loading, setLoading] = useState(false);
+
   const [passwordMismatch, setPasswordMismatch] = useState("");
-  const [loading, setLoading] = useState(false); // Add loading state
+
+  const resetErrors = () => {
+    setGeneralError(""); // Reset general error  
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-
-    // Clear field-specific errors on change
-    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+ 
+     // Clear field-specific errors on change
+     setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
-  const validateForm = () => {
-    const errors: any = {};
-    const { companyName, firstName, lastName, email, password, confirmPassword, accountType } = formData;
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    if (!firstName) errors.firstName = "First name is required.";
-    if (accountType === "property" && !companyName) errors.companyName = "Company name is required.";
-    if (!lastName) errors.lastName = "Last name is required.";
-    if (!email) errors.email = "Email address is required.";
-    if (!password) errors.password = "Password is required.";
-    if (!confirmPassword) errors.confirmPassword = "Confirm password is required.";
-    if (password && confirmPassword && password !== confirmPassword) setPasswordMismatch("Password does not match Confirm Password.");
-    else setPasswordMismatch("");
+  const makeRequests = async () => { 
+    resetErrors();
+    setLoading(true);
 
-    setFieldErrors(errors);
+    if (validateForm()) {
+      setLoading(true); // Set loading to true when starting the submission
+        // Send formData to backend API using Axios
+        const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, formData)
+        .then((response) => {
+          console.log("Response Received:");
+          console.log(response);
+          switch(response.status) {
+            case 200 :
+              console.log("Storing user to session storage");
+              sessionStorage.setItem('user', JSON.stringify(response.data));  
+            break;
+            default:
+              alert("check login response an unknown error code received");
+          }
+        }).then((response) => {
+          sessionState.init();
+        }).then((response) => {
+          console.log("Redirecting User to their landing page");
+          redirect();
+        }).catch(function (error) {
+          console.log("Error Received from Sign up entry:");
+          console.log(error.response.data.message);
+          setGeneralError(error.response.data.message);
+        });   
+      
+      setLoading(false);
+    }
+  }
 
-    // Return true if no errors
-    return Object.keys(errors).length === 0 && password === confirmPassword;
-  };
+    const validateForm = () => {
+      const errors: any = {};
+      const errorArray = [];
+      let isValid = false;
+            
+      for (const key in formData) {
+
+        if (formData.hasOwnProperty(key)) { 
+          if(!formData[key]){
+            console.log("no key");
+            console.log(key);
+            errors[key] = "this is a required"; 
+            errorArray.push(errors)
+          }
+        }
+
+        if(errorArray.length === 0){
+          isValid = true;
+        }
+        return isValid;
+      }
+      
+      setFieldErrors(errors);
+      return false;
+    };
+
+    if(validateForm()){
+      console.log("Form is validated proceed to post request");
+      makeRequests();
+    }
+
+  const redirect = () => {
+    const account_type = sessionState.getAccountType();
+
+    console.log("getaccounttype",sessionState.getAccountType());
+    console.log(account_type);
+
+    switch(account_type) {
+      case 'renter':
+        router.push("/listing-stay" as any); // Redirect to listing page
+        break;
+      case 'property':
+        router.push("/author" as any); // Redirect to listing page
+        break;
+      //default:
+        //router.push("/listing-stay" as any); // Redirect to listing page
+      }
+  }
+
+  setLoading(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,33 +160,20 @@ const PageSignUp: FC<PageSignUpProps> = () => {
       setLoading(true); // Set loading to true when starting the submission
       try {
         // Send formData to backend API using Axios
-        const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, formData);
-        console.log("Form submitted successfully!", response);
-        
+        const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, formData).then((response) => {
+        sessionState.init();
+      }).then((response) => {
+        console.log("Redirecting User to their landing page");
+        redirect();
+      }).catch(function (error) {
+      });        
       } catch (error) {
         console.error("Error submitting form:", error);
       }
-      
-      setTimeout(() => {
-        setLoading(false);
-        router.push("/home-1" as any);  // Redirect to MainNav2
-      }, 2000); 
-
-      // Reset form after successful submission 
-      setFormData({
-        accountType: "property",
-        companyName: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
     }
   };
 
-  const { accountType, companyName, firstName, lastName, email, password, confirmPassword } = formData;
-
+  }
   return (
     <div className={`nc-PageSignUp`}>
       <div className="container mb-24 lg:mb-32">
@@ -106,7 +186,7 @@ const PageSignUp: FC<PageSignUpProps> = () => {
         )}
 
         <div className="max-w-md mx-auto space-y-6 ">
-          <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
+        {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Account Type
@@ -122,6 +202,9 @@ const PageSignUp: FC<PageSignUpProps> = () => {
                 <option value="renter">Renter</option>
                 <option value="property">Rental Property Manager</option>
               </select>
+              {fieldErrors.accountType && (
+                  <p className="text-red-500 text-sm">{fieldErrors.accountType}</p>
+                )}
             </label>
 
             {accountType === "property" && (
@@ -226,7 +309,6 @@ const PageSignUp: FC<PageSignUpProps> = () => {
             <ButtonPrimary type="submit" disabled={loading}>
               {loading ? "Loading..." : "Continue"} {/* Update button text based on loading state */}
             </ButtonPrimary>
-          </form>
 
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             Already have an account?{" "}

@@ -1,18 +1,160 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState, useEffect } from "react";
 import Label from "@/components/Label";
+import axios from "axios";
 import Avatar from "@/shared/Avatar";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
-import Select from "@/shared/Select";
+import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
+import sessionState from "@/utils/sessionState";
+import { checkSession } from "@/utils/checkSession";
 
 export interface AccountPageProps {}
 
 const AccountPage = () => {
+
+  const user = {};
+
+  const [formData, setFormData] = useState({
+    firstName : sessionState.getFirstName(),
+    lastName : sessionState.getLastName(),
+    email : sessionState.getEmail(),
+    phoneNumber : sessionState.getPhoneNumber(),
+    about : sessionState.getAbout(),
+    languages : sessionState.getLanguages(),
+    companyName:sessionState.getCompanyName(),
+  });
+
+  const {
+    firstName,
+    companyName,
+    lastName,
+    email,
+    phoneNumber,
+    about,
+    languages,
+  } = formData;
+
+
+  const [loading, setLoading] = useState(false);
+  const [generalError, setGeneralError] = useState<string>("");
+
+  const [fieldErrors, setFieldErrors] = useState({
+    firstName : "",
+    lastName : "",
+    email : "",
+    phoneNumber : "",
+    languages : "",
+  });
+
+  let languageOptions = [
+    { name: 'English', defaultChecked : false },
+    { name: 'Spanish', defaultChecked : false },
+    { name: 'French', defaultChecked : false },
+  ]
+
+for(var x = 0; x<=languageOptions.length-1; x++){
+  for (let i = 0; i < languages.length; i++) {
+    if(languageOptions[x].name == (languages[i])){
+      languageOptions[x].defaultChecked = true;
+    } else {
+
+    }
+  }
+}
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    
+    // Clear field-specific errors on change
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
+    console.log(formData)
+  };
+
+  const validateForm = () => {
+    const errors: any = {};
+    const errorArray = [];
+    let isValid = false;
+          
+    for (const key in formData) {
+      if (formData.hasOwnProperty(key)) { 
+        if(!formData[key]){
+          errors[key] = "this is a required"; 
+          errorArray.push(errors)
+        }
+      }
+
+      if(languages.length === 0){
+        errors.languages = "at least 1 language is a required"; 
+        errorArray.push(errors.languages)
+      }
+      
+      setFieldErrors(errors);
+
+      if(errorArray.length === 0){
+        isValid = true;
+      }
+    } 
+    return isValid;
+  };
+
+  const makeRequests = async () => { 
+    //resetErrors();
+    setLoading(true);
+
+    if (validateForm()) {
+      setLoading(true); // Set loading to true when starting the submission
+        // Send formData to backend API using Axios
+        let data = formData;
+        data["user_id"] = sessionState.getUserId();
+        const userId = sessionState.getUserId();
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`, {
+          data
+        })
+        .then((response) => {
+          console.log("Response Received:");
+          console.log(response);
+          switch(response.status) {
+            case 200 :
+              console.log("Storing user to session storage");
+            //  sessionStorage.setItem('user', JSON.stringify(response.data));  
+            break;
+            default:
+              alert("check login response an unknown error code received");
+          }
+        }).then((response) => {
+          //sessionState.init();
+        }).then((response) => {
+          console.log("Redirecting User to their landing page");
+          //redirect();
+        }).catch(function (error) {
+          console.log("Error Received from Sign up entry:");
+          console.log(error);
+          //setGeneralError(error.response.data.message);
+        });   
+      
+      setLoading(false);
+    }
+  }
+
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if(validateForm()){
+      makeRequests();
+    }
+  }
+
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-4 sm:space-y-6">
       {/* HEADING */}
-      <h2 className="text-3xl font-semibold">Account infomation</h2>
+      
+      <h2 className="text-3xl font-semibold">Account Information</h2>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
@@ -43,43 +185,116 @@ const AccountPage = () => {
             />
           </div>
         </div>
-        <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
-          <div>
-            <Label>First Name</Label>
-            <Input className="mt-1.5" defaultValue="Eden" />
-            <Label>Last Name</Label>
-            <Input className="mt-1.5" defaultValue="Tuan" />
 
-          </div>
+
+        <form onSubmit={ handleUpdate } className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6" method="post">
+        {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
+        <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+        <div>
+            <Label>Company Name</Label>
+            <Input className="mt-1.5" 
+              name="companyName"
+              value={companyName}
+              onChange={handleChange} 
+            />
+        </div>
           {/* ---- */}
           <div>
-            <Label>Username</Label>
-            <Input className="mt-1.5" defaultValue="@eden_tuan" />
+            <Label>First Name</Label>
+            <Input className="mt-1.5"
+              name="firstName"
+              defaultValue={formData.firstName}
+              onChange={handleChange}
+            />
+            {fieldErrors.firstName && (
+              <p className="text-red-500 text-sm">{fieldErrors.firstName}</p>
+            )}
+            </div>
+          {/* ---- */}
+          <div>
+            <Label>Last Name</Label>
+            <Input className="mt-1.5" 
+              name="lastName"
+              value={lastName}
+              onChange={handleChange}
+            />
+            {fieldErrors.lastName && (
+                <p className="text-red-500 text-sm">{fieldErrors.lastName}</p>
+            )}
           </div>
           {/* ---- */}
           <div>
             <Label>Email</Label>
-            <Input className="mt-1.5" defaultValue="example@email.com" />
+            <Input className="mt-1.5" 
+              name="email"
+              value={email}
+              onChange={handleChange}
+            />
+            {fieldErrors.email && (
+                <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+            )}
           </div>          
           {/* ---- */}
           <div>
-            <Label>Addess</Label>
-            <Input className="mt-1.5" defaultValue="New york, USA" />
+            <Label>Phone number</Label>
+            <Input 
+            className="mt-1.5"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={handleChange}
+             />
+            {fieldErrors.phoneNumber && (
+                <p className="text-red-500 text-sm">{fieldErrors.phoneNumber}</p>
+            )}
           </div>
           {/* ---- */}
           <div>
-            <Label>Phone number</Label>
-            <Input className="mt-1.5" defaultValue="809 888 2322" />
+          <Label>Languages</Label>
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+              <div className="flex flex-wrap flexspace-y-5 pr-5 py-6">
+                {languageOptions.map((item, index) => (
+                  <div key={item.name} className="px-5">
+                    <Checkbox
+                      name={item.name}
+                      label={item.name}
+                      defaultChecked= {item.defaultChecked}
+                      onChange={(e) => {
+                        var idx = languages.indexOf(item.name, 0);
+                        
+                        if(idx >=0 && e == true){
+                        // do nothing item is in the array
+                        }
+                        
+                        if(idx>=0 && e == false){
+                          languages.splice(idx,1);
+                          // remove from array
+                        }
+
+                        if(idx==-1 && e == true){
+                          languages.push(item.name);
+                        }
+                      }}
+                  />
+                  </div>
+                ))}
+              </div>
           </div>
-          {/* ---- */}
+          {fieldErrors.languages && (
+                <p className="text-red-500 text-sm">{fieldErrors.languages}</p>
+            )}
+          </div>
           <div>
             <Label>About you</Label>
-            <Textarea className="mt-1.5" defaultValue="..." />
+            <Textarea className="mt-1.5" placeholder="ex. Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor."
+            defaultValue={about} /> 
           </div>
-          <div className="pt-2">
-            <ButtonPrimary>Update info</ButtonPrimary>
+          <div className="pt-2">         
+            <ButtonPrimary type="submit" disabled={loading}>
+              {loading ? "Loading..." : "Update info"}
+            </ButtonPrimary>
           </div>
         </div>
+        </form>
       </div>
     </div>
   );

@@ -9,22 +9,16 @@ export interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ navType = "MainNav1", className = "" }) => {
+  const oldNav = navType;
   const renderNav = () => {
-    if (checkSession()) {
-     // const user = sessionStorage.getItem('user');  // todo move to setSession
-      //console.log(user);
-      navType = "MainNav2";
-    }
-
-    console.log("session active: ", checkSession());
-
+  
+  const navType = (!checkSession()) ? "MainNav1" : "MainNav2";
+   
     switch (navType) {
       case "MainNav1":
         return <MainNav1 />;
       case "MainNav2":
         return <MainNav2 />;
-      default:
-        return <MainNav1 />;
     }
   };
 

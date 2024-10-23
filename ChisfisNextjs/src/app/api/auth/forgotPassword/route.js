@@ -22,7 +22,7 @@ export async function PUT(request) {
     return NextResponse.json(newObj);
   } else {
     return new NextResponse(
-      JSON.stringify({ message: 'No acouunt found matching this email address' }),
+      JSON.stringify({ message: 'No account found matching this email address' }),
       {
         status: 401,
         headers: { 'content-type': 'application/json' }
