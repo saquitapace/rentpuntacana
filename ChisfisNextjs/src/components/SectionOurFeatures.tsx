@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import rightImgPng from "@/images/our-features.png";
+import rightImgPng from "@/images/our-features-2.png";
 import Image, { StaticImageData } from "next/image";
 import Badge from "@/shared/Badge";
 

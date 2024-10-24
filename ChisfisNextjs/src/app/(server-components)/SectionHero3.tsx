@@ -24,7 +24,7 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
           sizeClass="px-6 py-3 lg:px-8 lg:py-4 rounded-xl"
           fontSize="text-sm sm:text-base lg:text-lg font-medium"
         >
-          Keep calm & travel on
+          Keep calm & let us assist you in your apartment search
         </ButtonPrimary>
       </div>
       <div className="relative aspect-w-1 aspect-h-1 sm:aspect-w-4 sm:aspect-h-3 lg:aspect-w-16 lg:aspect-h-9 xl:aspect-h-8 ">
