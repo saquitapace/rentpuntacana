@@ -7,37 +7,26 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // useRouter is causing an issue in some place when the page isnt fully rendered.
 import sessionState from "../../utils/sessionState";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface PageLoginProps {}
+export interface LoginFormInputs {
+  email: string;
+  password: string;
+}
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
   
-  const router = useRouter(); 
-  
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
+  const router = useRouter();
 
-  const { email, password } = formData;
+  //using react hook form
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
 
-  const [fieldErrors, setFieldErrors] = useState({
-    email: "",
-    password: "",
-  });
+  const [generalError, setGeneralError] = useState("");
 
-  // general errors
-  const [generalError, setGeneralError] = useState<string>("");
   //animations
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
- 
-    // Clear field-specific errors on change
-    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  };
 
   // need to put this into a global component
   const redirect = () => {
@@ -61,42 +50,13 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   } else {
     console.log("User is not logged, redirect from login page");
   }
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ 
+  const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
+      const makeRequests = async () => {
 
-    const validateForm = () => {
-      const errors: any = {};
-      let isValid = false;
-
-      if (!email) {
-        errors.email = "Email address is required."; 
-      }
-
-      if (!password) {
-         errors.password = "Password is required.";
-      }
-      
-      setFieldErrors(errors);
-      
-      if(Object.keys(errors).length === 0){
-        isValid = true;
-      }
-      return isValid;
-    };
-
-    const resetErrors = () => {
-      setGeneralError(""); // Reset general error  
-    }
-
-    const makeRequests = async () => {
-      
-      resetErrors();
       setLoading(true);
 
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
-        email,
-        password,
-      })
+      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, data )
       .then((response) => {
         console.log("Response Received:");
         console.log(response);
@@ -122,11 +82,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         setGeneralError(error.response.data.message);
       });
     }
-
-    if(validateForm()){
-      console.log("Form is validated proceed to post request");
-      makeRequests();
-    }
+    
+    makeRequests();
     setLoading(false);
   };
 
@@ -139,23 +96,19 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         <div className="max-w-md mx-auto space-y-6">
         {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
           {/* FORM */}
-          <form onSubmit={ handleLogin }
+          <form onSubmit={ handleSubmit( handleLogin ) }
           className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email
               </span>
               <Input
-                name="email"
                 type="email"
                 placeholder="example@example.com"
                 className="mt-1"
-                value={email}
-                onChange={handleChange}
+                { ...register("email", { required: "Email is required" }) }
               />
-              {fieldErrors.email && (
-                  <p className="text-red-500 text-sm">{fieldErrors.email}</p>
-              )}
+                { errors.email && <div className="text-red-600 text-sm">{ errors.email.message }</div> } {/* Email error message */}
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
@@ -164,16 +117,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                   Forgot password?
                 </Link>
               </span>
-              <Input 
-              name="password"
-              type="password" className="mt-1" 
-              value={password} 
-              onChange={handleChange}
+              <Input type="password" className="mt-1" { ...register("password", { required: "Password is required" }) } 
               />
-
-              {fieldErrors.password && (
-                  <p className="text-red-500 text-sm">{fieldErrors.password}</p>
-              )}
+              { errors.password && <div className="text-red-600 text-sm">{ errors.password.message }</div>} {/* Password error message */}
             </label>
             <ButtonPrimary type="submit" disabled={loading}>
               {loading ? "Loading..." : "Continue"}
