@@ -7,36 +7,30 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MailSlurp } from 'mailslurp-client';
+import { useForm, SubmitHandler } from "react-hook-form";
+
 export interface PageForgotPasswordProps {}
+export interface ForgotPasswordFormInputs {
+  email: string;
+}
 
 const PageForgotPassword: FC<PageForgotPasswordProps> = ({}) => {
   const router = useRouter();
-  const [email, setEmail] = useState<string>("");
-  const [emailError, setEmailError] = useState("");
+
+  //using react hook form
+  const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordFormInputs>();
+
   const [generalError, setGeneralError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleForgotPassword: SubmitHandler<ForgotPasswordFormInputs> = async (data) => {
 
-    setEmailError(""); // Reset email error
     setGeneralError(""); // Reset general error
-
-      // Validate inputs
-      let isValid = true;
-      if (!email) {
-        setEmailError("Email is required.");
-        isValid = false;
-      }
-  
-      if (!isValid) return; // Stop if validation fails
   
       setLoading(true);
-  
+      
       try {
-        axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgotPassword`, {
-          email: email,
-        })
+        axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgotPassword`, data)
         .then(async (response) => {
           const email = response.data.email;
           const pwd = response.data.password;
@@ -88,7 +82,7 @@ const PageForgotPassword: FC<PageForgotPasswordProps> = ({}) => {
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
-          <form onSubmit={ handleForgotPassword }
+          <form onSubmit={ handleSubmit( handleForgotPassword ) }
           className="grid grid-cols-1 gap-6" method="post">
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
@@ -98,10 +92,9 @@ const PageForgotPassword: FC<PageForgotPasswordProps> = ({}) => {
                 type="email"
                 placeholder="example@example.com"
                 className="mt-1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                { ...register("email", { required: "Email is required" }) }
               />
-                {emailError && <div className="text-red-600 text-sm">{emailError}</div>} {/* Email error message */}
+                { errors.email && <div className="text-red-600 text-sm">{ errors.email.message }</div> } {/* Email error message */}
             </label>
             {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
             <ButtonPrimary type="submit"
