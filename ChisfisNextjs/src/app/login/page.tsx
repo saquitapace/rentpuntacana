@@ -8,6 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // useRouter is causing an issue in some place when the page isnt fully rendered.
 import sessionState from "../../utils/sessionState";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { loginStart, loginSuccess, loginFailure } from '@/store/slices/LoginSlice';
+
 
 export interface PageLoginProps {}
 export interface LoginFormInputs {
@@ -16,33 +20,30 @@ export interface LoginFormInputs {
 }
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
-  
   const router = useRouter();
 
   //using react hook form
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.login);
+  
   const [generalError, setGeneralError] = useState("");
 
-  //animations
-  const [loading, setLoading] = useState(false);
+	// need to put this into a global component
+	const redirect = () => {
+		const account_type = sessionState.getAccountType();
 
-
-  // need to put this into a global component
-  const redirect = () => {
-    const account_type = sessionState.getAccountType();
-
-    switch(account_type) {
-      case 'renter':
-        router.push("/listing-stay" as any);
-        break;
-      case 'property':
-        router.push("/author" as any);
-        break;
-      default:
-        router.push("/" as any);
-      }
-  }
+		switch(account_type) {
+			case 'renter':
+				router.push("/listing-stay" as any);
+			break;
+			case 'property':
+				router.push("/author" as any);
+			break;
+			default:
+				router.push("/" as any);
+		}
+	}
 
   if (sessionStorage.getItem('user')){
     console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
@@ -51,41 +52,45 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
     console.log("User is not logged, redirect from login page");
   }
  
-  const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
-      const makeRequests = async () => {
+	const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
+      setGeneralError('');
+      dispatch(loginStart());
 
-      setLoading(true);
+			const makeRequests = async () => {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, data)
+        .then((response) => {
+          console.log("Response Received:");
+          console.log(response);
 
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, data )
-      .then((response) => {
-        console.log("Response Received:");
-        console.log(response);
-        switch(response.status) {
-          case 200 :
-            console.log("Storing user to session storage");
-            sessionStorage.setItem('user', JSON.stringify(response.data));  
-          break;
-          default:
-            alert("check login response an unknown error code received");
-        }
-      }).then((response) => {
-        sessionState.init();
-      }).then((response) => {
-        console.log("Redirecting User to their landing page");
+          dispatch(loginSuccess(data));
+
+          switch(response.status) {
+            case 200 :
+              console.log("Storing user to session storage");
+              sessionStorage.setItem('user', JSON.stringify(response.data));  
+            break;
+            default:
+              alert("check login response an unknown error code received");
+          }
+        }).then((response) => {
+          sessionState.init();
+        }).then((response) => {
+          console.log("Redirecting User to their landing page");
         
-       // var timeout = redirect();
-        const myTimeout = setTimeout(redirect, 1000);
-       
-      }).catch(function (error) {
-        console.log("Error Received from login entry:");
-        console.log(error.response.data.message);
-        setGeneralError(error.response.data.message);
-      });
-    }
-    
-    makeRequests();
-    setLoading(false);
-  };
+          // var timeout = redirect();
+          const myTimeout = setTimeout(redirect, 1000);
+          
+        }).catch(function (error) {
+          console.log("Error Received from login entry:");
+          console.log(error.response.data.message);
+          setGeneralError(error.response.data.message);
+
+          dispatch(loginFailure("Failed to login. Please try again."));
+        });
+		}
+		
+		makeRequests();
+	};
 
   return (
     <div className={`nc-PageLogin`}>
@@ -119,10 +124,10 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               </span>
               <Input type="password" className="mt-1" { ...register("password", { required: "Password is required" }) } 
               />
-              { errors.password && <div className="text-red-600 text-sm">{ errors.password.message }</div>} {/* Password error message */}
+              { errors.password && <div className="text-red-600 text-sm">{ errors.password.message }</div> } {/* Password error message */}
             </label>
-            <ButtonPrimary type="submit" disabled={loading}>
-              {loading ? "Loading..." : "Continue"}
+            <ButtonPrimary type="submit" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Continue"}
             </ButtonPrimary>
           </form>
 

@@ -12,6 +12,16 @@ import sessionState from "@/utils/sessionState";
 import { checkSession } from "@/utils/checkSession";
 
 export interface AccountPageProps {}
+export interface AccountFormInputs {
+  accountType: string,
+  firstName : string,
+  lastName : string,
+  email : string, 
+  phoneNumber : string,
+  about : string,
+  languages : string,
+  companyName : string,
+}
 
 const AccountPage = () => {
 
