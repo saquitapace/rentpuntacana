@@ -1,13 +1,16 @@
 "use client";
 
 import React, { FC, useState, useEffect} from "react";
-import axios from "axios";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import sessionState from "@/utils/sessionState";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { signUpUser, resetSignUpState } from "@/store/slices/signUpSlice";
+
 
 export interface PageSignUpProps {}
 export interface SignUpFormInputs {
@@ -21,8 +24,7 @@ export interface SignUpFormInputs {
 }
 
 
-const PageSignUp: FC<PageSignUpProps> = () => {
-  
+const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const router = useRouter();
 
   //using react hook form
@@ -31,69 +33,72 @@ const PageSignUp: FC<PageSignUpProps> = () => {
   const accountType = watch("accountType");
   const password = watch("password");
 
+  //using redux
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, success, error } = useSelector((state: RootState) => state.signUp);
+
   // general errors
   const [generalError, setGeneralError] = useState<string>("");
-  //animations
-  const [loading, setLoading] = useState(false);
 
   const resetErrors = () => {
     setGeneralError(""); // Reset general error  
   }
 
   const handleSignup: SubmitHandler<SignUpFormInputs> = async (data) => {  
-    const makeRequests = async () => { 
+    try {
       resetErrors();
-      setLoading(true); // Set loading to true when starting the submission
-
-      // Send formData to backend API using Axios
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, data)
-      .then((response) => {
-        console.log("Response Received:");
-        console.log(response);
-        switch(response.status) {
-          case 200 :
-            console.log("Storing user to session storage");
-            sessionStorage.setItem('user', JSON.stringify(response.data));  
-          break;
-          default:
-            alert("check login response an unknown error code received");
-        }
-      }).then((response) => {
+  
+      // Dispatch the signUpUser action, 
+      const response = await dispatch(signUpUser(data)).unwrap();
+  
+      console.log("Response Received:", response);
+  
+      // Check the response code or process based on the response content
+      if (response.status === 200) {
+        console.log("Storing user to session storage");
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+  
         sessionState.init();
-      }).then((response) => {
+  
         console.log("Redirecting User to their landing page");
         redirect();
-      }).catch(function (error) {
-        console.log("Error Received from Sign up entry:");
-        console.log(error.response.data.message);
-        setGeneralError(error.response.data.message);
-      });   
-      
-      setLoading(false);
+      } else {
+        console.log("Unknown response code received during signup");
+      }
+    } catch (error) {
+      console.log("Error Received from Signup entry:", error);
+  
+      //backend error message
+      setGeneralError(error.response?.data?.message || "An unknown error occurred during signup.");
     }
+  };
+  
+  const redirect = () => {
+    const account_type = sessionState.getAccountType();
 
-    makeRequests();
+    console.log("getaccounttype",sessionState.getAccountType());
+    console.log(account_type);
 
-    const redirect = () => {
-      const account_type = sessionState.getAccountType();
-
-      console.log("getaccounttype",sessionState.getAccountType());
-      console.log(account_type);
-
-      switch(account_type) {
-        case 'renter':
-          router.push("/listing-stay" as any); // Redirect to listing page
-          break;
-        case 'property':
-          router.push("/author" as any); // Redirect to listing page
-          break;
-        //default:
-          //router.push("/listing-stay" as any); // Redirect to listing page
-        }
-    }
-
-    setLoading(false);
+    switch(account_type) {
+      case 'renter':
+        router.push("/listing-stay" as any); // Redirect to listing page
+        break;
+      case 'property':
+        router.push("/author" as any); // Redirect to listing page
+        break;
+      //default:
+        //router.push("/listing-stay" as any); // Redirect to listing page
+      }
   }
+
+  // Reset state and redirect after successful sign-up
+  useEffect(() => {
+    if (success) {
+      //router.push("/");
+      dispatch(resetSignUpState());
+    }
+  }, [success, router, dispatch]);
+
   return (
     <div className={`nc-PageSignUp`}>
       <div className="container mb-24 lg:mb-32">
@@ -200,8 +205,8 @@ const PageSignUp: FC<PageSignUpProps> = () => {
                   { errors.confirmPassword && <div className="text-red-600 text-sm">{ errors.confirmPassword.message }</div> }
               </label>
 
-              <ButtonPrimary type="submit" disabled={loading}>
-                {loading ? "Loading..." : "Continue"} {/* Update button text based on loading state */}
+              <ButtonPrimary type="submit" disabled={isLoading}>
+                {isLoading ? "Loading..." : "Continue"} {/* Update button text based on loading state */}
               </ButtonPrimary>
 
             <span className="block text-center text-neutral-700 dark:text-neutral-300">
