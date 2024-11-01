@@ -102,7 +102,7 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
 	  }
 	return (
 		<>
-			<h2 className="text-2xl font-semibold">Your place location</h2>
+			<h2 className="text-2xl font-semibold">Listing location</h2>
 			<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 			{/* FORM */}
 			<div className="space-y-8">
@@ -126,13 +126,15 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
 						{latitudeError && <div className="text-red-600 text-sm">{latitudeError}</div>} {/* latitude error message */}
 					</FormItem>
 				</div>
+				
+				<FormItem label="Address Street" className="">
+					<Input placeholder="example: MHPG+CMH, esquina, C. Bahamas, Punta Cana 23000" />
+				</FormItem>
+
 				<FormItem label="Country/Region">
 					<Select disabled>
 						<option value="Dominican Republic">Dominican Republic</option>
 					</Select>
-				</FormItem>
-				<FormItem label="Street" className="hidden">
-					<Input placeholder="..." />
 				</FormItem>
 				<div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-5 hidden">
 					<FormItem label="City">

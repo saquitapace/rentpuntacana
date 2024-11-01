@@ -19,13 +19,24 @@ const PageAddListing8: FC<PageAddListing8Props> = () => {
       {/* FORM */}
       <div className="space-y-8">
         {/* ITEM */}
-        <FormItem label="Currency">
+       {/*} <FormItem label="Currency">
           <Select>
             <option value="USD">USD</option>
             <option value="RD">RD</option>
           </Select>
+        </FormItem> */}
+        <FormItem label="1 month" className="w-96">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span className="text-gray-500">$</span>
+            </div>
+            <Input className="!pl-8 !pr-10" placeholder="0.00" />
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <span className="text-gray-500">USD</span>
+            </div>
+          </div>
         </FormItem>
-        <FormItem label="Short term / 3 month price ">
+        <FormItem label="3 months" className="w-96">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span className="text-gray-500">$</span>
@@ -37,7 +48,7 @@ const PageAddListing8: FC<PageAddListing8Props> = () => {
           </div>
         </FormItem>
         {/* ----- */}
-        <FormItem label="Standard term / 6 month price ">
+        <FormItem label="6 months" className="w-96">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span className="text-gray-500">$</span>
@@ -49,7 +60,7 @@ const PageAddListing8: FC<PageAddListing8Props> = () => {
           </div>
         </FormItem>
         {/* ----- */}
-        <FormItem label="Long term / 12 month price ">
+        <FormItem label="12 months" className="w-96">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span className="text-gray-500">$</span>

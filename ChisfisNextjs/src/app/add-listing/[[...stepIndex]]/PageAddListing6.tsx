@@ -8,7 +8,7 @@ const PageAddListing6: FC<PageAddListing6Props> = () => {
     <>
       <div>
         <h2 className="text-2xl font-semibold">
-          Your Propety Listing description
+          Property Listing description
         </h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
           Mention the best features of your accommodation, any special amenities

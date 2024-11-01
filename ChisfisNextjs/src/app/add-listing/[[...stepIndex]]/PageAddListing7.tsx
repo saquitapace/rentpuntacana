@@ -8,7 +8,7 @@ const PageAddListing7: FC<PageAddListing7Props> = () => {
       <div>
         <h2 className="text-2xl font-semibold">Pictures of the place</h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-          A few beautiful photos will help customers have more sympathy for your
+          A few beautiful photos will help customers have more interest for your
           property.
         </span>
       </div>

@@ -18,15 +18,14 @@ const PageAddListing9: FC<PageAddListing9Props> = () => {
   return (
     <>
       <div>
-        <h2 className="text-2xl font-semibold">How long can guests stay?</h2>
+        <h2 className="text-2xl font-semibold">Availability Date</h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-          {` Shorter trips can mean more reservations, but you'll turn over your
-          space more often.`}
+          {`By setting this date your listing will only display when the property is available.`}
         </span>
       </div>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       {/* FORM */}
-      <div>
+      <div className="hidden">
         <h2 className="text-2xl font-semibold">Set your availability</h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
           Editing your calendar is easy—just select a date to block or unblock
