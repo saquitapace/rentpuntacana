@@ -47,9 +47,11 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
             + Add Listing
             </Link>
           ) : ("")}
+           <NotifyDropdown />
             <AvatarDropdown />
           </div>
           <div className="flex space-x-2 lg:hidden">
+            <NotifyDropdown />
             <AvatarDropdown />
             <MenuBar />
           </div>
