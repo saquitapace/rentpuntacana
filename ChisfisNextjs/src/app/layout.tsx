@@ -9,6 +9,7 @@ import Footer from '@/components/Footer'
 import FooterNav from '@/components/FooterNav'
 import { Metadata } from 'next'
 import ThemeProvider from './theme-provider'
+import NewHeader from './(client-components)/(Header)/NewHeader'
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -36,7 +37,8 @@ export default function RootLayout({
 			<ThemeProvider>
 				<body className="bg-white text-base text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200">
 					<div>
-						<SiteHeader />
+						{/* <SiteHeader /> */}
+						<NewHeader/>
 						{children}
 						<FooterNav />
 						<Footer />
