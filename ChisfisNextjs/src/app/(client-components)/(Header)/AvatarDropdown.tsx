@@ -1,22 +1,62 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
 import Link from "next/link";
 import clearSession from "@/utils/clearSession";
 import sessionState from "@/utils/sessionState";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { setUserProfile, setLoading } from '@/store/slices/userProfileSlice';
 
 interface Props {
   className?: string;
 }
 
-const fullname = sessionState.getFullName();
-
-const logout = () =>{
-  clearSession();
-}
-
+const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
 
 export default function AvatarDropdown({ className = "" }: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { avatar, firstName, lastName, address, loading } = useSelector(
+    (state: RootState) => state.userProfile
+  );
+
+  const logout = () => {
+    clearSession();
+    dispatch(setUserProfile({
+      avatar: '/images/avatars/default.png',
+      firstName: '',
+      lastName: '',
+      email: '',
+      address: '',
+      phoneNumber: '',
+      about: '',
+      loading: false,
+      error: null
+    }));
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
+      if (response.ok) {
+        const data = await response.json();
+        dispatch(setUserProfile(data));
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to fetch user data:', response.status, errorData);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return (
     <>
       <Popover className={`AvatarDropdown relative flex ${className}`}>
@@ -25,7 +65,12 @@ export default function AvatarDropdown({ className = "" }: Props) {
             <Popover.Button
               className={`self-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none flex items-center justify-center`}
             >
-              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" />
+              <Avatar 
+                imgUrl={avatar} 
+                sizeClass="w-8 h-8 sm:w-9 sm:h-9"
+                userName={`${firstName} ${lastName}`}
+                isLoading={loading}
+              />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -40,11 +85,15 @@ export default function AvatarDropdown({ className = "" }: Props) {
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
                     <div className="flex items-center space-x-3">
-                      <Avatar sizeClass="w-12 h-12" />
+                      <Avatar 
+                        imgUrl={avatar} 
+                        sizeClass="w-12 h-12"
+                        userName={`${firstName} ${lastName}`}
+                      />
 
                       <div className="flex-grow">
-                        <h4 className="font-semibold">{fullname}</h4>
-                       {/*<p className="text-xs mt-0.5">Los Angeles, CA</p>*/}
+                        <h4 className="font-semibold">{`${firstName} ${lastName}`}</h4>
+                        <p className="text-xs mt-0.5">{address}</p>
                       </div>
                     </div>
 
@@ -172,7 +221,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                         close();
                         logout();
                       }}
-                      >
+                    >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
                         <svg
                           width="24"

@@ -8,7 +8,7 @@ import StayCard from "@/components/StayCard2";
 import {
   DEMO_STAY_LISTINGS,
 } from "@/data/listings";
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, Fragment, useState, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
@@ -17,6 +17,41 @@ import sessionState from "../../utils/sessionState";
 export interface AuthorPageProps {}
 
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
+
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    phoneNumber: "",
+    about: "",
+    avatar: "",
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data);
+        setImageUrl(data.avatar || `/images/avatars/default.png`);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to fetch user data:', response.status, errorData);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!sessionStorage.getItem('user')){
     console.log("user does not logged in redirect to home");
@@ -32,9 +67,11 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className=" w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
         <Avatar
+          imgUrl={imageUrl}
           hasChecked
           hasCheckedClass="w-6 h-6 -top-0.5 right-2"
           sizeClass="w-28 h-28"
+          isLoading={isLoading}
         />
 
         {/* ---- */}
@@ -59,7 +96,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-4">
-          <div className="flex items-center space-x-4 hidden">
+          <div className="items-center space-x-4 hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 text-neutral-400"
@@ -126,9 +163,9 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold">{fullName}'s Listings</h2>
+          <h2 className="text-2xl font-semibold">{fullName}&apos;s Listings</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-            {`Kevin Francis's listings is very rich, 5 star reviews help him to be
+            {`Kevin Francis&apos;s listings is very rich, 5 star reviews help him to be
             more branded.`}
           </span>
         </div>

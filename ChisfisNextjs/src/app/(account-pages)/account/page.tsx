@@ -1,175 +1,200 @@
 "use client";
 
-import React, { FC, useState, useEffect } from "react";
-import Label from "@/components/Label";
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
+import Label from "@/components/Label";
 import Avatar from "@/shared/Avatar";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
 import sessionState from "@/utils/sessionState";
-import { checkSession } from "@/utils/checkSession";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { setUserProfile, setAvatar } from '@/store/slices/userProfileSlice';
+
+const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
 
 export interface AccountPageProps {}
 export interface AccountFormInputs {
-  accountType: string,
-  firstName : string,
-  lastName : string,
-  email : string, 
-  phoneNumber : string,
-  about : string,
-  languages : string,
-  companyName : string,
+  accountType: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  about: string;
+  languages: string[];
+  companyName: string;
+  address: string;
+  avatar: string;
 }
 
 const AccountPage = () => {
-
-  const user = {};
-
-  const [formData, setFormData] = useState({
-    firstName : sessionState.getFirstName(),
-    lastName : sessionState.getLastName(),
-    email : sessionState.getEmail(),
-    phoneNumber : sessionState.getPhoneNumber(),
-    about : sessionState.getAbout(),
-    languages : sessionState.getLanguages(),
-    companyName:sessionState.getCompanyName(),
-  });
-
-  const {
-    firstName,
-    companyName,
-    lastName,
-    email,
-    phoneNumber,
-    about,
-    languages,
-  } = formData;
-
+  const dispatch = useDispatch<AppDispatch>();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const [loading, setLoading] = useState(false);
   const [generalError, setGeneralError] = useState<string>("");
-
-  const [fieldErrors, setFieldErrors] = useState({
-    firstName : "",
-    lastName : "",
-    email : "",
-    phoneNumber : "",
-    languages : "",
+  
+  const [formData, setFormData] = useState({
+    firstName: userProfile.firstName || "",
+    lastName: userProfile.lastName || "",
+    email: userProfile.email || "",
+    phoneNumber: userProfile.phoneNumber || "",
+    about: userProfile.about || "",
+    languages: [],
+    companyName: "",
+    address: userProfile.address || "",
+    avatar: userProfile.avatar || "",
   });
 
-  let languageOptions = [
-    { name: 'English', defaultChecked : false },
-    { name: 'Spanish', defaultChecked : false },
-    { name: 'French', defaultChecked : false },
-  ]
+  const [fieldErrors, setFieldErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    languages: "",
+    address: "",
+  });
 
-for(var x = 0; x<=languageOptions.length-1; x++){
-  for (let i = 0; i < languages.length; i++) {
-    if(languageOptions[x].name == (languages[i])){
-      languageOptions[x].defaultChecked = true;
-    } else {
+  const languageOptions = [
+    { name: 'English', defaultChecked: false },
+    { name: 'Spanish', defaultChecked: false },
+    { name: 'French', defaultChecked: false },
+  ];
 
+  // Set initial checked state for languages
+  languageOptions.forEach(option => {
+    option.defaultChecked = formData.languages.includes(option.name);
+  });
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('/api/user-data?userId=' + sessionState.getUserId());
+      if (response.ok) {
+        const data = await response.json();
+        dispatch(setUserProfile(data));
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
     }
-  }
-}
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const uniqueId = uuidv4();
+      const fileName = `UserProfilePhoto-${uniqueId}.png`;
+      const filePath = `/images/avatars/${fileName}`;
+      
+      const formData = new FormData();
+      formData.append('avatar', file);
+      formData.append('filePath', filePath);
 
+      try {
+        const response = await fetch('/api/update-avatar', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          dispatch(setAvatar(data.avatarUrl));
+        } else {
+          console.error('Failed to update avatar');
+        }
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+      }
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-    
-    // Clear field-specific errors on change
-    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-
-    console.log(formData)
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: ""
+    }));
   };
 
   const validateForm = () => {
     const errors: any = {};
-    const errorArray = [];
-    let isValid = false;
-          
-    for (const key in formData) {
-      if (formData.hasOwnProperty(key)) { 
-        if(!formData[key]){
-          errors[key] = "this is a required"; 
-          errorArray.push(errors)
-        }
-      }
+    let isValid = true;
 
-      if(languages.length === 0){
-        errors.languages = "at least 1 language is a required"; 
-        errorArray.push(errors.languages)
+    // Validate required fields
+    const requiredFields = ['firstName', 'lastName', 'email', 'phoneNumber'];
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        errors[field] = "This field is required";
+        isValid = false;
       }
-      
-      setFieldErrors(errors);
+    });
 
-      if(errorArray.length === 0){
-        isValid = true;
-      }
-    } 
+    // Validate email format
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+
+    // Validate languages
+    if (formData.languages.length === 0) {
+      errors.languages = "Please select at least one language";
+      isValid = false;
+    }
+
+    setFieldErrors(errors);
     return isValid;
   };
 
-  const makeRequests = async () => { 
-    //resetErrors();
-    setLoading(true);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-    if (validateForm()) {
-      setLoading(true); // Set loading to true when starting the submission
-        // Send formData to backend API using Axios
-        let data = formData;
-        data["user_id"] = sessionState.getUserId();
-        const userId = sessionState.getUserId();
-        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`, {
-          data
-        })
-        .then((response) => {
-          console.log("Response Received:");
-          console.log(response);
-          switch(response.status) {
-            case 200 :
-              console.log("Storing user to session storage");
-            //  sessionStorage.setItem('user', JSON.stringify(response.data));  
-            break;
-            default:
-              alert("check login response an unknown error code received");
-          }
-        }).then((response) => {
-          //sessionState.init();
-        }).then((response) => {
-          console.log("Redirecting User to their landing page");
-          //redirect();
-        }).catch(function (error) {
-          console.log("Error Received from Sign up entry:");
-          console.log(error);
-          //setGeneralError(error.response.data.message);
-        });   
+    setLoading(true);
+    try {
+      const data = {
+        ...formData,
+        user_id: sessionState.getUserId()
+      };
       
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`,
+        { data }
+      );
+
+      if (response.status === 200) {
+        // Update session storage if needed
+        console.log("Profile updated successfully");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setGeneralError("Failed to update profile. Please try again.");
+    } finally {
       setLoading(false);
     }
-  }
-
-  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    if(validateForm()){
-      makeRequests();
-    }
-  }
+  };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* HEADING */}
-      
-      <h2 className="text-3xl font-semibold">Account Information</h2>
+    <div className="space-y-6 sm:space-y-8">
+      <h2 className="text-3xl font-semibold">Account information</h2>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
-            <Avatar sizeClass="w-32 h-32" />
+            <Avatar 
+              imgUrl={userProfile.avatar} 
+              sizeClass="w-32 h-32"
+              userName={`${userProfile.firstName} ${userProfile.lastName}`}
+            />
             <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
               <svg
                 width="30"
@@ -186,124 +211,144 @@ for(var x = 0; x<=languageOptions.length-1; x++){
                   strokeLinejoin="round"
                 />
               </svg>
-
               <span className="mt-1 text-xs">Change Image</span>
             </div>
             <input
               type="file"
               className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={handleFileChange}
+              accept="image/*"
             />
           </div>
         </div>
 
-
-        <form onSubmit={ handleUpdate } className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6" method="post">
-        {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
-        <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
-        <div>
+        <form onSubmit={handleSubmit} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+          {generalError && <div className="text-red-600 text-sm">{generalError}</div>}
+          
+          <div>
             <Label>Company Name</Label>
-            <Input className="mt-1.5" 
+            <Input 
+              className="mt-1.5"
               name="companyName"
-              value={companyName}
-              onChange={handleChange} 
+              value={formData.companyName}
+              onChange={handleInputChange}
             />
-        </div>
-          {/* ---- */}
+          </div>
+
           <div>
             <Label>First Name</Label>
-            <Input className="mt-1.5"
+            <Input 
+              className="mt-1.5"
               name="firstName"
-              defaultValue={formData.firstName}
-              onChange={handleChange}
+              value={formData.firstName}
+              onChange={handleInputChange}
             />
             {fieldErrors.firstName && (
               <p className="text-red-500 text-sm">{fieldErrors.firstName}</p>
             )}
-            </div>
-          {/* ---- */}
+          </div>
+
           <div>
             <Label>Last Name</Label>
-            <Input className="mt-1.5" 
+            <Input 
+              className="mt-1.5"
               name="lastName"
-              value={lastName}
-              onChange={handleChange}
+              value={formData.lastName}
+              onChange={handleInputChange}
             />
             {fieldErrors.lastName && (
-                <p className="text-red-500 text-sm">{fieldErrors.lastName}</p>
+              <p className="text-red-500 text-sm">{fieldErrors.lastName}</p>
             )}
           </div>
-          {/* ---- */}
+
           <div>
             <Label>Email</Label>
-            <Input className="mt-1.5" 
+            <Input 
+              className="mt-1.5"
               name="email"
-              value={email}
-              onChange={handleChange}
+              value={formData.email}
+              onChange={handleInputChange}
             />
             {fieldErrors.email && (
-                <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+              <p className="text-red-500 text-sm">{fieldErrors.email}</p>
             )}
-          </div>          
-          {/* ---- */}
+          </div>
+
+          <div>
+            <Label>Address</Label>
+            <Input 
+              className="mt-1.5"
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+            />
+            {fieldErrors.address && (
+              <p className="text-red-500 text-sm">{fieldErrors.address}</p>
+            )}
+          </div>
+
           <div>
             <Label>Phone number</Label>
             <Input 
-            className="mt-1.5"
-            name="phoneNumber"
-            value={phoneNumber}
-            onChange={handleChange}
-             />
+              className="mt-1.5"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+            />
             {fieldErrors.phoneNumber && (
-                <p className="text-red-500 text-sm">{fieldErrors.phoneNumber}</p>
+              <p className="text-red-500 text-sm">{fieldErrors.phoneNumber}</p>
             )}
           </div>
-          {/* ---- */}
+
           <div>
-          <Label>Languages</Label>
-          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="flex flex-wrap flexspace-y-5 pr-5 py-6">
-                {languageOptions.map((item, index) => (
+            <Label>Languages</Label>
+            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+              <div className="flex flex-wrap space-y-5 pr-5 py-6">
+                {languageOptions.map((item) => (
                   <div key={item.name} className="px-5">
                     <Checkbox
                       name={item.name}
                       label={item.name}
-                      defaultChecked= {item.defaultChecked}
-                      onChange={(e) => {
-                        var idx = languages.indexOf(item.name, 0);
-                        
-                        if(idx >=0 && e == true){
-                        // do nothing item is in the array
-                        }
-                        
-                        if(idx>=0 && e == false){
-                          languages.splice(idx,1);
-                          // remove from array
-                        }
-
-                        if(idx==-1 && e == true){
-                          languages.push(item.name);
-                        }
+                      defaultChecked={item.defaultChecked}
+                      onChange={(checked) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          languages: Array.isArray(prev.languages) && checked 
+                            ? [...prev.languages, item.name]
+                            : Array.isArray(prev.languages) 
+                              ? prev.languages.filter(lang => lang !== item.name)
+                              : [item.name]
+                        }));
+                        setFieldErrors(prev => ({
+                          ...prev,
+                          languages: ""
+                        }));
                       }}
-                  />
+                    />
                   </div>
                 ))}
               </div>
-          </div>
-          {fieldErrors.languages && (
-                <p className="text-red-500 text-sm">{fieldErrors.languages}</p>
+            </div>
+            {fieldErrors.languages && (
+              <p className="text-red-500 text-sm">{fieldErrors.languages}</p>
             )}
           </div>
+
           <div>
             <Label>About you</Label>
-            <Textarea className="mt-1.5" placeholder="ex. Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor."
-            defaultValue={about} /> 
+            <Textarea 
+              className="mt-1.5"
+              name="about"
+              value={formData.about}
+              onChange={handleInputChange}
+            />
           </div>
-          <div className="pt-2">         
+
+          <div className="pt-2">
             <ButtonPrimary type="submit" disabled={loading}>
-              {loading ? "Loading..." : "Update info"}
+              {loading ? "Updating..." : "Update info"}
             </ButtonPrimary>
           </div>
-        </div>
         </form>
       </div>
     </div>
