@@ -127,7 +127,7 @@ const PageAddListing2: FC<PageAddListing2Props> = () => {
 					</FormItem>
 				</div>
 				
-				<FormItem label="Address Street" className="">
+				<FormItem label="Street Address" className="">
 					<Input placeholder="example: MHPG+CMH, esquina, C. Bahamas, Punta Cana 23000" />
 				</FormItem>
 

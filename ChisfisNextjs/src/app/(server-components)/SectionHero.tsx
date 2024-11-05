@@ -19,7 +19,7 @@ const SectionHero: FC<SectionHeroProps> = ({ className = "" }) => {
             Find your next place to call home
           </h2>
           <span className="text-base md:text-lg text-neutral-500 dark:text-neutral-400">
-            Rate #1 in short-term or long-term stays in Punca Cana 
+            Rate #1 in short-term or long-term stays in Punta Cana 
           </span>
           <ButtonPrimary href="/listing-stay-map" sizeClass="px-5 py-4 sm:px-7">
             Start your search
