@@ -6,7 +6,7 @@ import clearSession from "@/utils/clearSession";
 import sessionState from "@/utils/sessionState";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { setUserProfile, setLoading } from '@/store/slices/userProfileSlice';
+import { setUserProfile } from '@/store/slices/userProfileSlice';
 
 interface Props {
   className?: string;
@@ -16,7 +16,7 @@ const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000
 
 export default function AvatarDropdown({ className = "" }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { avatar, firstName, lastName, address, loading } = useSelector(
+  const { avatar, firstName, lastName, address, isLoading } = useSelector(
     (state: RootState) => state.userProfile
   );
 
@@ -41,7 +41,6 @@ export default function AvatarDropdown({ className = "" }: Props) {
 
   const fetchUserData = async () => {
     try {
-      dispatch(setLoading(true));
       const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
       if (response.ok) {
         const data = await response.json();
@@ -53,7 +52,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
-      dispatch(setLoading(false));
+
     }
   };
 
@@ -69,7 +68,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                 imgUrl={avatar} 
                 sizeClass="w-8 h-8 sm:w-9 sm:h-9"
                 userName={`${firstName} ${lastName}`}
-                isLoading={loading}
+                isLoading={isLoading}
               />
             </Popover.Button>
             <Transition
