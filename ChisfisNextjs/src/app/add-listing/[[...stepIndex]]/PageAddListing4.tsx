@@ -18,31 +18,20 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
   if(!sessionStorage.page4FormData) {
     sessionStorage.setItem("page4FormData",JSON.stringify({listingType:"",title:"", rentalLength: []}));
   }
-  const page4FormData = JSON.parse(sessionStorage.getItem("page4FormData"))
+  const page4FormData = JSON.parse(sessionStorage.getItem("page4FormData"));
+
 
   const [formData, setFormData] = useState({
-    generalAmenities: page4FormData.generalAmenities,
-    otherAmenities:page4FormData.otherAmenities,
-    safeAmenities: page4FormData.safeAmenities
+    generalAmenities: page4FormData.generalAmenities || [],
+    otherAmenities: page4FormData.otherAmenities || [],
+    safeAmenities: page4FormData.safeAmenities || [],
   });
   
-  let {
+  const {
     generalAmenities,
     otherAmenities,
     safeAmenities,
   } = formData;
-
-  if(generalAmenities === undefined) {
-    generalAmenities = [];
-  }
-
-  if(otherAmenities === undefined) {
-    otherAmenities = [];
-  }
-
-  if(safeAmenities === undefined) {
-    safeAmenities = [];
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,35 +45,17 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
     console.log(formData)
   };
 
-  for(var x = 0; x<=generalAmenitiesOptions.length-1; x++){
-    for (let i = 0; i < generalAmenities.length; i++) {
-      if(generalAmenitiesOptions[x].field == (generalAmenities[i])){
-        generalAmenitiesOptions[x].defaultChecked = true;
-      } else {
-  
-      }
-    }
-  }
+  generalAmenitiesOptions.forEach(option => {
+    option.defaultChecked = formData.generalAmenities.includes(option.field);
+  });
 
-  for(var x = 0; x<=otherAmenitiesOptions.length-1; x++){
-    for (let i = 0; i < otherAmenities.length; i++) {
-      if(otherAmenitiesOptions[x].field == (otherAmenities[i])){
-        otherAmenitiesOptions[x].defaultChecked = true;
-      } else {
+  otherAmenitiesOptions.forEach(option => {
+    option.defaultChecked = formData.otherAmenities.includes(option.field);
+  });
   
-      }
-    }
-  }
-
-  for(var x = 0; x<=safeAmenitiesOptions.length-1; x++){
-    for (let i = 0; i < safeAmenities.length; i++) {
-      if(safeAmenitiesOptions[x].field == (safeAmenities[i])){
-        safeAmenitiesOptions[x].defaultChecked = true;
-      } else {
-  
-      }
-    }
-  }
+  safeAmenitiesOptions.forEach(option => {
+    option.defaultChecked = formData.safeAmenities.includes(option.field);
+  });
 
   return (
     <>

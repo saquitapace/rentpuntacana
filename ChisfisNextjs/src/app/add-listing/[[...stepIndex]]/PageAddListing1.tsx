@@ -40,7 +40,6 @@ const PageAddListing1: FC<PageAddListing1Props> = () => {
     rentalLength,
   } = formData;
 
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -54,17 +53,11 @@ const PageAddListing1: FC<PageAddListing1Props> = () => {
   };
 
   let rentalTermOptions = rental_length;
-
-  for(var x = 0; x<=rentalTermOptions.length-1; x++){
-    for (let i = 0; i < rentalLength.length; i++) {
-      if(rentalTermOptions[x].field == (rentalLength[i])){
-        rentalTermOptions[x].defaultChecked = true;
-      } else {
   
-      }
-    }
-  }
-  //console.log(sessionStorage.getItem("page1FormData"));
+   // Set initial checked state for rentalTermOptions
+  rentalTermOptions.forEach(option => {
+    option.defaultChecked = formData.rentalLength.includes(option.field);
+  });
 
   return (
     <>
