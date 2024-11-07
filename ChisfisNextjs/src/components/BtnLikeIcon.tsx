@@ -22,7 +22,10 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   const postLike = async(id: number)=>{
     const activeUser = sessionState.getUserId();
     const user_id = activeUser;
-    const property_id = id;
+    const property_id = parseInt(id);
+
+    console.log(user_id,
+      property_id,)
 
     const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/auth/postLike`, {
       user_id,
@@ -32,7 +35,7 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
       console.log("Response Received:");
       console.log(response);
       setLikedState(!likedState);
-      sessionState.updateData('likes',response.data)
+      //sessionState.updateData('likes',response.data)
 
     }).catch(function (error) {
       console.log("Error Received from post Like");

@@ -7,8 +7,7 @@ export async function POST(request) {
 
   // Insert the like
   const response = await pool.query('INSERT INTO saved_properties (user_id, property_id) VALUES (?, ?)', [user_id, property_id]);
-  const updatedLikes = await pool.query('SELECT id, property_id FROM saved_properties WHERE user_id = ?', [user_id]);
-
-  //postLike
-  return NextResponse.json(updatedLikes[0]);
+  //const updatedLikes = await pool.query('SELECT id, property_id FROM saved_properties WHERE user_id = ?', [user_id]);
+  
+  return NextResponse.json(response);
 }

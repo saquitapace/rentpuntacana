@@ -8,7 +8,6 @@ import SectionHowItWork from "@/components/SectionHowItWork";
 import SectionSubscribe2 from "@/components/SectionSubscribe2";
 import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
 import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor";
-import SectionVideos from "@/components/SectionVideos";
 import SectionClientSay from "@/components/SectionClientSay";
 
 function PageHome() {
