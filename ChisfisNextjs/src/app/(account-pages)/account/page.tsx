@@ -70,6 +70,7 @@ const AccountPage = () => {
       const data = await fetchUserData();
       
       if (data) {
+        console.log(data)
         dispatch(setUserProfile(data));
       }
     };
@@ -82,6 +83,11 @@ const AccountPage = () => {
     setValue('companyName', userProfile.companyName);
     setValue('firstName', userProfile.firstName);
     setValue('lastName', userProfile.lastName);
+    setValue('email', userProfile.email);
+    setValue('phoneNumber', userProfile.phoneNumber);
+    setValue('about', userProfile.about);
+    //setValue('languages', userProfile.languages);
+    setValue('address', userProfile.address);
     
   }, [userProfile, setValue]);
 
