@@ -10,75 +10,92 @@ import Input from "@/shared/Input";
 import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
 import sessionState from "@/utils/sessionState";
+import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { setUserProfile, setAvatar } from '@/store/slices/userProfileSlice';
+import { setUserProfile, setAvatar, updateUserProfile } from '@/store/slices/userProfileSlice';
 
 const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
 
 export interface AccountPageProps {}
 export interface AccountFormInputs {
-  accountType: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  about: string;
-  languages: string[];
-  companyName: string;
-  address: string;
-  avatar: string;
+  accountType?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  about?: string;
+  languages?: string[];
+  companyName?: string;
+  address?: string;
+  avatar?: string;
 }
 
 const AccountPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-
-  const [loading, setLoading] = useState(false);
-  const [generalError, setGeneralError] = useState<string>("");
   
-  const [formData, setFormData] = useState({
-    firstName: userProfile.firstName || "",
-    lastName: userProfile.lastName || "",
-    email: userProfile.email || "",
-    phoneNumber: userProfile.phoneNumber || "",
-    about: userProfile.about || "",
-    languages: [],
-    companyName: "",
-    address: userProfile.address || "",
-    avatar: userProfile.avatar || "",
+  const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<AccountFormInputs>({
+    defaultValues: {
+      languages: []
+      //accountType: userProfile.accountType,
+      /* firstName: userProfile.firstName,
+      lastName: userProfile.lastName,
+      email: userProfile.email,
+      phoneNumber: userProfile.phoneNumber,
+      about: userProfile.about,
+      languages: userProfile.languages,
+      companyName: userProfile.companyName,
+      address: userProfile.address,
+      avatar: userProfile.avatar */
+    }
   });
 
-  const [fieldErrors, setFieldErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    languages: "",
-    address: "",
-  });
+  const [generalError, setGeneralError] = useState<string>("");
 
-  const languageOptions = [
-    { name: 'English', defaultChecked: false },
-    { name: 'Spanish', defaultChecked: false },
-    { name: 'French', defaultChecked: false },
-  ];
 
   // Set initial checked state for languages
-  languageOptions.forEach(option => {
-    option.defaultChecked = formData.languages.includes(option.name);
-  });
+  const languages = watch("languages", []);
 
+  const languageOptions = [
+    { name: 'English', defaultChecked: userProfile.languages.includes('English') },
+    { name: 'Spanish', defaultChecked: userProfile.languages.includes('Spanish') },
+    { name: 'French', defaultChecked: userProfile.languages.includes('French') },
+  ];
+  
+
+  // Load user data on page load
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    const loadUserData = async () => {
+      const data = await fetchUserData();
+      
+      if (data) {
+        console.log(data)
+        dispatch(setUserProfile(data));
+      }
+    };
+
+    loadUserData();
+  }, [dispatch]);
+
+  // Sync form with Redux state
+  useEffect(() => {
+    setValue('companyName', userProfile.companyName);
+    setValue('firstName', userProfile.firstName);
+    setValue('lastName', userProfile.lastName);
+    setValue('email', userProfile.email);
+    setValue('phoneNumber', userProfile.phoneNumber);
+    setValue('about', userProfile.about);
+    //setValue('languages', userProfile.languages);
+    setValue('address', userProfile.address);
+    
+  }, [userProfile, setValue]);
 
   const fetchUserData = async () => {
     try {
       const response = await fetch('/api/user-data?userId=' + sessionState.getUserId());
       if (response.ok) {
-        const data = await response.json();
-        dispatch(setUserProfile(data));
+        return await response.json();
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -114,75 +131,16 @@ const AccountPage = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setFieldErrors(prev => ({
-      ...prev,
-      [name]: ""
-    }));
-  };
-
-  const validateForm = () => {
-    const errors: any = {};
-    let isValid = true;
-
-    // Validate required fields
-    const requiredFields = ['firstName', 'lastName', 'email', 'phoneNumber'];
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        errors[field] = "This field is required";
-        isValid = false;
-      }
-    });
-
-    // Validate email format
-    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Please enter a valid email address";
-      isValid = false;
-    }
-
-    // Validate languages
-    if (formData.languages.length === 0) {
-      errors.languages = "Please select at least one language";
-      isValid = false;
-    }
-
-    setFieldErrors(errors);
-    return isValid;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setLoading(true);
+  const onUpdateSubmit = async (data: Partial<AccountFormInputs>) => {
     try {
-      const data = {
-        ...formData,
-        user_id: sessionState.getUserId()
-      };
-      
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`,
-        { data }
-      );
+      const userId = sessionState.getUserId();
+      await dispatch(updateUserProfile({ formData: data, userId })).unwrap();
 
-      if (response.status === 200) {
-        // Update session storage if needed
-        console.log("Profile updated successfully");
-      }
     } catch (error) {
-      console.error("Error updating profile:", error);
-      setGeneralError("Failed to update profile. Please try again.");
-    } finally {
-      setLoading(false);
+      console.error('Error updating profile:', error);
     }
   };
-
+ 
   return (
     <div className="space-y-6 sm:space-y-8">
       <h2 className="text-3xl font-semibold">Account information</h2>
@@ -222,131 +180,106 @@ const AccountPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+        <form onSubmit={handleSubmit(onUpdateSubmit)} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
           {generalError && <div className="text-red-600 text-sm">{generalError}</div>}
           
           <div>
             <Label>Company Name</Label>
             <Input 
               className="mt-1.5"
-              name="companyName"
-              value={formData.companyName}
-              onChange={handleInputChange}
+              { ...register("companyName", { required: "Company Name is required" }) }
             />
+            { errors.companyName && <div className="text-red-600 text-sm">{ errors.companyName.message }</div> }
           </div>
 
           <div>
             <Label>First Name</Label>
             <Input 
               className="mt-1.5"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
+              { ...register("firstName", { required: "First Name is required" }) }
             />
-            {fieldErrors.firstName && (
-              <p className="text-red-500 text-sm">{fieldErrors.firstName}</p>
-            )}
+            { errors.firstName && <div className="text-red-600 text-sm">{ errors.firstName.message }</div> }
           </div>
 
           <div>
             <Label>Last Name</Label>
             <Input 
               className="mt-1.5"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
+              { ...register("lastName", { required: "Last Name is required"}) }
             />
-            {fieldErrors.lastName && (
-              <p className="text-red-500 text-sm">{fieldErrors.lastName}</p>
-            )}
+            { errors.lastName && <div className="text-red-600 text-sm">{ errors.lastName.message }</div> }
           </div>
 
           <div>
             <Label>Email</Label>
             <Input 
               className="mt-1.5"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
+              { ...register("email", { required: "Email is required" }) }
             />
-            {fieldErrors.email && (
-              <p className="text-red-500 text-sm">{fieldErrors.email}</p>
-            )}
+            { errors.email && <div className="text-red-600 text-sm">{ errors.email.message }</div> }
           </div>
 
           <div>
             <Label>Address</Label>
             <Input 
               className="mt-1.5"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
+              { ...register("address", { required: "Address is required" }) }
             />
-            {fieldErrors.address && (
-              <p className="text-red-500 text-sm">{fieldErrors.address}</p>
-            )}
+            { errors.address && <div className="text-red-600 text-sm">{ errors.address.message }</div> }
           </div>
 
           <div>
             <Label>Phone number</Label>
             <Input 
               className="mt-1.5"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
+              { ...register("phoneNumber", { required: "Phone Number is required" }) }
             />
-            {fieldErrors.phoneNumber && (
-              <p className="text-red-500 text-sm">{fieldErrors.phoneNumber}</p>
-            )}
+            { errors.phoneNumber && <div className="text-red-600 text-sm">{ errors.phoneNumber.message }</div> }
           </div>
-
+          
           <div>
             <Label>Languages</Label>
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
-              <div className="flex flex-wrap space-y-5 pr-5 py-6">
+              <div className="flex flex-wrap gap-4 px-5 py-6">
                 {languageOptions.map((item) => (
-                  <div key={item.name} className="px-5">
-                    <Checkbox
-                      name={item.name}
-                      label={item.name}
-                      defaultChecked={item.defaultChecked}
-                      onChange={(checked) => {
-                        setFormData(prev => ({
-                          ...prev,
-                          languages: Array.isArray(prev.languages) && checked 
-                            ? [...prev.languages, item.name]
-                            : Array.isArray(prev.languages) 
-                              ? prev.languages.filter(lang => lang !== item.name)
-                              : [item.name]
-                        }));
-                        setFieldErrors(prev => ({
-                          ...prev,
-                          languages: ""
-                        }));
-                      }}
-                    />
-                  </div>
+                  <Controller
+                    key={item.name}
+                    name="languages"
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        name={item.name}
+                        label={item.name}
+                        checked={languages.includes(item.name)}
+                        onChange={(checked) => {
+                          const updatedLanguages = checked
+                            ? [...languages, item.name]
+                            : languages.filter((lang) => lang !== item.name);
+                          setValue("languages", updatedLanguages);
+                        }}
+                        className="flex items-center space-x-2"
+                      />
+                    )}
+                  />
                 ))}
               </div>
             </div>
-            {fieldErrors.languages && (
-              <p className="text-red-500 text-sm">{fieldErrors.languages}</p>
-            )}
+            { errors.languages && <div className="text-red-600 text-sm">{ errors.languages.message }</div> }
           </div>
 
           <div>
             <Label>About you</Label>
             <Textarea 
               className="mt-1.5"
-              name="about"
-              value={formData.about}
-              onChange={handleInputChange}
+              { ...register("about", { required: "About you is required" }) }
             />
+             { errors.about && <div className="text-red-600 text-sm">{ errors.about.message }</div> }
           </div>
 
           <div className="pt-2">
-            <ButtonPrimary type="submit" disabled={loading}>
-              {loading ? "Updating..." : "Update info"}
+            <ButtonPrimary type="submit" disabled={userProfile.isLoading}>
+              {userProfile.isLoading ? "Updating..." : "Update info"}
             </ButtonPrimary>
           </div>
         </form>
