@@ -11,6 +11,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { loginStart, loginSuccess, loginFailure } from '@/store/slices/LoginSlice';
+import { setUserProfile } from '@/store/slices/userProfileSlice';
 import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import Image from "next/image";
@@ -45,27 +46,27 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   const [generalError, setGeneralError] = useState("");
 
 	// need to put this into a global component
-	const redirect = () => {
-		const account_type = sessionState.getAccountType();
+	const redirect = (account_type: 'renter' | 'property' | 'default') => {
+    try {
+      switch (account_type) {
+        case 'renter':
+          return router.push("/listing-stay" as const);
+        case 'property':
+          return router.push("/author" as const);
+        default:
+          return router.push("/" as const);
+      }
+    } catch (error) {
+      console.error("Failed to redirect:", error);
+    }
+  };
 
-		switch(account_type) {
-			case 'renter':
-				router.push("/listing-stay" as any);
-			break;
-			case 'property':
-				router.push("/author" as any);
-			break;
-			default:
-				router.push("/" as any);
-		}
-	}
-
-  if (sessionStorage.getItem('user')){
+  /* if (sessionStorage.getItem('user')){
     console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
     redirect();
   } else {
     console.log("User is not logged, redirect from login page");
-  }
+  } */
  
 	const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
       setGeneralError('');
@@ -75,26 +76,21 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, data)
         .then((response) => {
           console.log("Response Received:");
-          console.log(response);
-
-          dispatch(loginSuccess(data));
+          console.log(response.data.account_type);
 
           switch(response.status) {
             case 200 :
-              console.log("Storing user to session storage");
-              sessionStorage.setItem('user', JSON.stringify(response.data));  
+              dispatch(loginSuccess(data));
+
+              dispatch(setUserProfile(response.data));
+              redirect( response.data.account_type ); 
+
+              //TODO: Use JWT
+
             break;
             default:
               alert("check login response an unknown error code received");
           }
-        }).then((response) => {
-          sessionState.init();
-        }).then((response) => {
-          console.log("Redirecting User to their landing page");
-        
-          // var timeout = redirect();
-          const myTimeout = setTimeout(redirect, 1000);
-          
         }).catch(function (error) {
           console.log("Error Received from login entry:");
           console.log(error.response.data.message);

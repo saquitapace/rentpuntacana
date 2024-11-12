@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Route } from "@/routers/types";
 import sessionState from "@/utils/sessionState";
 import { checkSession } from "../../../utils/checkSession";
+import { checkAuth } from "../../../utils/checkAuth";
 
 export interface HeaderProps {
   userStatus?: "userNotExist" | "userExist";
@@ -25,7 +26,7 @@ const Header: FC<HeaderProps> = ({ className = "" }) => {
   const [signupPrimary, setsignupPrimary] = useState("true");
   sessionState.init();
   const accountType = sessionState.getAccountType();
-  const userStatus = !checkSession() ? "userNotExist" : "userExist";
+  const userStatus = !checkAuth() ? "userNotExist" : "userExist";
 
   const handleSignInClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

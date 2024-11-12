@@ -1,6 +1,5 @@
 "use client";
 
-import { Tab } from "@headlessui/react";
 import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
@@ -8,66 +7,31 @@ import StayCard from "@/components/StayCard2";
 import {
   DEMO_STAY_LISTINGS,
 } from "@/data/listings";
-import React, { FC, Fragment, useState, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
-import sessionState from "../../utils/sessionState";
+
+import { useSelector } from "react-redux";
+import { getUserAvatar, getUserFullName, getUserLanguages,
+  getUserLoading, getUserAbout, getUserCreatedAt } from '@/store/slices/userProfileSlice';
+
 
 export interface AuthorPageProps {}
 
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
+  const fullName = useSelector(getUserFullName);
+  const avatar = useSelector(getUserAvatar);
+  const languages = useSelector(getUserLanguages);
+  const about = useSelector(getUserAbout);
+  const isLoading = useSelector(getUserLoading);
+  const dateJoined = useSelector(getUserCreatedAt);
 
-  const [imageUrl, setImageUrl] = useState<string>('');
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    address: "",
-    phoneNumber: "",
-    about: "",
-    avatar: "",
-  });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const fetchUserData = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
-      if (response.ok) {
-        const data = await response.json();
-        setUserData(data);
-        setImageUrl(data.avatar || `/images/avatars/default.png`);
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to fetch user data:', response.status, errorData);
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (!sessionStorage.getItem('user')){
-    console.log("user does not logged in redirect to home");
-    window.location.href = "/";
-  }
-  
-  const fullName = sessionState.getFullName();
-  const about = sessionState.getAbout();
-  const dateJoined = sessionState.getDateJoined();
-  const languages = sessionState.getLanguages();
-  
   const renderSidebar = () => {
     return (
       <div className=" w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
         <Avatar
-          imgUrl={imageUrl}
+          imgUrl={ avatar || `/images/avatars/default.png` }
           hasChecked
           hasCheckedClass="w-6 h-6 -top-0.5 right-2"
           sizeClass="w-28 h-28"

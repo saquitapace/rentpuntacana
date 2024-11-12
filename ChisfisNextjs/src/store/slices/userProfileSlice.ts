@@ -1,7 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { RootState } from '../store';
+import { getDateJoined } from "@/utils/helpers";
 
+//TODO: fields naming from API Endpoint
 interface UserProfileState {
+  userId: string;
   avatar: string;
   companyName: string;
   firstName: string;
@@ -11,11 +15,13 @@ interface UserProfileState {
   phoneNumber: string;
   about: string;
   languages: string[];
+  createdAt: string;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: UserProfileState = {
+  userId: '',
   avatar: '/images/avatars/default.png',
   companyName: '',
   firstName: '',
@@ -24,6 +30,7 @@ const initialState: UserProfileState = {
   address: '',
   phoneNumber: '',
   about: '',
+  createdAt: '',
   languages: [],
   isLoading: false,
   error: null
@@ -36,7 +43,7 @@ export const updateUserProfile = createAsyncThunk(
     try {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`,
-        { ...formData, user_id: userId }
+        { ...formData, userId: userId }
       );
 
       if (response.status === 200) {
@@ -78,6 +85,21 @@ const userProfileSlice = createSlice({
       });
   }
 });
+
+export const getUserId = (state: RootState) => state.userProfile.userId;
+export const getUserFullName = (state: RootState) => {
+  const { firstName, lastName } = state.userProfile;
+  return `${firstName} ${lastName}`.trim();
+};
+export const getUserAvatar = (state: RootState) => state.userProfile.avatar;
+export const getUserLanguages = (state: RootState) => state.userProfile.languages;
+export const getUserCompanyName = (state: RootState) => state.userProfile.companyName;
+export const getUserLoading = (state: RootState) => state.userProfile.isLoading;
+export const getUserAbout = (state: RootState) => state.userProfile.about;
+export const getUserCreatedAt = (state: RootState) => {
+  const { createdAt } = state.userProfile;
+  return getDateJoined( createdAt );
+};
 
 export const { setUserProfile, setAvatar } = userProfileSlice.actions;
 export default userProfileSlice.reducer;

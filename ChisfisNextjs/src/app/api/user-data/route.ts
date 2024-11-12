@@ -21,6 +21,7 @@ export async function GET(request: Request) {
     if (rows.length > 0) {
       const userData = rows[0];
       return NextResponse.json({
+        userId: userData.user_id,
         firstName: userData.first_name,
         lastName: userData.last_name,
         email: userData.email,
@@ -28,6 +29,8 @@ export async function GET(request: Request) {
         phoneNumber: userData.phone_number || '',
         about: userData.about || '',
         avatar: userData.avatar || '/images/avatars/default.png',
+        languages: userData.languages || '',
+        createdAt: userData.created_at || ''
       });
     } else {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });

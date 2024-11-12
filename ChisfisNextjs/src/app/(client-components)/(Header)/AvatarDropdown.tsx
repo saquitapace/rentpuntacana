@@ -23,6 +23,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
   const logout = () => {
     clearSession();
     dispatch(setUserProfile({
+      userId: '',
       avatar: '/images/avatars/default.png',
       firstName: '',
       lastName: '',
@@ -36,6 +37,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
   };
 
   useEffect(() => {
+    //TODO: fix when logged out
     fetchUserData();
   }, []);
 
@@ -44,6 +46,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
       const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
       if (response.ok) {
         const data = await response.json();
+        
         dispatch(setUserProfile(data));
       } else {
         const errorData = await response.json();
