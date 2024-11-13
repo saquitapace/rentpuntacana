@@ -5,12 +5,13 @@ import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import sessionState from "@/utils/sessionState";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { signUpUser, resetSignUpState } from "@/store/slices/signUpSlice";
-
+import { redirect } from "@/utils/helpers";
+import Cookies from "js-cookie";
+import { setUserProfile } from "@/store/slices/userProfileSlice";
 
 export interface PageSignUpProps {}
 export interface SignUpFormInputs {
@@ -56,12 +57,14 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
       // Check the response code or process based on the response content
       if (response.status === 200) {
         console.log("Storing user to session storage");
-        sessionStorage.setItem('user', JSON.stringify(response.data));
-  
-        sessionState.init();
-  
+
+        dispatch(setUserProfile(response.data));
+        router.push( redirect( response.data.account_type ) );
+
+        //TODO: Use JWT
+        Cookies.set('authToken', response.data.user_id, { expires: 1, secure: true });
+
         console.log("Redirecting User to their landing page");
-        redirect();
       } else {
         console.log("Unknown response code received during signup");
       }
@@ -72,24 +75,6 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
       setGeneralError(error.response?.data?.message || "An unknown error occurred during signup.");
     }
   };
-  
-  const redirect = () => {
-    const account_type = sessionState.getAccountType();
-
-    console.log("getaccounttype",sessionState.getAccountType());
-    console.log(account_type);
-
-    switch(account_type) {
-      case 'renter':
-        router.push("/listing-stay" as any); // Redirect to listing page
-        break;
-      case 'property':
-        router.push("/author" as any); // Redirect to listing page
-        break;
-      //default:
-        //router.push("/listing-stay" as any); // Redirect to listing page
-      }
-  }
 
   // Reset state and redirect after successful sign-up
   useEffect(() => {

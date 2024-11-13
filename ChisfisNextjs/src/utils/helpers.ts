@@ -9,3 +9,14 @@ export const getDateJoined = (dateString: string | null): string => {
   
   return `${month} ${year}`;
 };
+
+export const redirect = (account_type: 'renter' | 'property' | 'default') => {
+  switch (account_type) {
+    case 'renter':
+      return '/listing-stay';
+    case 'property':
+      return '/author';
+    default:
+      return '/';
+  }
+};

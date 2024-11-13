@@ -6,7 +6,6 @@ import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // useRouter is causing an issue in some place when the page isnt fully rendered.
-import sessionState from "../../utils/sessionState";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
@@ -16,6 +15,7 @@ import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import Image from "next/image";
 import Cookies from 'js-cookie';
+import { redirect } from "@/utils/helpers";
 
 export interface PageLoginProps {}
 export interface LoginFormInputs {
@@ -45,29 +45,6 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   const { isLoading, error } = useSelector((state: RootState) => state.login);
   
   const [generalError, setGeneralError] = useState("");
-
-	// need to put this into a global component
-	const redirect = (account_type: 'renter' | 'property' | 'default') => {
-    try {
-      switch (account_type) {
-        case 'renter':
-          return router.push("/listing-stay" as const);
-        case 'property':
-          return router.push("/author" as const);
-        default:
-          return router.push("/" as const);
-      }
-    } catch (error) {
-      console.error("Failed to redirect:", error);
-    }
-  };
-
-  /* if (sessionStorage.getItem('user')){
-    console.log("user is known; return/ redirect; doing this to prevent submit on refresh");
-    redirect();
-  } else {
-    console.log("User is not logged, redirect from login page");
-  } */
  
 	const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
       setGeneralError('');
@@ -84,7 +61,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               dispatch(loginSuccess(data));
 
               dispatch(setUserProfile(response.data));
-              redirect( response.data.account_type ); 
+              router.push( redirect( response.data.account_type ) );
 
               //TODO: Use JWT
               Cookies.set('authToken', response.data.user_id, { expires: 1, secure: true });
