@@ -6,7 +6,9 @@ import clearSession from "@/utils/clearSession";
 import sessionState from "@/utils/sessionState";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { setUserProfile } from '@/store/slices/userProfileSlice';
+import { setUserProfile, resetUserProfile } from '@/store/slices/userProfileSlice';
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -16,34 +18,34 @@ const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000
 
 export default function AvatarDropdown({ className = "" }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { avatar, firstName, lastName, address, isLoading } = useSelector(
+  const { userId, avatar, firstName, lastName, address, isLoading } = useSelector(
     (state: RootState) => state.userProfile
   );
 
+  const router = useRouter();
+  const authToken = Cookies.get('authToken');
+
   const logout = () => {
-    clearSession();
-    dispatch(setUserProfile({
-      userId: '',
-      avatar: '/images/avatars/default.png',
-      firstName: '',
-      lastName: '',
-      email: '',
-      address: '',
-      phoneNumber: '',
-      about: '',
-      loading: false,
-      error: null
-    }));
+    router.push("/login");
+    Cookies.remove('authToken');
+    dispatch(resetUserProfile());
   };
 
+  //checking auth here
   useEffect(() => {
-    //TODO: fix when logged out
-    fetchUserData();
-  }, []);
+    if (authToken) {
+      fetchUserData();
+    }
+    else
+    {
+      logout();
+    }
+  }, [authToken]);
+
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('/api/user-data?userId=M29SZDR4QDJBB6');
+      const response = await fetch(`/api/user-data?userId=${ authToken }`);
       if (response.ok) {
         const data = await response.json();
         

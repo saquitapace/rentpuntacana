@@ -67,7 +67,8 @@ const userProfileSlice = createSlice({
     },
     setAvatar: (state, action: PayloadAction<string>) => {
       state.avatar = action.payload;
-    }
+    },
+    resetUserProfile: () => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -101,5 +102,5 @@ export const getUserCreatedAt = (state: RootState) => {
   return getDateJoined( createdAt );
 };
 
-export const { setUserProfile, setAvatar } = userProfileSlice.actions;
+export const { setUserProfile, setAvatar, resetUserProfile } = userProfileSlice.actions;
 export default userProfileSlice.reducer;

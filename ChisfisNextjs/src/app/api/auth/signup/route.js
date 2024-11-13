@@ -33,7 +33,7 @@ export async function POST(request) {
     .substring(2, 8); // start at index 2 to skip decimal point
 
   const uniqueId = (dateStr+randomStr).toUpperCase();
-  const avatar = "http://localhost:8888/images/avatars/default.png";
+  const avatar = "http://localhost:3000/images/avatars/default.png";
   // Insert the new user into the database
   await pool.query('INSERT INTO login_cred (user_id, email, password) VALUES (?, ?, ?)', [uniqueId, email, hashedPassword]);
   await pool.query('INSERT INTO users (user_id, account_type, first_name, last_name, company_name, avatar) VALUES (?, ?, ?, ?, ?,?)', [uniqueId, accountType, firstName, lastName, companyName, avatar]);

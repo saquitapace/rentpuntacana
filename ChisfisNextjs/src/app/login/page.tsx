@@ -15,6 +15,7 @@ import { setUserProfile } from '@/store/slices/userProfileSlice';
 import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import Image from "next/image";
+import Cookies from 'js-cookie';
 
 export interface PageLoginProps {}
 export interface LoginFormInputs {
@@ -86,7 +87,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               redirect( response.data.account_type ); 
 
               //TODO: Use JWT
-
+              Cookies.set('authToken', response.data.user_id, { expires: 1, secure: true });
             break;
             default:
               alert("check login response an unknown error code received");

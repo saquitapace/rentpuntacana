@@ -8,6 +8,5 @@ export const checkAuth= () => {
 	//Testing purpose
 	const userId = useSelector(getUserId);
 
-	alert(userId)
 	return userId ? userId : null;
 };
