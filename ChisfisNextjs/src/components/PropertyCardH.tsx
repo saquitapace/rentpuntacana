@@ -79,7 +79,7 @@ const PropertyCardH: FC<PropertyCardHProps> = ({
             <i className="las la-expand-arrows-alt text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            1200 Sq. Fit
+            1200 M
           </span>
         </div>
       </div>

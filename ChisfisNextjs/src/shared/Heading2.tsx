@@ -9,7 +9,7 @@ export interface Heading2Props {
 
 const Heading2: React.FC<Heading2Props> = ({
   className = "",
-  heading = "All Property Listings",
+  heading = "All Property Listings (todo - SaQuita w.i.p)",
   subHeading = "",
 }) => {
   return (

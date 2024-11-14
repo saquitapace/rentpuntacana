@@ -26,21 +26,21 @@ const DEMO_DATA = [
   {
     id: 1,
     clientName: "Tiana Abie",
-    clientAddress: "Malaysia",
+    clientAddress: "Bavaro",
     content:
       "This place is exactly like the picture posted on Chisfis. Great service, we had a great stay!",
   },
   {
     id: 2,
     clientName: "Lennie Swiffan",
-    clientAddress: "London",
+    clientAddress: "White Sands",
     content:
       "This place is exactly like the picture posted on Chisfis. Great service, we had a great stay!",
   },
   {
     id: 3,
     clientName: "Berta Emili",
-    clientAddress: "Tokyo",
+    clientAddress: "Punta Cana",
     content:
       "This place is exactly like the picture posted on Chisfis. Great service, we had a great stay!",
   },
@@ -117,7 +117,7 @@ const SectionClientSay: FC<SectionClientSayProps> = ({
 
   return (
     <div className={`nc-SectionClientSay relative ${className} `}>
-      <Heading desc="Let's see what people think of Chisfis" isCenter>
+      <Heading desc="Let's see what people think of Rent Punta Cana" isCenter>
         Good news from far away
       </Heading>
       <div className="relative md:mb-16 max-w-2xl mx-auto">
