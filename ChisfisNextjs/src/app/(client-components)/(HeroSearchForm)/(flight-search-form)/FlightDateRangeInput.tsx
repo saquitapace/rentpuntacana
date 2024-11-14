@@ -14,14 +14,14 @@ export interface FlightDateRangeInputProps {
   className?: string;
   fieldClassName?: string;
   hasButtonSubmit?: boolean;
-  selectsRange?: boolean;
+  selectsRange?: false;
 }
 
 const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
   className = "",
   fieldClassName = "[ nc-hero-field-padding ]",
   hasButtonSubmit = true,
-  selectsRange = true,
+  selectsRange = false,
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(
     new Date("2023/05/01")
@@ -41,7 +41,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
           <CalendarIcon className="w-5 h-5 lg:w-7 lg:h-7" />
         </div>
         <div className="flex-grow text-left">
-          <span className="block xl:text-lg font-semibold">
+          <span className="block xl:text-sm font-semibold">
             {startDate?.toLocaleDateString("en-US", {
               month: "short",
               day: "2-digit",
@@ -55,7 +55,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               : ""}
           </span>
           <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-            {selectsRange ? "Pick up - Drop off" : "Pick up date"}
+            {selectsRange ? "Pick up - Drop off" : "Availability Date"}
           </span>
         </div>
       </>
@@ -85,11 +85,11 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               </Popover.Button>
 
               {/* BUTTON SUBMIT OF FORM */}
-              {hasButtonSubmit && (
+            {/*  {hasButtonSubmit && (
                 <div className="pr-2 xl:pr-4">
                   <ButtonSubmit href="/listing-car-detail" />
                 </div>
-              )}
+              )} */}
             </div>
 
             {open && (

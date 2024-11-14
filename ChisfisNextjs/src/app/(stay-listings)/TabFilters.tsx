@@ -1,6 +1,9 @@
 'use client'
 
 import { Fragment, useState } from 'react'
+import PriceRangeInput from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PriceRangeInput";
+import PropertyTypeSelect from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PropertyTypeSelect";
+
 import {
 	Dialog,
 	DialogTitle,
@@ -12,11 +15,16 @@ import {
 } from '@headlessui/react'
 import NcInputNumber from '@/components/NcInputNumber'
 import ButtonPrimary from '@/shared/ButtonPrimary'
+import ButtonSecondary from '@/shared/ButtonSecondary'
 import ButtonThird from '@/shared/ButtonThird'
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import ButtonClose from '@/shared/ButtonClose'
 import Checkbox from '@/shared/Checkbox'
+import FlightDateRangeInput from "../(client-components)/(HeroSearchForm)/(flight-search-form)/FlightDateRangeInput";
+import { usePathname } from 'next/navigation'
 import Slider from 'rc-slider'
 import Link from 'next/link'
+
 import convertNumbThousand from '@/utils/convertNumbThousand'
 
 // DEMO DATA
@@ -80,7 +88,6 @@ const TabFilters = () => {
 	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false)
 	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false)
 	const [rangePrices, setRangePrices] = useState([0, 1000])
-
 	//
 	const closeModalMoreFilter = () => setisOpenMoreFilter(false)
 	const openModalMoreFilter = () => setisOpenMoreFilter(true)
@@ -672,18 +679,49 @@ const TabFilters = () => {
 		)
 	}
 
+	const renderViewAllButton = () => {
+		return(
+			<div className="hidden sm:block flex-shrink-0">
+				<ButtonSecondary href="/listing-stay-map" className="!leading-none">
+					<div className="flex items-center justify-center self-end">
+					<span>View all</span>
+					<ArrowRightIcon className="w-5 h-5 ml-3" />
+					</div>
+				</ButtonSecondary>
+			</div>
+		)
+	}
+
+	const renderMapViewToggle = () => {
+		return(
+			<><Link href="/listing-stay-map">map view</Link><Link href="/listing-stay">close view</Link></>
+		)
+	}
+
+	const pathname = usePathname();   
+
+		{/*<form className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center rounded-3xl lg:rounded-full shadow-xl dark:shadow-2xl bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
+*/}
 	return (
-		<div className="flex lg:space-x-4">
-			<div className="hidden space-x-4 lg:flex">
-				{renderTabsTypeOfPlace()}
-				{renderTabsPriceRage()}
+
+		<div className="space-x-2 w-full relative shadow-xl dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0 ">
+			<div className="hidden space-x-2 lg:flex">
+				<PropertyTypeSelect />
+        		<PriceRangeInput />
 				{renderTabsRoomAndBeds()}
 				{renderTabMoreFilter()}
-				<Link href="/listing-stay-map">map view</Link>
-				<Link href="/listing-stay">close view</Link>
-
-			</div>
-			{renderTabMoreFilterMobile()}
+				<FlightDateRangeInput />
+				<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
+				</div>
+				{pathname=="/" ? (
+					
+					renderViewAllButton()
+				) : (
+					""
+				)}
+					</div>	
+				
+				{renderTabMoreFilterMobile()}
 		</div>
 	)
 }

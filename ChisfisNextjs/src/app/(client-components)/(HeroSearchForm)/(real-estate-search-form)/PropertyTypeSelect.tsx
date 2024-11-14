@@ -64,7 +64,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
               <HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" />
             </div>
             <div className="flex-1">
-              <span className="block xl:text-lg font-semibold overflow-hidden">
+              <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
                   {typeOfPropertyText || `Type`}
                 </span>

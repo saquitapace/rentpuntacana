@@ -35,21 +35,21 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
                 <CurrencyDollarIcon className="w-5 h-5 lg:w-7 lg:h-7" />
               </div>
               <div className="flex-grow">
-                <span className="block xl:text-lg font-semibold truncate">
+                <span className="block xl:text-sm font-semibold truncate">
                   {`$${convertNumbThousand(
                     rangePrices[0] / 1000
                   )}k ~ $${convertNumbThousand(rangePrices[1] / 1000)}k`}
                 </span>
                 <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
-                  Choose price range
+                 Price range
                 </span>
               </div>
             </Popover.Button>
 
             {/* BUTTON SUBMIT OF FORM */}
-            <div className="pr-2 xl:pr-4">
+          {/*  <div className="pr-2 xl:pr-4">
               <ButtonSubmit href="/listing-real-estate" />
-            </div>
+            </div> */}
           </div>
 
           {open && (

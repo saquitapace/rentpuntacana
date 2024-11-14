@@ -4,8 +4,8 @@ import React, { FC, useState } from "react";
 import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import SearchDropdown from "./SearchDropdown";
+import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import ButtonSecondary from "@/shared/ButtonSecondary";
 import MenuBar from "@/shared/MenuBar";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdown from "./LangDropdown";
@@ -55,24 +55,13 @@ const Header: FC<HeaderProps> = ({ className = "" }) => {
              
               <div className="hidden xl:flex space-x-0.5">
                 <div className="px-1" />
-                {signupPrimary === "true" ? (
+                  <Button className="self-center" href="/login" onClick={() => setsignupPrimary("false")}>
+                    Sign In
+                  </Button>
+
                   <ButtonPrimary className="self-center" href="/signup" onClick={() => setsignupPrimary("true")}>
                     Sign Up
                   </ButtonPrimary>
-                ) : (
-                  <ButtonSecondary className="self-center" href="/signup" onClick={() => setsignupPrimary("true")}>
-                    Sign Up
-                  </ButtonSecondary>
-                )}
-                {signupPrimary === "true" ? (
-                  <ButtonSecondary className="self-center" href="/login" onClick={() => setsignupPrimary("false")}>
-                    Sign In
-                  </ButtonSecondary>
-                ) : (
-                  <ButtonPrimary className="self-center" href="/login" onClick={() => setsignupPrimary("false")}>
-                    Sign In
-                  </ButtonPrimary>
-                )}
               </div>
             ) : (
               
