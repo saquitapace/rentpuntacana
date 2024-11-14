@@ -14,7 +14,6 @@ import AvatarDropdown from "./AvatarDropdown";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import sessionState from "@/utils/sessionState";
-import { checkSession } from "../../../utils/checkSession";
 import { checkAuth } from "../../../utils/checkAuth";
 
 export interface HeaderProps {

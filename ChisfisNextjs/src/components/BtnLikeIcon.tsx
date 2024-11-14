@@ -35,7 +35,6 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
       console.log("Response Received:");
       console.log(response);
       setLikedState(!likedState);
-      //sessionState.updateData('likes',response.data)
 
     }).catch(function (error) {
       console.log("Error Received from post Like");

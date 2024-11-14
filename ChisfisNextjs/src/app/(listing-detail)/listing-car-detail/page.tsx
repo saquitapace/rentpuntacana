@@ -16,7 +16,6 @@ import { Amenities_demos, includes_demo, PHOTOS } from "./constant";
 import LikeSaveBtns from "@/components/LikeSaveBtns";
 import { usePathname, useRouter } from "next/navigation";
 import SectionDateRange from "../SectionDateRange";
-import RentalCarDatesRangeInput from "./RentalCarDatesRangeInput";
 import { Route } from "next";
 
 export interface ListingCarDetailPageProps {}
@@ -379,7 +378,6 @@ const ListingCarDetailPage: FC<ListingCarDetailPageProps> = ({}) => {
 
         {/* FORM */}
         <form className="border border-neutral-200 dark:border-neutral-700 rounded-2xl">
-          <RentalCarDatesRangeInput />
         </form>
 
         {/* SUM */}

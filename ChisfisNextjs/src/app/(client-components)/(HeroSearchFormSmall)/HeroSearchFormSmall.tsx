@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState } from "react";
 import { StaySearchFormFields } from "../type";
 import StaySearchForm from "./(stay-search-form)/StaySearchForm";
 
-export type SearchTab = "Stays" | "Experiences" | "Cars" | "Flights";
+export type SearchTab = "Stays" | "Experiences" | "Flights";
 
 export interface HeroSearchFormSmallProps {
   className?: string;
@@ -12,7 +12,7 @@ export interface HeroSearchFormSmallProps {
   onTabChange?: (tab: SearchTab) => void;
   defaultFieldFocus?: StaySearchFormFields;
 }
-const TABS: SearchTab[] = ["Stays", "Experiences", "Cars", "Flights"];
+const TABS: SearchTab[] = ["Stays", "Experiences", "Flights"];
 
 const HeroSearchFormSmall: FC<HeroSearchFormSmallProps> = ({
   className = "",

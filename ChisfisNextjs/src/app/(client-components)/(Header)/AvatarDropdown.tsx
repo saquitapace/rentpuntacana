@@ -2,8 +2,6 @@ import { Popover, Transition } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
 import Link from "next/link";
-import clearSession from "@/utils/clearSession";
-import sessionState from "@/utils/sessionState";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { setUserProfile, resetUserProfile } from '@/store/slices/userProfileSlice';

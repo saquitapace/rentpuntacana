@@ -4,10 +4,9 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { PathName } from "@/routers/types";
 import Link from "next/link";
 import Header from "./Header";
-import Header3 from "./Header3";
 import { usePathname } from "next/navigation";
 
-export type SiteHeaders = "Header 1" | "Header 2" | "Header 3";
+export type SiteHeaders = "Header 1" | "Header 2";
 
 interface HomePageItem {
   name: string;
@@ -21,7 +20,6 @@ let OPTIONS = {
 };
 let OBSERVER: IntersectionObserver | null = null;
 const PAGES_HIDE_HEADER_BORDER: PathName[] = [
-  "/home-3",
   "/listing-car-detail",
   "/listing-experiences-detail",
   "/listing-stay-detail",
@@ -30,12 +28,11 @@ const PAGES_HIDE_HEADER_BORDER: PathName[] = [
 const SiteHeader = () => {
   const anchorRef = useRef<HTMLDivElement>(null);
 
-  let [headers] = useState<SiteHeaders[]>(["Header 1", "Header 2", "Header 3"]);
+  let [headers] = useState<SiteHeaders[]>(["Header 1", "Header 2"]);
 
   let [homePages] = useState<HomePageItem[]>([
     { name: "Home Main", slug: "/" },
     { name: "Real Estate", slug: "/home-2" },
-    { name: "Home 3", slug: "/home-3" },
   ]);
   const [headerSelected, setHeaderSelected] = useState<SiteHeaders>("Header 1");
 
@@ -129,10 +126,6 @@ const SiteHeader = () => {
         return <Header className={headerClassName} navType="MainNav1" />;
       case "Header 2":
         return <Header className={headerClassName} navType="MainNav2" />;
-      case "Header 3":
-        return <Header3 className={headerClassName} />;
-        default:
-        return <Header3 className={headerClassName} />;
     }
   };
 
