@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { signUpUser, resetSignUpState } from "@/store/slices/signUpSlice";
 import { redirect } from "@/utils/helpers";
+import facebookSvg from "@/images/Facebook.svg";
+import googleSvg from "@/images/Google.svg";
+import Image from "next/image";
+
 import Cookies from "js-cookie";
 import { setUserProfile } from "@/store/slices/userProfileSlice";
 
@@ -24,6 +28,18 @@ export interface SignUpFormInputs {
   confirmPassword: string,
 }
 
+const loginSocials = [
+  {
+    name: "Continue with Facebook",
+    href: "#",
+    icon: facebookSvg,
+  },
+  {
+    name: "Continue with Google",
+    href: "#",
+    icon: googleSvg,
+  },
+];
 
 const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const router = useRouter();
@@ -87,12 +103,44 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
   return (
     <div className={`nc-PageSignUp`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
           Sign Up
         </h2>
-        <div className="max-w-md mx-auto space-y-6 ">
+
+        <div className="max-w-md mx-auto space-y-6">
+
+        <div className="grid gap-3">
+            {loginSocials.map((item, index) => (
+              <a
+                key={index}
+                href={item.href}
+                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+              >
+                <Image
+                  className="flex-shrink-0"
+                  src={item.icon}
+                  alt={item.name}
+                />
+                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                  {item.name}
+                </h3>
+              </a>
+            ))}
+            <div>
+        </div>
+          </div>
+          {/* OR */}
+          <div className="relative text-center">
+            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
+              OR
+            </span>
+            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
+          </div>
+          {/* FORM */}
+
           {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
-          <form onSubmit={ handleSubmit( handleSignup ) } className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6" method="post">
+          <form onSubmit={ handleSubmit( handleSignup ) } 
+          className="grid grid-cols-1 gap-6" method="post">
               <label className="block">
                 <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                   Account Type

@@ -8,13 +8,14 @@ import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import MenuBar from "@/shared/MenuBar";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
-import LangDropdown from "./LangDropdown";
+import LangDropdownSingle from "./LangDropdownSingle";
 import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import sessionState from "@/utils/sessionState";
 import { checkAuth } from "../../../utils/checkAuth";
+import { usePathname } from 'next/navigation';
 
 export interface HeaderProps {
   userStatus?: "userNotExist" | "userExist";
@@ -26,6 +27,8 @@ const Header: FC<HeaderProps> = ({ className = "" }) => {
   sessionState.init();
   const accountType = sessionState.getAccountType();
   const userStatus = !checkAuth() ? "userNotExist" : "userExist";
+	
+  const pathname = usePathname();
 
   const handleSignInClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,36 +39,42 @@ const Header: FC<HeaderProps> = ({ className = "" }) => {
       <div className={`relative z-10 ${className}`}>
         <div className="px-4 lg:container h-20 flex justify-between">
           
-          
           <div className="hidden md:flex justify-start flex-1 space-x-4 sm:space-x-10">
             <Logo className="w-24 self-center" />
-            <div className="hidden lg:block self-center h-10 border-l border-neutral-300 dark:border-neutral-500"></div>
-            <Navigation />
+            {/*<div className="hidden lg:block self-center h-10 border-l border-neutral-300 dark:border-neutral-500"></div> */}
+            {/* <Navigation /> */}
           </div>
 
-          
           <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
             <HeroSearchForm2MobileFactory />
           </div>
-
           
-          <div className="hidden md:flex flex-shrink-0 justify-end flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
+          <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
+           
+            {(pathname == "/login" || pathname == "/signup") ? (
+              ""
+            ) : (
+              <LangDropdownSingle />
+            )}
+
             {userStatus === "userNotExist" ? (
              
               <div className="hidden xl:flex space-x-0.5">
                 <div className="px-1" />
-                  <Button className="self-center" href="/login" onClick={() => setsignupPrimary("false")}>
+              
+                {pathname == "/" ? (
+                  <><Button className="self-center block" href="/login" onClick={() => setsignupPrimary("false")}>
                     Sign In
-                  </Button>
-
-                  <ButtonPrimary className="self-center" href="/signup" onClick={() => setsignupPrimary("true")}>
-                    Sign Up
-                  </ButtonPrimary>
+                  </Button><ButtonPrimary className="self-center" href="/signup" onClick={() => setsignupPrimary("true")}>
+                      Sign Up
+                  </ButtonPrimary></>
+                    ) : (
+                      ""
+                )}
               </div>
             ) : (
               
-              <div className="hidden lg:flex space-x-1">
-                <LangDropdown />
+              <div className="hidden lg:flex space-x-1">                
                 {accountType === "property" && (
                   <Link
                     href={"/add-listing" as Route<string>}

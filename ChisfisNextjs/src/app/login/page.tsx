@@ -84,7 +84,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
           Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
@@ -138,7 +138,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Password
-                <Link href="/forgotPassword" className="text-sm underline font-medium">
+                <Link href="/forgotPassword" className="text-sm">
                   Forgot password?
                 </Link>
               </span>

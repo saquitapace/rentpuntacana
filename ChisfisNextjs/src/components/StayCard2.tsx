@@ -80,7 +80,7 @@ const StayCard2: FC<StayCard2Props> = ({
             <i className="las la-expand-arrows-alt text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            1200 M
+          1200 m<sup>2</sup>
           </span>
         </div>
       </div>
