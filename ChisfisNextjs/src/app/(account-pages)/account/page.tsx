@@ -9,11 +9,11 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
-import sessionState from "@/utils/sessionState";
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { setUserProfile, setAvatar, updateUserProfile } from '@/store/slices/userProfileSlice';
+import { useSession } from "next-auth/react";
 
 const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
 
@@ -34,6 +34,8 @@ export interface AccountFormInputs {
 const AccountPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userProfile = useSelector((state: RootState) => state.userProfile);
+  const { data: session, update: updateSession } = useSession();
+  const user = session?.user;
   
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<AccountFormInputs>({
     defaultValues: {
@@ -64,36 +66,55 @@ const AccountPage = () => {
   ];
   
 
-  // Load user data on page load
+  // Update this useEffect to sync with session data
+  useEffect(() => {
+    if (user) {
+      // Update Redux store with session data
+      dispatch(setUserProfile({
+        userId: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        accountType: user.account_type,
+        avatar: user.avatar,
+        // Set other fields with defaults if they don't exist in session
+        phoneNumber: userProfile.phoneNumber || '',
+        about: userProfile.about || '',
+        languages: userProfile.languages || [],
+        companyName: userProfile.companyName || '',
+        address: userProfile.address || '',
+      }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, dispatch]);
+
+  // Load additional user data if needed
   useEffect(() => {
     const loadUserData = async () => {
-      const data = await fetchUserData();
-      
-      if (data) {
-        console.log(data)
-        dispatch(setUserProfile(data));
+      if (user?.id) {
+        const data = await fetchUserData();
+        if (data) {
+          dispatch(setUserProfile({
+            ...data,
+            // Preserve session data
+            userId: user.id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+            accountType: user.account_type,
+            avatar: user.avatar,
+          }));
+        }
       }
     };
 
     loadUserData();
-  }, [dispatch]);
-
-  // Sync form with Redux state
-  useEffect(() => {
-    setValue('companyName', userProfile.companyName);
-    setValue('firstName', userProfile.firstName);
-    setValue('lastName', userProfile.lastName);
-    setValue('email', userProfile.email);
-    setValue('phoneNumber', userProfile.phoneNumber);
-    setValue('about', userProfile.about);
-    //setValue('languages', userProfile.languages);
-    setValue('address', userProfile.address);
-    
-  }, [userProfile, setValue]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('/api/user-data?userId=' + sessionState.getUserId());
+      const response = await fetch('/api/user-data?userId=' + user?.id);
       if (response.ok) {
         return await response.json();
       }
@@ -105,35 +126,60 @@ const AccountPage = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      const uniqueId = uuidv4();
-      const fileName = `UserProfilePhoto-${uniqueId}.png`;
+      
+      // Create filename using user ID for consistency
+      const fileName = `UserProfile_${user?.id}.png`;
       const filePath = `/images/avatars/${fileName}`;
+      
+      // Create local URL for immediate display
+      const localUrl = URL.createObjectURL(file);
+      
+      // Update Redux immediately for instant UI feedback
+      dispatch(setAvatar(localUrl));
       
       const formData = new FormData();
       formData.append('avatar', file);
       formData.append('filePath', filePath);
 
       try {
-        const response = await fetch('/api/update-avatar', {
+        // Start the upload in the background
+        const uploadPromise = fetch('/api/update-avatar', {
           method: 'POST',
           body: formData,
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          dispatch(setAvatar(data.avatarUrl));
-        } else {
-          console.error('Failed to update avatar');
+        // Update session in parallel
+        const sessionPromise = updateSession({
+          ...session,
+          user: {
+            ...session?.user,
+            avatar: filePath // Use the expected final path
+          }
+        });
+
+        // Wait for both operations to complete
+        const [response] = await Promise.all([uploadPromise, sessionPromise]);
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Failed to update avatar:', error);
+          // Revert Redux state on error
+          dispatch(setAvatar(user?.avatar || ''));
         }
+
+        // Clean up local URL
+        URL.revokeObjectURL(localUrl);
       } catch (error) {
         console.error('Error updating avatar:', error);
+        // Revert Redux state on error
+        dispatch(setAvatar(user?.avatar || ''));
       }
     }
   };
 
   const onUpdateSubmit = async (data: Partial<AccountFormInputs>) => {
     try {
-      const userId = sessionState.getUserId();
+      const userId = user.id;
       await dispatch(updateUserProfile({ formData: data, userId })).unwrap();
 
     } catch (error) {
@@ -247,25 +293,31 @@ const AccountPage = () => {
                     name="languages"
                     control={control}
                     render={({ field }) => (
-                      <Checkbox
-                        {...field}
-                        name={item.name}
-                        label={item.name}
-                        checked={languages.includes(item.name)}
-                        onChange={(checked) => {
-                          const updatedLanguages = checked
-                            ? [...languages, item.name]
-                            : languages.filter((lang) => lang !== item.name);
-                          setValue("languages", updatedLanguages);
-                        }}
-                        className="flex items-center space-x-2"
-                      />
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={item.name}
+                          checked={languages.includes(item.name)}
+                          onChange={(e) => {
+                            const updatedLanguages = e.target.checked
+                              ? [...languages, item.name]
+                              : languages.filter((lang) => lang !== item.name);
+                            setValue("languages", updatedLanguages);
+                          }}
+                          className="form-checkbox h-5 w-5 text-primary-600"
+                        />
+                        <label htmlFor={item.name} className="text-sm font-medium">
+                          {item.name}
+                        </label>
+                      </div>
                     )}
                   />
                 ))}
               </div>
             </div>
-            { errors.languages && <div className="text-red-600 text-sm">{ errors.languages.message }</div> }
+            {errors.languages && (
+              <div className="text-red-600 text-sm">{errors.languages.message}</div>
+            )}
           </div>
 
           <div>

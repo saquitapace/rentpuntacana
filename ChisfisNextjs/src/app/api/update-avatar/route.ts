@@ -1,36 +1,74 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
+import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
 import pool from '@/lib/db';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '../auth/[...nextauth]/route'
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  const file = formData.get('avatar') as File;
-  const filePath = formData.get('filePath') as string;
-
-  if (!file || !filePath) {
-    return NextResponse.json({ error: 'No file uploaded or file path missing' }, { status: 400 });
-  }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = new Uint8Array(bytes);
-
-  const fullPath = path.join(process.cwd(), 'public', filePath);
-  
   try {
-    await writeFile(fullPath, buffer);
-    
-    // Update the user's avatar URL in the database
-    const connection = await pool.getConnection();
-    await connection.query(
-      'UPDATE users SET avatar = ? WHERE user_id = ?',
-      [filePath, 'M29SZDR4QDJBB6'] // Replace 'M29SZDR4QDJBB6' with the actual user ID for Toni Stewart
-    );
-    connection.release();
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    return NextResponse.json({ avatarUrl: filePath });
+    const formData = await request.formData();
+    const file = formData.get('avatar') as File;
+    const filePath = formData.get('filePath') as string;
+
+    if (!file || !filePath) {
+      return NextResponse.json({ error: 'Missing file or path' }, { status: 400 });
+    }
+
+    const fullPath = path.join(process.cwd(), 'public', filePath);
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Delete old avatar if it exists
+    const [rows] = await pool.execute(
+      'SELECT avatar FROM users WHERE user_id = ?',
+      [session.user.id]
+    );
+    const currentAvatar = (rows as any[])[0]?.avatar;
+
+    if (currentAvatar && 
+        currentAvatar !== '/images/avatars/default.png' && 
+        currentAvatar.startsWith('/images/avatars/')) {
+      try {
+        await unlink(path.join(process.cwd(), 'public', currentAvatar));
+      } catch (error) {
+        console.error('Error deleting old avatar:', error);
+      }
+    }
+
+    // Save new avatar
+    await writeFile(fullPath, new Uint8Array(buffer));
+
+    // Update database
+    const connection = await pool.getConnection();
+    try {
+      await connection.execute(
+        'UPDATE users SET avatar = ? WHERE user_id = ?',
+        [filePath, session.user.id]
+      );
+
+      // Update session data
+      session.user.avatar = filePath;
+
+      return NextResponse.json({ 
+        success: true,
+        avatarUrl: filePath,
+        message: 'Avatar updated successfully',
+        user: session.user
+      });
+    } finally {
+      connection.release();
+    }
   } catch (error) {
     console.error('Error saving file or updating database:', error);
-    return NextResponse.json({ error: 'Error saving file or updating database' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Error saving file or updating database' }, 
+      { status: 500 }
+    );
   }
 }

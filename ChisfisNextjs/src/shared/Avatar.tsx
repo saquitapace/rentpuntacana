@@ -1,6 +1,7 @@
+"use client";
+
 import { avatarColors } from "@/contains/contants";
-import React, { FC } from "react";
-import avatar1 from "@/images/avatars/default.png"; // Local fallback
+import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 
 export interface AvatarProps {
@@ -23,40 +24,88 @@ const Avatar: FC<AvatarProps> = ({
   hasChecked,
   hasCheckedClass = "w-4 h-4 -top-0.5 -right-0.5",
 }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | StaticImageData | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (imgUrl) {
+      setIsLoading(true);
+      const urlString = typeof imgUrl === 'string' ? imgUrl : imgUrl.src;
+      
+      if (urlString.startsWith('/images/avatars/')) {
+        setImageSrc(`${urlString}?t=${new Date().getTime()}`);
+        setImageError(false);
+      } else {
+        setImageSrc(urlString);
+        setImageError(false);
+      }
+    }
+  }, [imgUrl]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/images/avatars/')) {
+      interval = setInterval(() => {
+        setImageSrc(`${imageSrc.split('?')[0]}?t=${new Date().getTime()}`);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [imageSrc]);
+
   const name = userName || "John Doe";
   const _setBgColor = (name: string) => {
     const backgroundIndex = Math.floor(name.charCodeAt(0) % avatarColors.length);
     return avatarColors[backgroundIndex];
   };
 
+  const handleImageError = () => {
+    console.log('Image failed to load:', imageSrc);
+    setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div
       className={`wil-avatar relative flex-shrink-0 inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
-      style={{ backgroundColor: imgUrl ? undefined : _setBgColor(name) }}
+      style={{ backgroundColor: imageError ? _setBgColor(name) : undefined }}
     >
-      {imgUrl ? (
-        <Image
-          className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={typeof imgUrl === "string" ? imgUrl : avatar1} // Handle string URLs and default fallback
-          alt={name}
-          width={100}
-          height={100}
-        />
+      {imageSrc && !imageError ? (
+        <>
+          <Image
+            className={`absolute inset-0 w-full h-full object-cover ${radius} ${
+              isLoading ? 'opacity-0' : 'opacity-100'
+            } transition-opacity duration-200`}
+            src={imageSrc}
+            alt={name}
+            width={100}
+            height={100}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            priority
+            unoptimized
+          />
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center text-sm">
+              <span className="animate-pulse">Loading...</span>
+            </div>
+          )}
+        </>
       ) : (
-        <Image
-          className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={avatar1}
-          alt={name}
-          width={100}
-          height={100}
-        />
+        <span className="wil-avatar__name">{name[0]}</span>
       )}
-      <span className="wil-avatar__name">{name[0]}</span>
 
       {hasChecked && (
-        <span
-          className={` bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute ${hasCheckedClass}`}
-        >
+        <span className={`bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute ${hasCheckedClass}`}>
           <i className="las la-check"></i>
         </span>
       )}
