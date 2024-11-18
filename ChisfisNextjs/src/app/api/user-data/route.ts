@@ -22,6 +22,7 @@ export async function GET(request: Request) {
       const userData = rows[0];
       return NextResponse.json({
         userId: userData.user_id,
+        accountType: userData.account_type,
         firstName: userData.first_name,
         lastName: userData.last_name,
         email: userData.email,

@@ -1,5 +1,4 @@
 import { Poppins } from 'next/font/google'
-import SiteHeader from './(client-components)/(Header)/SiteHeader'
 import ClientCommons from './ClientCommons'
 import './globals.css'
 import '@/fonts/line-awesome-1.3.0/css/line-awesome.css'
@@ -37,7 +36,6 @@ export default function RootLayout({
 			<ThemeProvider>
 				<body className="bg-white text-base text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200">
 					<div>
-						{/* <SiteHeader /> */}
 						<NewHeader/>
 						{children}
 						<FooterNav />

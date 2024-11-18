@@ -6,19 +6,16 @@ import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import Link from "next/link";
-import TemplatesDropdown from "./TemplatesDropdown";
 import { Route } from "@/routers/types";
-import sessionState from "@/utils/sessionState";
 import Navigation from "@/shared/Navigation/Navigation";
 
 export interface MainNav2Props {
   className?: string;
 }
 
-const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
-
-  sessionState.init();
-  const accountType = sessionState.getAccountType();
+const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {  
+  
+  const accountType =null;
   
   return (
     <div className={`MainNav2 relative z-10 ${className}`}>
