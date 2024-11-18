@@ -2,18 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import axios from "axios";
 import Label from "@/components/Label";
 import Avatar from "@/shared/Avatar";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
-import sessionState from "@/utils/sessionState";
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { setUserProfile, setAvatar, updateUserProfile } from '@/store/slices/userProfileSlice';
+import { setUserProfile, setAvatar, updateUserProfile, getUserId, getUserFullName, getUserLanguages, getUserLoading, getUserAbout, getUserCreatedAt, getUserAvatar } from '@/store/slices/userProfileSlice';
+
 
 const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
 
@@ -38,18 +37,15 @@ const AccountPage = () => {
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<AccountFormInputs>({
     defaultValues: {
       languages: []
-      //accountType: userProfile.accountType,
-      /* firstName: userProfile.firstName,
-      lastName: userProfile.lastName,
-      email: userProfile.email,
-      phoneNumber: userProfile.phoneNumber,
-      about: userProfile.about,
-      languages: userProfile.languages,
-      companyName: userProfile.companyName,
-      address: userProfile.address,
-      avatar: userProfile.avatar */
     }
   });
+
+  const userId = useSelector(getUserId);
+  const fullName = useSelector(getUserFullName);
+  const avatar = useSelector(getUserAvatar);
+  const about = useSelector(getUserAbout);
+  const isLoading = useSelector(getUserLoading);
+  const dateJoined = useSelector(getUserCreatedAt);
 
   const [generalError, setGeneralError] = useState<string>("");
 
@@ -86,14 +82,16 @@ const AccountPage = () => {
     setValue('email', userProfile.email);
     setValue('phoneNumber', userProfile.phoneNumber);
     setValue('about', userProfile.about);
+    //TODO: languages + update api
     //setValue('languages', userProfile.languages);
+    setValue('languages', userProfile.languages);
     setValue('address', userProfile.address);
     
   }, [userProfile, setValue]);
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('/api/user-data?userId=' + sessionState.getUserId());
+      const response = await fetch('/api/user-data?userId=' + userId);
       if (response.ok) {
         return await response.json();
       }
@@ -133,7 +131,6 @@ const AccountPage = () => {
 
   const onUpdateSubmit = async (data: Partial<AccountFormInputs>) => {
     try {
-      const userId = sessionState.getUserId();
       await dispatch(updateUserProfile({ formData: data, userId })).unwrap();
 
     } catch (error) {
@@ -149,9 +146,9 @@ const AccountPage = () => {
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
             <Avatar 
-              imgUrl={userProfile.avatar} 
+              imgUrl={avatar} 
               sizeClass="w-32 h-32"
-              userName={`${userProfile.firstName} ${userProfile.lastName}`}
+              userName={`${fullName}`}
             />
             <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
               <svg
@@ -278,8 +275,8 @@ const AccountPage = () => {
           </div>
 
           <div className="pt-2">
-            <ButtonPrimary type="submit" disabled={userProfile.isLoading}>
-              {userProfile.isLoading ? "Updating..." : "Update info"}
+            <ButtonPrimary type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update info"}
             </ButtonPrimary>
           </div>
         </form>

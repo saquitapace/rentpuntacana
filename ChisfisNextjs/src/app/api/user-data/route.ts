@@ -25,6 +25,7 @@ export async function GET(request: Request) {
         firstName: userData.first_name,
         lastName: userData.last_name,
         email: userData.email,
+        companyName: userData.company_name,
         address: userData.address || '',
         phoneNumber: userData.phone_number || '',
         about: userData.about || '',

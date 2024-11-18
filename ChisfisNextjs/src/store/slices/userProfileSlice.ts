@@ -88,10 +88,13 @@ const userProfileSlice = createSlice({
 });
 
 export const getUserId = (state: RootState) => state.userProfile.userId;
+export const getUserFirstName = (state: RootState) => state.userProfile.firstName;
+export const getUserLastName = (state: RootState) => state.userProfile.lastName;
 export const getUserFullName = (state: RootState) => {
   const { firstName, lastName } = state.userProfile;
   return `${firstName} ${lastName}`.trim();
 };
+export const getUserEmail = (state: RootState) => state.userProfile.email;
 export const getUserAvatar = (state: RootState) => state.userProfile.avatar;
 export const getUserLanguages = (state: RootState) => state.userProfile.languages;
 export const getUserCompanyName = (state: RootState) => state.userProfile.companyName;
