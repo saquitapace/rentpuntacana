@@ -71,8 +71,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           }
         }).catch(function (error) {
           console.log("Error Received from login entry:");
-          console.log(error.response.data.message);
-          setGeneralError(error.response.data.message);
+          console.log(error.response);
+          setGeneralError(error.response.statusText);
 
           dispatch(loginFailure("Failed to login. Please try again."));
         });

@@ -41,7 +41,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
               {/*<GlobeAltIcon className="w-[18px] h-[18px] opacity-80" /> */}
               <GlobeAltIcon className="h-6 w-6" />
 
-              <span className="ml-2 select-none"></span>
+              <span className="ml-2 select-none">Eng</span>
               <ChevronDownIcon
                 className={`${open ? "-rotate-180" : "text-opacity-70"}
                   ml-2 h-4 w-4  group-hover:text-opacity-80 transition ease-in-out duration-150`}

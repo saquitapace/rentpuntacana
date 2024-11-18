@@ -1,4 +1,4 @@
-import React, { Fragment,FC } from "react";
+import React, {Fragment, FC } from "react";
 import LocationInput from "../LocationInput";
 import PriceRangeInput from "./PriceRangeInput";
 import PropertyTypeSelect from "./PropertyTypeSelect";
@@ -26,14 +26,15 @@ const RealEstateSearchForm: FC<RealEstateSearchFormProps> = ({}) => {
 			<Popover className="relative">
 				{({ open, close }) => (
 					<>
-						<PopoverButton
-							className={`flex items-center justify-center rounded-full border border-neutral-300 px-4 py-2 text-sm hover:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:hover:border-neutral-6000 ${
-								open ? '!border-primary-500' : ''
-							}`}
+          <Popover.Button
+							className={`flex z-10 text-left w-full flex-shrink-0 items-center [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer
+								${
+									open ? "nc-hero-field-focused" : ""
+								}`}
 						>
 							<span>Rooms of Beds</span>
 							<i className="las la-angle-down ml-2"></i>
-						</PopoverButton>
+							</Popover.Button>
 						<Transition
 							as={Fragment}
 							enter="transition ease-out duration-200"

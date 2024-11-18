@@ -64,7 +64,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
 
   return (
     <>
-      <Popover className={`FlightDateRangeInput relative flex ${className}`}>
+      <Popover className={`FlightDateRangeInput relative ${className}`}>
         {({ open }) => (
           <>
             <div
@@ -92,9 +92,10 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               )} */}
             </div>
 
+{/*}
             {open && (
               <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -left-0.5 right-10 bg-white dark:bg-neutral-800"></div>
-            )}
+            )} */}
 
             <Transition
               as={Fragment}

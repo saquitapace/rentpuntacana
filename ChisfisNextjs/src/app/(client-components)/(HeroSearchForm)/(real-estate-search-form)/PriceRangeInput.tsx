@@ -19,22 +19,21 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
   const [rangePrices, setRangePrices] = useState([100000, 4000000]);
 
   return (
-    <Popover className="flex relative flex-[1.3]">
+    <Popover className="flex relative flex-1">
       {({ open, close }) => (
         <>
-          <div
-            className={`flex-1 z-10 flex items-center focus:outline-none cursor-pointer ${
+          
+            <Popover.Button
+            className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
               open ? "nc-hero-field-focused" : ""
             }`}
-          >
-            <Popover.Button
-              className={`flex-1 flex text-left items-center focus:outline-none ${fieldClassName} space-x-3 `}
+                
               onClickCapture={() => document.querySelector("html")?.click()}
             >
               <div className="text-neutral-300 dark:text-neutral-400">
                 <CurrencyDollarIcon className="w-5 h-5 lg:w-7 lg:h-7" />
               </div>
-              <div className="flex-grow">
+              <div className="flex-1">
                 <span className="block xl:text-sm font-semibold truncate">
                   {`$${convertNumbThousand(
                     rangePrices[0] / 1000
@@ -50,11 +49,11 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
           {/*  <div className="pr-2 xl:pr-4">
               <ButtonSubmit href="/listing-real-estate" />
             </div> */}
-          </div>
-
+          
+{/*
           {open && (
             <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -left-0.5 right-1 bg-white dark:bg-neutral-800"></div>
-          )}
+          )} */}
 
           <Transition
             as={Fragment}

@@ -9,6 +9,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   className?: string;
@@ -191,20 +193,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                       onClick={() => close()}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M12.62 20.81C12.28 20.93 11.72 20.93 11.38 20.81C8.48 19.82 2 15.69 2 8.68998C2 5.59998 4.49 3.09998 7.56 3.09998C9.38 3.09998 10.99 3.97998 12 5.33998C13.01 3.97998 14.63 3.09998 16.44 3.09998C19.51 3.09998 22 5.59998 22 8.68998C22 15.69 15.52 19.82 12.62 20.81Z"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                        <HeartIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium ">{"Favorites"}</p>
@@ -223,35 +212,9 @@ export default function AvatarDropdown({ className = "" }: Props) {
                       }}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M8.90002 7.55999C9.21002 3.95999 11.06 2.48999 15.11 2.48999H15.24C19.71 2.48999 21.5 4.27999 21.5 8.74999V15.27C21.5 19.74 19.71 21.53 15.24 21.53H15.11C11.09 21.53 9.24002 20.08 8.91002 16.54"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M15 12H3.62"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M5.85 8.6499L2.5 11.9999L5.85 15.3499"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+
+                      <ArrowLeftStartOnRectangleIcon className="h-6 w-6"/>
+                        
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium ">{"Log out"}</p>
