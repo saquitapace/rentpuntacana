@@ -49,7 +49,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   }, [authToken]);
 
   const loadNotificationData = async () => {
-   const data = await fetchNotificationsData();
+  /* const data = await fetchNotificationsData();
     
     if (data) {
       data.map((str) => {
@@ -57,7 +57,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
       });
 
       setNotifications(data);
-    }
+    } */
   };
 
   const fetchNotificationsData = async () => {
