@@ -5,17 +5,21 @@ import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 
 import {
-  DEMO_STAY_LISTINGS,
-} from "@/data/listings";
-import React, { FC, useEffect } from "react";
+  DEMO_EXPERIENCES_LISTINGS,
+  DEMO_STAY_LISTINGS} from "@/data/listings";
+import React, {Fragment, FC, useEffect, useState } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/outline";
 
 import { useSelector } from "react-redux";
 import { getUserAvatar, getUserFullName, getUserLanguages,
   getUserLoading, getUserAbout, getUserCreatedAt } from '@/store/slices/userProfileSlice';
 
+import { Tab } from "@headlessui/react";
+import ExperiencesCard from "@/components/ExperiencesCard";
 
 export interface AuthorPageProps {}
 
@@ -26,6 +30,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const about = useSelector(getUserAbout);
   const isLoading = useSelector(getUserLoading);
   const dateJoined = useSelector(getUserCreatedAt);
+
+  let [categories] = useState(["Published", "Drafts"]);
 
   const renderSidebar = () => {
     return (
@@ -40,18 +46,25 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">{fullName}</h2>
+          <h2 className="text-3xl">{fullName}</h2>
           <StartRating className="!text-base" />
         </div>
 
         {/* ---- */}
-        <p className="text-neutral-500 dark:text-neutral-400">
-          {about}
-        </p>
+
+        {about ? (
+           <p className="text-neutral-500 dark:text-neutral-400">
+           {about}
+           </p>
+        ) : (
+          <div className="flex bg-red-200 text-red-700 px-2 py-2  relative" role="alert">
+            <ExclamationTriangleIcon className="h-6 w-6" /> <span className="block sm:inline">Complete Profile</span>
+        </div>              
+        )}
 
         {/* ---- */}
         <SocialsList
-          className="!space-x-3 hidden"
+          className="!space-x-3"
           itemClass="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xl"
         />
 
@@ -60,8 +73,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* ---- */}
         <div className="space-y-4">
-          <div className="items-center space-x-4 hidden">
-            <svg
+        <div className="flex items-center space-x-4">
+        <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 text-neutral-400"
               fill="none"
@@ -76,7 +89,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              Ha Noi, Viet Nam
+              Punta Cana, Dominican Republic
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -94,9 +107,16 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
                 d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
               />
             </svg>
-            <span className="text-neutral-6000 dark:text-neutral-300">
-              Speaking English {languages}
-            </span>
+
+              {languages ? (
+              <span className="text-neutral-6000 dark:text-neutral-300">
+                Speaks {languages}
+               </span>
+              ) : (
+                <div className="flex bg-red-200 text-red-700 px-2 py-2  relative" role="alert">
+                  <ExclamationTriangleIcon className="h-6 w-6" /> <span className="block sm:inline">Complete Profile</span>
+              </div>              
+              )}
           </div>
 
           <div className="flex items-center space-x-4">
@@ -118,30 +138,85 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               Joined in {dateJoined}
             </span>
           </div>
-        </div>
+
+         
+        </div> 
+        
+        
       </div>
+      
     );
   };
+
 
   const renderSection1 = () => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold">{fullName}&apos;s Listings</h2>
+          <h2 className="text-2xl">{fullName}&apos;s Listings</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-            {`Kevin Francis&apos;s listings is very rich, 5 star reviews help him to be
+            {fullName}&apos;s
+            {` listings is very rich, 5 star reviews help him to be
             more branded.`}
           </span>
         </div>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-                <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
-                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 4).map((stay) => (
+        
+        <div>
+          <Tab.Group>
+            <Tab.List className="flex space-x-1 overflow-x-auto">
+              {categories.map((item) => (
+                <Tab key={item} as={Fragment}>
+                  {({ selected }) => (
+                    <button
+                      className={`flex-shrink-0 block !leading-none font-medium px-5 py-2.5 text-sm sm:text-base sm:px-6 sm:py-3 capitalize rounded-full focus:outline-none ${
+                        selected
+                          ? "bg-secondary-900 text-secondary-50 "
+                          : "text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-100 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      } `}
+                    >
+                      {item}
+                    </button>
+                  )}
+                </Tab>
+              ))}
+            </Tab.List>
+            <Tab.Panels>
+              <Tab.Panel className="mt-8">
+                <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 8).map((stay) => (
                     <StayCard key={stay.id} data={stay} />
                   ))}
                 </div>
-                <div className="flex mt-11 justify-center items-center">
+                {/*<div className="flex mt-11 justify-center items-center">
                   <ButtonSecondary>Show me more</ButtonSecondary>
+                </div> */}
+              </Tab.Panel>
+              <Tab.Panel className="mt-8">
+                <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 2).map(
+                    (stay) => (
+                      <ExperiencesCard key={stay.id} data={stay} />
+                    )
+                  )}
                 </div>
+                {/*<div className="flex mt-11 justify-center items-center">
+                  <ButtonSecondary>Show me more</ButtonSecondary>
+                </div> */}
+              </Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
+        </div>
+  
+
+
+
+
+
+
+
+
+
+
           
       </div>
     );
@@ -172,7 +247,13 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     <div className={`nc-AuthorPage `}>
       <main className="container mt-12 mb-24 lg:mb-32 flex flex-col lg:flex-row">
         <div className="block flex-grow mb-24 lg:mb-0">
-          <div className="lg:sticky lg:top-24">{renderSidebar()}</div>
+          <div className="lg:sticky lg:top-24">{renderSidebar()}
+
+          <div className="flex pt-5 justify-center border-solid">
+          <EyeIcon className="h-6 w-6" /><div className="pl-5">Preview Public Profile</div>
+          </div>
+
+          </div>
         </div>
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pl-10 flex-shrink-0">
           {renderSection1()}

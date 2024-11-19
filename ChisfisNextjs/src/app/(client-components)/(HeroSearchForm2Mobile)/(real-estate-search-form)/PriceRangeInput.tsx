@@ -26,7 +26,7 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
   return (
     <div className="p-5">
       <span className="block font-semibold text-xl sm:text-2xl">
-        Range Price?
+        Price Range?
       </span>
       <div className="relative flex flex-col space-y-8 mt-7">
         <Slider

@@ -14,14 +14,14 @@ export interface FlightDateRangeInputProps {
   className?: string;
   fieldClassName?: string;
   hasButtonSubmit?: boolean;
-  selectsRange?: boolean;
+  selectsRange?: false;
 }
 
 const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
   className = "",
   fieldClassName = "[ nc-hero-field-padding ]",
   hasButtonSubmit = true,
-  selectsRange = true,
+  selectsRange = false,
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(
     new Date("2023/05/01")
@@ -41,7 +41,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
           <CalendarIcon className="w-5 h-5 lg:w-7 lg:h-7" />
         </div>
         <div className="flex-grow text-left">
-          <span className="block xl:text-lg font-semibold">
+          <span className="block xl:text-sm font-semibold">
             {startDate?.toLocaleDateString("en-US", {
               month: "short",
               day: "2-digit",
@@ -55,7 +55,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               : ""}
           </span>
           <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-            {selectsRange ? "Pick up - Drop off" : "Pick up date"}
+            {selectsRange ? "Pick up - Drop off" : "Availability Date"}
           </span>
         </div>
       </>
@@ -64,7 +64,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
 
   return (
     <>
-      <Popover className={`FlightDateRangeInput relative flex ${className}`}>
+      <Popover className={`FlightDateRangeInput relative ${className}`}>
         {({ open }) => (
           <>
             <div
@@ -85,16 +85,17 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               </Popover.Button>
 
               {/* BUTTON SUBMIT OF FORM */}
-              {hasButtonSubmit && (
+            {/*  {hasButtonSubmit && (
                 <div className="pr-2 xl:pr-4">
                   <ButtonSubmit href="/listing-car-detail" />
                 </div>
-              )}
+              )} */}
             </div>
 
+{/*}
             {open && (
               <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -left-0.5 right-10 bg-white dark:bg-neutral-800"></div>
-            )}
+            )} */}
 
             <Transition
               as={Fragment}

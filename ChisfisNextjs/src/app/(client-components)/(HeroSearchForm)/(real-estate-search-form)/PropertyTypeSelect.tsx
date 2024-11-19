@@ -7,24 +7,23 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 
 const defaultPropertyType: ClassOfProperties[] = [
   {
-    name: "Duplex House",
-    description: "Have a place to yourself",
+    name: "Apartment",
+    description: "",
     checked: true,
   },
   {
-    name: "Ferme House",
-    description: "Have your own room and share some common spaces",
+    name: "House",
+    description: "",
     checked: false,
   },
   {
-    name: "Chalet House",
-    description:
-      "Have a private or shared room in a boutique hotel, hostel, and more",
+    name: "Hotel",
+    description:"",
     checked: false,
   },
   {
-    name: "Maison House",
-    description: "Stay in a shared space, like a common room",
+    name: "Other",
+    description: "",
     checked: false,
   },
 ];
@@ -64,7 +63,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
               <HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" />
             </div>
             <div className="flex-1">
-              <span className="block xl:text-lg font-semibold overflow-hidden">
+              <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
                   {typeOfPropertyText || `Type`}
                 </span>
@@ -75,9 +74,10 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             </div>
           </Popover.Button>
 
+{/*}
           {open && (
             <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -inset-x-0.5 bg-white dark:bg-neutral-800"></div>
-          )}
+          )} */}
 
           <Transition
             as={Fragment}

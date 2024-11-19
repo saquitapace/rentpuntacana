@@ -1,60 +1,70 @@
 import axios from "axios";
 
 const options = (function() {
-
     const init = async () => {
-        const opions = await axios.get(process.env.NEXT_PUBLIC_API_URL+'/auth/options', {
-        }).then((response) => {
-            console.log("get options:");
-            //console.log(response.data[0]);
-            
-            //setting array to local storage
-            localStorage.setItem("options",JSON.stringify(response.data[0]))
-            
-        }).catch(function (error) {
-            console.log("Error getting options");
-        });
-    }
-      
-    const optionsSet : string = localStorage.getItem('options') ?? '';
-    if (optionsSet === ''){
-        init();
-    } else {
-        console.log("options are already set in localStorage no need to call it again;");
+        try {
+            const response = await axios.get(process.env.NEXT_PUBLIC_API_URL+'/auth/options');
+            if (response.data && response.data[0]) {
+                localStorage.setItem("options", JSON.stringify(response.data[0]));
+            }
+        } catch (error) {
+            console.error("Error getting options:", error);
+        }
+    };
+
+    // Helper function to safely parse localStorage data
+    const safeGetOptions = () => {
+        if (typeof window === 'undefined') return null;
+        
+        try {
+            const options = localStorage.getItem("options");
+            return options ? JSON.parse(options) : null;
+        } catch (error) {
+            console.error("Error parsing options:", error);
+            return null;
+        }
+    };
+
+    // Initialize if needed
+    if (typeof window !== 'undefined') {
+        const optionsSet = localStorage.getItem('options');
+        if (!optionsSet) {
+            init();
+        }
     }
 
     const getListingTypes = function() {
-        const r = JSON.parse(localStorage.getItem("options")).filter(li => li.category == "listing_type");
-        return r;
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "listing_type") || [];
     };
     
     const getRentalLength = function() {
-        const r = JSON.parse(localStorage.getItem("options")).filter(li => li.category == "rental_length");
-        return r;
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "rental_length") || [];
     };
 
     const getGeneralAmenities = function() {
-        const r = JSON.parse(localStorage.getItem("options")).filter(li => li.category == "general_amenities");
-        return r;
-    }
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "general_amenities") || [];
+    };
 
     const getOtherAmenities = function() {
-        const r = JSON.parse(localStorage.getItem("options")).filter(li => li.category == "other_amenities");
-        return r;
-    }
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "other_amenities") || [];
+    };
 
     const getSafeAmenities = function() {
-        const r = JSON.parse(localStorage.getItem("options")).filter(li => li.category == "safe_amenities");
-        return r;
-    }
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "safe_amenities") || [];
+    };
       
     return {
-    getListingTypes : getListingTypes, 
-    getRentalLength : getRentalLength,
-    getGeneralAmenities : getGeneralAmenities, 
-    getOtherAmenities : getOtherAmenities,
-    getSafeAmenities : getSafeAmenities,
-    }
+        getListingTypes,
+        getRentalLength,
+        getGeneralAmenities,
+        getOtherAmenities,
+        getSafeAmenities,
+    };
 })();
 
 export default options;

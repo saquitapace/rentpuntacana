@@ -1,100 +1,105 @@
 "use client";
 
-import React, { FC, useState, useEffect } from "react";
-import axios from "axios";
+import React, { FC, useState } from "react";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // useRouter is causing an issue in some place when the page isnt fully rendered.
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
-import { loginStart, loginSuccess, loginFailure } from '@/store/slices/LoginSlice';
-import { setUserProfile } from '@/store/slices/userProfileSlice';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
-import Image from "next/image";
-import Cookies from 'js-cookie';
-import { redirect } from "@/utils/helpers";
 
 export interface PageLoginProps {}
-export interface LoginFormInputs {
-  email: string;
-  password: string;
-}
 
 const loginSocials = [
   {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
+    name: "Continue with Google",
+    provider: "google",
+    icon: googleSvg,
   },
   {
-    name: "Continue with Google",
-    href: "#",
-    icon: googleSvg,
+    name: "Continue with Facebook",
+    provider: "facebook",
+    icon: facebookSvg,
   },
 ];
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  //using react hook form
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error } = useSelector((state: RootState) => state.login);
-  
-  const [generalError, setGeneralError] = useState("");
- 
-	const handleLogin: SubmitHandler<LoginFormInputs> = async (data) => {
-      setGeneralError('');
-      dispatch(loginStart());
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-			const makeRequests = async () => {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, data)
-        .then((response) => {
-          console.log("Response Received:");
-          console.log(response.data.account_type);
+  const handleSocialLogin = async (provider: string) => {
+    try {
+      setIsLoading(true);
+      setError("");
+      
+      await signIn(provider, {
+        callbackUrl: "/",
+      });
+      
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-          switch(response.status) {
-            case 200 :
-              dispatch(loginSuccess(data));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      setError("");
 
-              dispatch(setUserProfile(response.data));
-              router.push( redirect( response.data.account_type ) );
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
 
-              //TODO: Use JWT
-              Cookies.set('authToken', response.data.user_id, { expires: 1, secure: true });
-            break;
-            default:
-              alert("check login response an unknown error code received");
-          }
-        }).catch(function (error) {
-          console.log("Error Received from login entry:");
-          console.log(error.response.data.message);
-          setGeneralError(error.response.data.message);
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
 
-          dispatch(loginFailure("Failed to login. Please try again."));
-        });
-		}
-		
-		makeRequests();
-	};
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      setError("An error occurred during login");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
           Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
-
-        <div className="grid gap-3">
+          {/* SOCIAL LOGIN BUTTONS */}
+          <div className="grid gap-3">
             {loginSocials.map((item, index) => (
-              <a
+              <button
                 key={index}
-                href={item.href}
                 className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                onClick={() => handleSocialLogin(item.provider)}
+                disabled={isLoading}
               >
                 <Image
                   className="flex-shrink-0"
@@ -104,11 +109,10 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
                   {item.name}
                 </h3>
-              </a>
+              </button>
             ))}
-            <div>
-        </div>
           </div>
+
           {/* OR */}
           <div className="relative text-center">
             <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
@@ -116,38 +120,42 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
             </span>
             <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
           </div>
-          {/* FORM */}
 
-
-        {generalError && <div className="text-red-600 text-sm">{generalError}</div>} {/* General error message */}
           {/* FORM */}
-          <form onSubmit={ handleSubmit( handleLogin ) }
-          className="grid grid-cols-1 gap-6" method="post">
+          {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
+          <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
-                Email
+                Email address
               </span>
               <Input
                 type="email"
+                name="email"
                 placeholder="example@example.com"
                 className="mt-1"
-                { ...register("email", { required: "Email is required" }) }
+                onChange={handleChange}
+                required
               />
-                { errors.email && <div className="text-red-600 text-sm">{ errors.email.message }</div> } {/* Email error message */}
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Password
-                <Link href="/forgotPassword" className="text-sm underline font-medium">
+                <Link href="/forgotPassword" className="text-sm underline">
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" { ...register("password", { required: "Password is required" }) } 
+              <Input
+                type="password"
+                name="password"
+                className="mt-1"
+                onChange={handleChange}
+                required
               />
-              { errors.password && <div className="text-red-600 text-sm">{ errors.password.message }</div> } {/* Password error message */}
             </label>
             <ButtonPrimary type="submit" disabled={isLoading}>
-              {isLoading ? "Loading..." : "Continue"}
+              {isLoading ? "Signing in..." : "Continue"}
             </ButtonPrimary>
           </form>
 

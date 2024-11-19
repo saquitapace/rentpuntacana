@@ -1,7 +1,9 @@
+"use client";
+
 import React, { FC } from "react";
 import MainNav1 from "./MainNav1";
 import MainNav2 from "./MainNav2";
-import { checkSession } from "../../../utils/checkSession";
+import { useSession } from "next-auth/react";
 
 export interface HeaderProps {
   navType?: "MainNav1" | "MainNav2";
@@ -9,10 +11,13 @@ export interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ navType = "MainNav1", className = "" }) => {
+  const { data: session } = useSession();
+  const user = session?.user;
+
   const oldNav = navType;
   const renderNav = () => {
   
-  const navType = (!checkSession()) ? "MainNav1" : "MainNav2";
+  const navType = (!user) ? "MainNav1" : "MainNav2";
    
     switch (navType) {
       case "MainNav1":
