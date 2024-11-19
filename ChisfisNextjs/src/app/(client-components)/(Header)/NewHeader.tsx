@@ -16,6 +16,8 @@ import { Route } from "@/routers/types";
 import sessionState from "@/utils/sessionState";
 import { checkSession } from "../../../utils/checkSession";
 import { checkAuth } from "../../../utils/checkAuth";
+import { useSelector } from "react-redux";
+import { getUserId } from "@/store/slices/userProfileSlice";
 
 export interface HeaderProps {
   userStatus?: "userNotExist" | "userExist";
@@ -26,7 +28,13 @@ const Header: FC<HeaderProps> = ({ className = "" }) => {
   const [signupPrimary, setsignupPrimary] = useState("true");
   sessionState.init();
   const accountType = sessionState.getAccountType();
+  
   const userStatus = !checkAuth() ? "userNotExist" : "userExist";
+
+
+  var x = useSelector(getUserId);
+
+  alert(userStatus);
 
   const handleSignInClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

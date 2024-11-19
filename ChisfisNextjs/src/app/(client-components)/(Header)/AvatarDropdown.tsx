@@ -9,6 +9,9 @@ import { RootState, AppDispatch } from '@/store/store';
 import { setUserProfile, resetUserProfile } from '@/store/slices/userProfileSlice';
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+//import { checkAuth } from "@/utils/checkAuth";
+import { UseSelector } from "react-redux";
+import { getUserId } from "@/store/slices/userProfileSlice";
 
 interface Props {
   className?: string;
@@ -22,8 +25,12 @@ export default function AvatarDropdown({ className = "" }: Props) {
     (state: RootState) => state.userProfile
   );
 
+  //var x = useSelector(getUserId);
+  //alert("x",x)
+
   const router = useRouter();
   const authToken = Cookies.get('authToken');
+
 
   const logout = () => {
     router.push("/login");
