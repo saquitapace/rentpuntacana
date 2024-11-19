@@ -29,6 +29,60 @@ export async function getUserByEmail(email: string) {
   }
 }
 
+export async function updateUser(userId: string, data: any) {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Update users table
+    if (Object.keys(data).some(key => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))) {
+      const userUpdateFields = Object.entries(data)
+        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))
+        .map(([key]) => `${key} = ?`)
+        .join(', ');
+
+      const userUpdateValues = Object.entries(data)
+        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))
+        .map(([_, value]) => value);
+
+      if (userUpdateFields) {
+        await connection.execute(
+          `UPDATE users SET ${userUpdateFields} WHERE user_id = ?`,
+          [...userUpdateValues, userId]
+        );
+      }
+    }
+
+    // Update login_cred table
+    if (Object.keys(data).some(key => ['email', 'password', 'google_id', 'auth_type', 'email_verified'].includes(key))) {
+      const loginUpdateFields = Object.entries(data)
+        .filter(([key]) => ['email', 'password', 'google_id', 'auth_type', 'email_verified'].includes(key))
+        .map(([key]) => `${key} = ?`)
+        .join(', ');
+
+      const loginUpdateValues = Object.entries(data)
+        .filter(([key]) => ['email', 'password', 'google_id', 'auth_type', 'email_verified'].includes(key))
+        .map(([_, value]) => value);
+
+      if (loginUpdateFields) {
+        await connection.execute(
+          `UPDATE login_cred SET ${loginUpdateFields} WHERE user_id = ?`,
+          [...loginUpdateValues, userId]
+        );
+      }
+    }
+
+    await connection.commit();
+    return true;
+  } catch (error) {
+    await connection.rollback();
+    console.error('Database error in updateUser:', error);
+    throw new Error('Failed to update user');
+  } finally {
+    connection.release();
+  }
+}
+
 export async function createUser(userData: {
   user_id?: string;
   account_type: string;
@@ -129,4 +183,4 @@ export async function testConnection() {
   }
 }
 
-export default pool; 
+export { pool }; 

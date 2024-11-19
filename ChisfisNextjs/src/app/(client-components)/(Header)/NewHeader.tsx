@@ -14,12 +14,9 @@ import AvatarDropdown from "./AvatarDropdown";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import { useSession } from "next-auth/react";
-import MainNav1 from "./MainNav1";
-import MainNav2 from "./MainNav2";
 import { usePathname } from 'next/navigation';
 
 export interface HeaderProps {
-  navType?: "MainNav1" | "MainNav2";
   className?: string;
 }
 
@@ -29,20 +26,6 @@ const NewHeader: FC<HeaderProps> = ({ className = "" }) => {
   const user = session?.user;
   const pathname = usePathname();
 
-  const renderNav = () => {
-    // Use session to determine which nav to show
-    const navType = !user ? "MainNav1" : "MainNav2";
-   
-    switch (navType) {
-      case "MainNav1":
-        return <MainNav1 />;
-      case "MainNav2":
-        return <MainNav2 />;
-      default:
-        return <MainNav1 />;
-    }
-  };
-
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
       <div className={`relative z-10 ${className}`}>
@@ -50,8 +33,8 @@ const NewHeader: FC<HeaderProps> = ({ className = "" }) => {
           
           <div className="hidden md:flex justify-start flex-1 space-x-4 sm:space-x-10">
             <Logo className="w-24 self-center" />
-            {/*<div className="hidden lg:block self-center h-10 border-l border-neutral-300 dark:border-neutral-500"></div> */}
-            {/* <Navigation /> */}
+            <div className="hidden lg:block self-center h-10 border-l border-neutral-300 dark:border-neutral-500"></div>
+            <Navigation />
           </div>
 
           <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
@@ -100,19 +83,16 @@ const NewHeader: FC<HeaderProps> = ({ className = "" }) => {
                   </Link>
                 )}
                 <NotifyDropdown />
-                <AvatarDropdown />
               </div>
             )}
             
-            <div className="flex space-x-2 lg:hidden">
-              <NotifyDropdown />
-              <AvatarDropdown />
+            <div className="flex space-x-2">
+              {user && <AvatarDropdown />}
               <MenuBar />
             </div>
           </div>
         </div>
       </div>
-      {renderNav()}
     </div>
   );
 };
