@@ -9,7 +9,6 @@ import ButtonPrimary from '@/shared/ButtonPrimary'
 import Input from '@/shared/Input'
 import Select from '@/shared/Select'
 import FormItem from '../FormItem';
-import sessionState from '../../../utils/sessionState'
 import {
 	APIProvider, 
 	Map,

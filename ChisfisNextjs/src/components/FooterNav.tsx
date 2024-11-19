@@ -31,7 +31,7 @@ const NAV: NavItem[] = [
   },
   {
     name: "Favorites",
-    link: "/account-savelists",
+    link: "/favorites",
     icon: HeartIcon,
   },
   {
@@ -47,7 +47,7 @@ const NAV: NavItem[] = [
 
 const FooterNav = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
+  
   const pathname = usePathname();
 
   useEffect(() => {

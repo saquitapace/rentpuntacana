@@ -5,12 +5,20 @@ import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import googleSvg from "@/images/Google.svg";
 import bcrypt from "bcryptjs";
 
 export interface PageSignUpProps {}
+
+const loginSocials = [
+  {
+    name: "Continue with Google",
+    provider: "google",
+    icon: googleSvg,
+  }
+];
 
 const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const router = useRouter();
@@ -37,21 +45,14 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
     try {
       setIsLoading(true);
       setError("");
-      const result = await signIn("google", {
+      
+      await signIn("google", {
         callbackUrl: "/",
-        redirect: true,
-      }).catch((error) => {
-        console.error("SignIn error:", error);
-        return { error: error.message };
       });
       
-      if (result?.error) {
-        console.error("SignIn result error:", result.error);
-        setError(result.error);
-      }
-    } catch (error: any) {
+    } catch (error) {
       console.error("SignUp error:", error);
-      setError(error?.message || "An error occurred during sign up");
+      setError("An error occurred during sign up");
     } finally {
       setIsLoading(false);
     }
@@ -121,21 +122,26 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
           Sign Up
         </h2>
         <div className="max-w-md mx-auto space-y-6">
-          {/* GOOGLE SIGNUP BUTTON */}
-          <button
-            className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-            onClick={handleGoogleSignUp}
-            disabled={isLoading}
-          >
-            <Image
-              className="flex-shrink-0"
-              src={googleSvg}
-              alt="Continue with Google"
-            />
-            <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
-              Continue with Google
-            </h3>
-          </button>
+          {/* SOCIAL SIGNUP BUTTONS */}
+          <div className="grid gap-3">
+            {loginSocials.map((item, index) => (
+              <button
+                key={index}
+                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                onClick={handleGoogleSignUp}
+                disabled={isLoading}
+              >
+                <Image
+                  className="flex-shrink-0"
+                  src={item.icon}
+                  alt={item.name}
+                />
+                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                  {item.name}
+                </h3>
+              </button>
+            ))}
+          </div>
 
           {/* OR */}
           <div className="relative text-center">

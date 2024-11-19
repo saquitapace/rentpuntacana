@@ -27,13 +27,7 @@ const solutions: SolutionItem[] = [
     description: "Real Estate description",
     href: "/listing-real-estate",
     icon: IconTwo,
-  },
-  {
-    name: "Cars",
-    description: "Car rental description",
-    href: "/listing-car",
-    icon: IconThree,
-  },
+  }
 ];
 
 export default function DropdownTravelers() {

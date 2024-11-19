@@ -79,6 +79,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       router.refresh();
     } catch (error) {
       setError("An error occurred during login");
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -87,8 +88,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Login
+        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
+          Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* SOCIAL LOGIN BUTTONS */}

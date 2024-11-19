@@ -21,7 +21,7 @@ import StayDatesRangeInput from './StayDatesRangeInput'
 import GuestsInput from './GuestsInput'
 import SectionDateRange from '../SectionDateRange'
 import { Route } from 'next'
-
+import ShareBtn from '@/components/ShareBtn'
 export interface ListingStayDetailPageProps {}
 
 const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
@@ -50,7 +50,19 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 				{/* 1 */}
 				<div className="flex items-center justify-between">
 					<Badge name="Wooden house" />
-					<LikeSaveBtns />
+					<div className="flow-root ">
+						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
+
+						<ShareBtn
+							text="Share"
+							url="https://www.google.com"
+							title="Check this listing"
+						/>
+						<LikeSaveBtns />
+
+						</div>
+					</div>
+
 				</div>
 
 				{/* 2 */}

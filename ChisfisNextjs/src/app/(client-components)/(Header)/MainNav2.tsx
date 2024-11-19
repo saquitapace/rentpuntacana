@@ -8,7 +8,6 @@ import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import Link from "next/link";
-import TemplatesDropdown from "./TemplatesDropdown";
 import { Route } from "@/routers/types";
 import { useSession } from "next-auth/react";
 import Navigation from "@/shared/Navigation/Navigation";
@@ -20,7 +19,7 @@ export interface MainNav2Props {
 const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
   const { data: session } = useSession();
   const user = session?.user;
-
+  
   return (
     <div className={`MainNav2 relative z-10 ${className}`}>
       <div className="px-4 h-20 lg:container flex justify-between">

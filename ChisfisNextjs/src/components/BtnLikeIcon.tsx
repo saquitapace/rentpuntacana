@@ -3,6 +3,7 @@
 import React, { FC, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 export interface BtnLikeIconProps {
   className?: string;
@@ -21,14 +22,53 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   const { data: session } = useSession();
   const router = useRouter();
 
+  const postLike = async (propertyId: string) => {
+    try {
+      const response = await axios.post(`/api/likes`, {
+        userId: session?.user?.id,
+        propertyId: parseInt(propertyId),
+      });
+
+      if (response.data) {
+        setLikedState(true);
+      }
+    } catch (error) {
+      console.error("Error posting like:", error);
+    }
+  };
+
+  const deleteLike = async (propertyId: string) => {
+    try {
+      const response = await axios.delete(`/api/likes`, {
+        params: { 
+          userId: session?.user?.id,
+          propertyId: parseInt(propertyId)
+        }
+      });
+
+      if (response.data) {
+        setLikedState(false);
+      }
+    } catch (error) {
+      console.error("Error deleting like:", error);
+    }
+  };
+
   const handleClick = async () => {
     if (!session?.user) {
       router.push('/login');
       return;
     }
-    
-    setLikedState(!likedState);
-    // Your like/unlike logic here
+
+    try {
+      if (!likedState) {
+        await postLike(id);
+      } else {
+        await deleteLike(id);
+      }
+    } catch (error) {
+      console.error("Error handling like:", error);
+    }
   };
 
   return (

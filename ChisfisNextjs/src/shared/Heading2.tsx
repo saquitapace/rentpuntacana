@@ -9,12 +9,12 @@ export interface Heading2Props {
 
 const Heading2: React.FC<Heading2Props> = ({
   className = "",
-  heading = "All Property Listings",
+  heading = "",
   subHeading = "",
 }) => {
   return (
-    <div className={`mb-12 lg:mb-16 ${className}`}>
-      <h2 className="text-4xl font-semibold">{heading}</h2>
+    <div className={`mb-6 lg:mb-6 ${className}`}>
+      <h2 className="text-3xl">{heading}</h2>
       {subHeading ? (
         subHeading
       ) : (

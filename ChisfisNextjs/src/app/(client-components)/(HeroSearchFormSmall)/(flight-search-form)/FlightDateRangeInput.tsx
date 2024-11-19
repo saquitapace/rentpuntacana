@@ -20,10 +20,10 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
   className = "",
   fieldClassName = "[ nc-hero-field-padding--small ]",
   hasButtonSubmit = true,
-  selectsRange = true,
+  selectsRange = false,
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(
-    new Date("2023/05/01")
+    new Date("2023/05/09")
   );
   const [endDate, setEndDate] = useState<Date | null>(new Date("2023/05/16"));
 
@@ -51,7 +51,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
               : ""}
           </span>
           <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-            {selectsRange ? "Pick up - Drop off" : "Pick up date"}
+            {!selectsRange ? "Pick up - Drop off" : "Pick up date"}
           </span>
         </div>
       </>
@@ -103,24 +103,6 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
             >
               <Popover.Panel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5 bg-white dark:bg-neutral-800 p-8">
-                  {selectsRange ? (
-                    <DatePicker
-                      selected={startDate}
-                      onChange={onChangeRangeDate}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      monthsShown={2}
-                      showPopperArrow={false}
-                      inline
-                      renderCustomHeader={(p) => (
-                        <DatePickerCustomHeaderTwoMonth {...p} />
-                      )}
-                      renderDayContents={(day, date) => (
-                        <DatePickerCustomDay dayOfMonth={day} date={date} />
-                      )}
-                    />
-                  ) : (
                     <DatePicker
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
@@ -134,7 +116,6 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
                         <DatePickerCustomDay dayOfMonth={day} date={date} />
                       )}
                     />
-                  )}
                 </div>
               </Popover.Panel>
             </Transition>

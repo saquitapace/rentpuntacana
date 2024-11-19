@@ -114,30 +114,3 @@ export interface ExperiencesDataType {
     lng: number;
   };
 }
-
-//
-export interface CarDataType {
-  id: string | number;
-  author: AuthorType;
-  date: string;
-  href: Route<string>;
-  title: string;
-  featuredImage: StaticImageData | string;
-  commentCount: number;
-  viewCount: number;
-  address: string;
-  reviewStart: number;
-  reviewCount: number;
-  like: boolean;
-  galleryImgs: (StaticImageData | string)[];
-  price: string;
-  listingCategory: TaxonomyType;
-  seats: number;
-  gearshift: string;
-  saleOff?: string | null;
-  isAds: boolean | null;
-  map: {
-    lat: number;
-    lng: number;
-  };
-}

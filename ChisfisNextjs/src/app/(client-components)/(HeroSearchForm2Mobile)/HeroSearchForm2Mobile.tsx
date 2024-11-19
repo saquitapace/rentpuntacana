@@ -98,7 +98,7 @@ const HeroSearchForm2Mobile = () => {
 											</div>
 
 											<TabList className="flex w-full justify-center space-x-6 pt-12 text-sm font-semibold text-neutral-500 dark:text-neutral-400 sm:space-x-8 sm:text-base">
-												{['Stay', 'Experiences', 'Cars', 'Flights'].map(
+												{['Stay', 'Experiences', 'Flights'].map(
 													(item, index) => (
 														<Tab key={index} as={Fragment}>
 															{({ selected }) => (
@@ -133,11 +133,6 @@ const HeroSearchForm2Mobile = () => {
 															<StaySearchForm />
 														</div>
 													</Tab.Panel>
-													<TabPanel>
-														<div className="animate-[myblur_0.4s_ease-in-out] transition-opacity">
-															<CarsSearchForm />
-														</div>
-													</TabPanel>
 													<TabPanel>
 														<div className="animate-[myblur_0.4s_ease-in-out] transition-opacity">
 															<FlightSearchForm />

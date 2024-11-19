@@ -1,5 +1,5 @@
 import React from "react";
-import SectionHero from "../app/(server-components)/SectionHero";
+import SectionHero from "../app/(server-components)/SectionHero2";
 import BgGlassmorphism from "@/components/BgGlassmorphism";
 import SectionOurFeatures from "@/components/SectionOurFeatures";
 import BackgroundSection from "@/components/BackgroundSection";
@@ -23,14 +23,16 @@ function PageHome() {
 
         {/* SECTION 1 */}
 
-        <SectionGridFeaturePlaces cardType="card2" />
-
+        <SectionGridFeaturePlaces cardType="card1" />
+        
         <SectionHowItWork />
 
         <SectionOurFeatures />
+
         <div className="relative py-16">
           <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
-          <SectionGridAuthorBox />
+          <SectionGridAuthorBox boxCard="box2" />
+          
         </div>
 
         <div className="relative py-16">

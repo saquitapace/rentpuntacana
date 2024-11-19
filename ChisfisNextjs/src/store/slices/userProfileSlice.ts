@@ -6,6 +6,7 @@ import { getDateJoined } from "@/utils/helpers";
 //TODO: fields naming from API Endpoint
 interface UserProfileState {
   userId: string;
+  accountType: string;
   avatar: string;
   companyName: string;
   firstName: string;
@@ -22,6 +23,7 @@ interface UserProfileState {
 
 const initialState: UserProfileState = {
   userId: '',
+  accountType :'',
   avatar: '/images/avatars/default.png',
   companyName: '',
   firstName: '',
@@ -88,10 +90,14 @@ const userProfileSlice = createSlice({
 });
 
 export const getUserId = (state: RootState) => state.userProfile.userId;
+export const getUserAccountType = (state: RootState) => state.userProfile.accountType;
+export const getUserFirstName = (state: RootState) => state.userProfile.firstName;
+export const getUserLastName = (state: RootState) => state.userProfile.lastName;
 export const getUserFullName = (state: RootState) => {
   const { firstName, lastName } = state.userProfile;
   return `${firstName} ${lastName}`.trim();
 };
+export const getUserEmail = (state: RootState) => state.userProfile.email;
 export const getUserAvatar = (state: RootState) => state.userProfile.avatar;
 export const getUserLanguages = (state: RootState) => state.userProfile.languages;
 export const getUserCompanyName = (state: RootState) => state.userProfile.companyName;

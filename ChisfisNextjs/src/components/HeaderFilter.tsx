@@ -35,7 +35,7 @@ const HeaderFilter: FC<HeaderFilterProps> = ({
 
   return (
     <div className="flex flex-col mb-8 relative">
-      <Heading desc={subHeading}>{heading}</Heading>
+     {/*} <Heading desc={subHeading}>{heading}</Heading> */}
       <div className="flex items-center justify-between">
         <Nav
           className="sm:space-x-2"
