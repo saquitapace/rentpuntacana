@@ -88,7 +88,6 @@ const NewHeader: FC<HeaderProps> = ({ className = "" }) => {
             
             <div className="flex space-x-2">
               {user && <AvatarDropdown />}
-              <MenuBar />
             </div>
           </div>
         </div>

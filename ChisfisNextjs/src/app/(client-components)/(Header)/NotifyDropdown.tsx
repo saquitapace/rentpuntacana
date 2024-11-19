@@ -49,7 +49,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   }, [authToken]);
 
   const loadNotificationData = async () => {
-  /* const data = await fetchNotificationsData();
+    const data = await fetchNotificationsData();
     
     if (data) {
       data.map((str) => {
@@ -57,14 +57,14 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
       });
 
       setNotifications(data);
-    } */
+    }
   };
 
   const fetchNotificationsData = async () => {
     const userId = authToken;
 
     try {
-      const response = await axios.post(process.env.NEXT_PUBLIC_API_URL+"/auth/getNotifications", {userId:userId})
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/getNotifications`, {userId:userId})
 
       if (response) {
        return await response.data[0];
