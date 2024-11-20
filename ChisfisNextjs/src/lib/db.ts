@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'root',
   database: process.env.DB_NAME || 'rentpuntacana',
-  port: parseInt(process.env.DB_PORT || '8889'),
+  port: parseInt(process.env.DB_PORT || '8809'),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -22,7 +22,13 @@ export async function getUserByEmail(email: string) {
       [email]
     );
     console.log('Query result:', rows);
-    return (rows as any[])[0];
+    
+    const user = (rows as any[])[0];
+    if (!user) {
+      return null; // Return null when no user is found
+    }
+    
+    return user;
   } catch (error) {
     console.error('Database error in getUserByEmail:', error);
     throw new Error('Failed to fetch user');
@@ -99,15 +105,27 @@ export async function createUser(userData: {
   try {
     await connection.beginTransaction();
     
+    // Generate userId if not provided
     const userId = userData.user_id || generateUserId();
 
+    // First check if email already exists
+    const [existingUsers] = await connection.execute(
+      'SELECT user_id FROM login_cred WHERE email = ?',
+      [userData.email]
+    );
+
+    if ((existingUsers as any[]).length > 0) {
+      throw new Error('Email already registered');
+    }
+
+    // Insert into users table with proper default values
     await connection.execute(
       `INSERT INTO users (
         user_id, 
-        account_type, 
-        first_name, 
-        last_name, 
-        company_name, 
+        account_type,
+        first_name,
+        last_name,
+        company_name,
         avatar,
         phone_number,
         about,
@@ -120,18 +138,19 @@ export async function createUser(userData: {
         userData.last_name,
         userData.company_name || '',
         userData.avatar || '/images/avatars/default.png',
-        0, // Default phone_number
+        0,  // Default phone_number as 0 instead of empty string
         '', // Default about
         '[]' // Default languages as empty array
       ]
     );
 
+    // Insert into login_cred table
     await connection.execute(
       `INSERT INTO login_cred (
-        user_id, 
-        email, 
-        password, 
-        google_id, 
+        user_id,
+        email,
+        password,
+        google_id,
         auth_type,
         email_verified
       ) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -141,7 +160,7 @@ export async function createUser(userData: {
         userData.password || null,
         userData.google_id || null,
         userData.auth_type || 'credentials',
-        userData.auth_type === 'google' ? new Date() : null // Set email_verified for Google users
+        userData.auth_type === 'google' ? new Date() : null
       ]
     );
 
@@ -160,7 +179,7 @@ export async function createUser(userData: {
   } catch (error) {
     await connection.rollback();
     console.error('Database error in createUser:', error);
-    throw new Error('Failed to create user');
+    throw error; // Throw the actual error for better debugging
   } finally {
     connection.release();
   }

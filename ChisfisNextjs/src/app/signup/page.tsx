@@ -69,10 +69,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
         return;
       }
 
-      // Hash password
-      const hashedPassword = await bcrypt.hash(formData.password, 10);
-
-      // Create user
+      // Create account
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -83,7 +80,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          password: hashedPassword,
+          password: formData.password,
           companyName: formData.companyName,
         }),
       });
@@ -91,14 +88,14 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create account");
+        throw new Error(data.error || data.details || "Failed to create account");
       }
 
       // Sign in the user
       const result = await signIn("credentials", {
-        redirect: false,
         email: formData.email,
         password: formData.password,
+        redirect: false,
       });
 
       if (result?.error) {
@@ -106,9 +103,15 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
         return;
       }
 
+      if (!result?.ok) {
+        setError("Failed to sign in after account creation");
+        return;
+      }
+
       router.push("/");
       router.refresh();
     } catch (error: any) {
+      console.error("Signup error:", error);
       setError(error.message || "An error occurred during sign up");
     } finally {
       setIsLoading(false);
