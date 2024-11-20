@@ -17,7 +17,7 @@ export async function getUserByEmail(email: string) {
     const [rows] = await pool.execute(
       `SELECT u.*, lc.email, lc.password, lc.google_id, lc.auth_type 
        FROM users u 
-       JOIN login_cred lc ON u.user_id = lc.user_id 
+       JOIN login_cred lc ON u.userId = lc.userId 
        WHERE lc.email = ?`,
       [email]
     );
@@ -41,19 +41,19 @@ export async function updateUser(userId: string, data: any) {
     await connection.beginTransaction();
 
     // Update users table
-    if (Object.keys(data).some(key => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))) {
+    if (Object.keys(data).some(key => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages', 'avatar'].includes(key))) {
       const userUpdateFields = Object.entries(data)
-        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))
+        .filter(([key]) => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages', 'avatar'].includes(key))
         .map(([key]) => `${key} = ?`)
         .join(', ');
 
       const userUpdateValues = Object.entries(data)
-        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages', 'avatar'].includes(key))
+        .filter(([key]) => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages', 'avatar'].includes(key))
         .map(([_, value]) => value);
 
       if (userUpdateFields) {
         await connection.execute(
-          `UPDATE users SET ${userUpdateFields} WHERE user_id = ?`,
+          `UPDATE users SET ${userUpdateFields} WHERE userId = ?`,
           [...userUpdateValues, userId]
         );
       }
@@ -72,7 +72,7 @@ export async function updateUser(userId: string, data: any) {
 
       if (loginUpdateFields) {
         await connection.execute(
-          `UPDATE login_cred SET ${loginUpdateFields} WHERE user_id = ?`,
+          `UPDATE login_cred SET ${loginUpdateFields} WHERE userId = ?`,
           [...loginUpdateValues, userId]
         );
       }
@@ -90,13 +90,13 @@ export async function updateUser(userId: string, data: any) {
 }
 
 export async function createUser(userData: {
-  user_id?: string;
-  account_type: string;
-  first_name: string;
-  last_name: string;
+  userId?: string;
+  accountType: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password?: string;
-  company_name?: string;
+  companyName?: string;
   avatar?: string;
   google_id?: string;
   auth_type?: 'credentials' | 'google';
@@ -105,11 +105,11 @@ export async function createUser(userData: {
   try {
     await connection.beginTransaction();
     
-    const userId = userData.user_id || generateUserId();
+    const userId = userData.userId || generateUserId();
 
     // First check if email already exists
     const [existingUsers] = await connection.execute(
-      'SELECT user_id FROM login_cred WHERE email = ?',
+      'SELECT userId FROM login_cred WHERE email = ?',
       [userData.email]
     );
 
@@ -120,22 +120,22 @@ export async function createUser(userData: {
     // Insert into users table with proper default values
     await connection.execute(
       `INSERT INTO users (
-        user_id, 
-        account_type,
-        first_name,
-        last_name,
-        company_name,
+        userId, 
+        accountType,
+        firstName,
+        lastName,
+        companyName,
         avatar,
-        phone_number,
+        phoneNumber,
         about,
         languages
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
-        userData.account_type,
-        userData.first_name,
-        userData.last_name,
-        userData.company_name || '',
+        userData.accountType,
+        userData.firstName,
+        userData.lastName,
+        userData.companyName || '',
         userData.avatar || '/images/avatars/default.png',
         0,
         'Hi! I am new here.',
@@ -146,7 +146,7 @@ export async function createUser(userData: {
     // Insert into login_cred table
     await connection.execute(
       `INSERT INTO login_cred (
-        user_id,
+        userId,
         email,
         password,
         google_id,
@@ -167,11 +167,11 @@ export async function createUser(userData: {
     
     return {
       userId,
-      user_id: userId,
+      userId: userId,
       email: userData.email,
-      first_name: userData.first_name,
-      last_name: userData.last_name,
-      account_type: userData.account_type,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      accountType: userData.accountType,
       avatar: userData.avatar || '/images/avatars/default.png',
       auth_type: userData.auth_type || 'credentials'
     };

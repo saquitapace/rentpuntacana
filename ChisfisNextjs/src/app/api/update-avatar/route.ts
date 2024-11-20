@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     // Delete old avatar if it exists
     const [rows] = await pool.execute(
-      'SELECT avatar FROM users WHERE user_id = ?',
+      'SELECT avatar FROM users WHERE userId = ?',
       [session.user.id]
     );
     const currentAvatar = (rows as any[])[0]?.avatar;
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const connection = await pool.getConnection();
     try {
       await connection.execute(
-        'UPDATE users SET avatar = ? WHERE user_id = ?',
+        'UPDATE users SET avatar = ? WHERE userId = ?',
         [filePath, session.user.id]
       );
 

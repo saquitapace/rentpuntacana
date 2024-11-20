@@ -45,12 +45,12 @@ export const authOptions: NextAuthOptions = {
         }
 
         return {
-          id: user.user_id,
-          user_id: user.user_id,
+          id: user.userId,
+          userId: user.userId,
           email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          account_type: user.account_type,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          accountType: user.accountType,
           avatar: user.avatar || '/images/avatars/default.png',
           auth_type: user.auth_type
         };

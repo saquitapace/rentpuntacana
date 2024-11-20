@@ -43,7 +43,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
             <Popover.Button
               className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none flex items-center justify-center`}
             >
-              <Avatar imgUrl={user?.avatar} userName={user?.first_name} />
+              <Avatar imgUrl={user?.avatar} userName={user?.firstName} />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -58,9 +58,9 @@ export default function AvatarDropdown({ className = "" }: Props) {
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
                     <div className="flex items-center space-x-3">
-                      <Avatar imgUrl={user?.avatar} userName={user?.first_name} />
+                      <Avatar imgUrl={user?.avatar} userName={user?.firstName} />
                       <div className="flex-grow">
-                        <h4 className="font-semibold">{user?.first_name} {user?.last_name}</h4>
+                        <h4 className="font-semibold">{user?.firstName} {user?.lastName}</h4>
                         <p className="text-sm text-neutral-500">{user?.email}</p>
                       </div>
                     </div>

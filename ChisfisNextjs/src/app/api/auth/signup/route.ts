@@ -36,12 +36,12 @@ export async function POST(req: NextRequest) {
     
     try {
       const result = await createUser({
-        account_type: data.accountType,
-        first_name: data.firstName,
-        last_name: data.lastName,
+        accountType: data.accountType,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: hashedPassword,
-        company_name: data.companyName || '',
+        companyName: data.companyName || '',
         auth_type: 'credentials'
       })
 

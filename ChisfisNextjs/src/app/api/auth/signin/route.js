@@ -33,16 +33,16 @@ export async function POST(request) {
       );
     }
     else {
-      const [userInfo] = await pool.query('SELECT * FROM users WHERE user_id = ?', existingUser[0].user_id);
+      const [userInfo] = await pool.query('SELECT * FROM users WHERE userId = ?', existingUser[0].userId);
       const userInfoClean = userInfo[0];
       
-      const [likes] = await pool.query('SELECT id, property_id FROM saved_properties WHERE user_id = ?', existingUser[0].user_id);
+      const [likes] = await pool.query('SELECT id, property_id FROM saved_properties WHERE userId = ?', existingUser[0].userId);
       
-      userInfoClean.userId = userInfoClean.user_id,
-      userInfoClean.firstName = userInfoClean.first_name,
-      userInfoClean.lastName = userInfoClean.last_name,
-      userInfoClean.phoneNumber = userInfoClean.phone_number,
-      userInfoClean.createdAt = userInfoClean.created_at;
+      userInfoClean.userId = userInfoClean.userId,
+      userInfoClean.firstName = userInfoClean.firstName,
+      userInfoClean.lastName = userInfoClean.lastName,
+      userInfoClean.phoneNumber = userInfoClean.phoneNumber,
+      userInfoClean.createdAt = userInfoClean.createdAt;
       userInfoClean.email = email;
       userInfoClean.likes = [];
       userInfoClean.likes.push(likes);

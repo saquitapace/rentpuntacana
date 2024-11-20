@@ -12,13 +12,13 @@ export async function PUT(request) {
   if (existingUser.length > 0) {
     const newPassword = Math.random().toString(36).slice(2);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const userId = existingUser[0].user_id;
+    const userId = existingUser[0].userId;
     const newObj = {
       email : existingUser[0].email,
       password : newPassword,
     }
     // update db
-    await pool.query('UPDATE login_cred SET password = ? WHERE user_id = ?', [hashedPassword, userId]);
+    await pool.query('UPDATE login_cred SET password = ? WHERE userId = ?', [hashedPassword, userId]);
     return NextResponse.json(newObj);
   } else {
     return new NextResponse(

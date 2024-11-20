@@ -23,7 +23,7 @@ const NotifyDropdown: FC<NotifyDropdownProps> = ({ className = "" }) => {
         }
       };
       
-      fetchNotifications();
+     // fetchNotifications();
     }
   }, [userId]);
 

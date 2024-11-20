@@ -6,7 +6,7 @@ const addListingFormData = (function() {
    const listing = {
         id : "",
         listing_id : "",
-        user_id : "",
+        userId : "",
         href : "",
         address : "",
         title : "",

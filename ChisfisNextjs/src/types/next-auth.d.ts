@@ -9,11 +9,11 @@ declare module "next-auth" {
 
   interface User {
     id: string
-    user_id: string
+    userId: string
     email: string
-    first_name: string
-    last_name: string
-    account_type: string
+    firstName: string
+    lastName: string
+    accountType: string
     avatar?: string
     auth_type: 'credentials' | 'google'
   }

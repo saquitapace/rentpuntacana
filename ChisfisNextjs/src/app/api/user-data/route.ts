@@ -27,17 +27,17 @@ export async function GET(req: NextRequest) {
 
     // Format the response data
     const userData = {
-      userId: user.user_id,
-      accountType: user.account_type,
-      firstName: user.first_name,
-      lastName: user.last_name,
+      userId: user.userId,
+      accountType: user.accountType,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      companyName: user.company_name,
+      companyName: user.companyName,
       about: user.about || '',
       avatar: user.avatar || '/images/avatars/default.png',
       languages: user.languages ? JSON.parse(user.languages) : [],
-      createdAt: user.created_at,
-      phoneNumber: user.phone_number || ''
+      createdAt: user.createdAt,
+      phoneNumber: user.phoneNumber || ''
     };
 
     return NextResponse.json(userData);
@@ -77,20 +77,20 @@ export async function PUT(req: NextRequest) {
     await connection.beginTransaction();
 
     // Update users table
-    if (Object.keys(data).some(key => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))) {
+    if (Object.keys(data).some(key => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages'].includes(key))) {
       const userUpdateFields = Object.entries(data)
-        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))
+        .filter(([key]) => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages'].includes(key))
         .map(([key]) => `${key} = ?`)
         .join(', ');
 
       const userUpdateValues = Object.entries(data)
-        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))
+        .filter(([key]) => ['firstName', 'lastName', 'companyName', 'phoneNumber', 'about', 'languages'].includes(key))
         .map(([_, value]) => typeof value === 'object' ? JSON.stringify(value) : value);
 
       if (userUpdateFields) {
         await connection.execute(
-          `UPDATE users SET ${userUpdateFields} WHERE user_id = ?`,
-          [...userUpdateValues, user.user_id]
+          `UPDATE users SET ${userUpdateFields} WHERE userId = ?`,
+          [...userUpdateValues, user.userId]
         );
       }
     }
@@ -98,8 +98,8 @@ export async function PUT(req: NextRequest) {
     // Update login_cred table
     if (Object.keys(data).some(key => ['email'].includes(key))) {
       await connection.execute(
-        'UPDATE login_cred SET email = ? WHERE user_id = ?',
-        [data.email, user.user_id]
+        'UPDATE login_cred SET email = ? WHERE userId = ?',
+        [data.email, user.userId]
       );
     }
 
@@ -111,17 +111,17 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({
       message: 'Profile updated successfully',
       user: {
-        userId: updatedUser.user_id,
-        accountType: updatedUser.account_type,
-        firstName: updatedUser.first_name,
-        lastName: updatedUser.last_name,
+        userId: updatedUser.userId,
+        accountType: updatedUser.accountType,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
         email: updatedUser.email,
-        companyName: updatedUser.company_name,
+        companyName: updatedUser.companyName,
         about: updatedUser.about || '',
         avatar: updatedUser.avatar || '/images/avatars/default.png',
         languages: updatedUser.languages ? JSON.parse(updatedUser.languages) : ['English'],
-        createdAt: updatedUser.created_at,
-        phoneNumber: updatedUser.phone_number || ''
+        createdAt: updatedUser.createdAt,
+        phoneNumber: updatedUser.phoneNumber || ''
       }
     });
 
@@ -158,7 +158,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Delete user directly using pool
-    await pool.query('DELETE FROM users WHERE user_id = ?', [user.user_id]);
+    await pool.query('DELETE FROM users WHERE userId = ?', [user.userId]);
 
     return NextResponse.json({ message: 'User deleted successfully' })
   } catch (error) {

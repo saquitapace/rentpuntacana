@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
     // Update password
-    await updateUser(user.user_id, { password: hashedPassword } as any)
+    await updateUser(user.userId, { password: hashedPassword } as any)
 
     return NextResponse.json({ message: 'Password updated successfully' })
   } catch (error) {
