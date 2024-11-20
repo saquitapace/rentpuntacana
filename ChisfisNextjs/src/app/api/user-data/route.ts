@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]/route'
-import { getUserByEmail } from '@/lib/db'
+import { getUserByEmail, pool } from '@/lib/db'
 import bcrypt from 'bcryptjs'
-import { pool } from '@/lib/db'
 
 // GET: Fetch user data
 export async function GET(req: NextRequest) {
@@ -34,84 +33,107 @@ export async function GET(req: NextRequest) {
       lastName: user.last_name,
       email: user.email,
       companyName: user.company_name,
-      address: user.address || '',
-      phoneNumber: user.phone_number || '',
       about: user.about || '',
       avatar: user.avatar || '/images/avatars/default.png',
-      languages: user.languages || '',
-      createdAt: user.created_at || ''
+      languages: user.languages ? JSON.parse(user.languages) : [],
+      createdAt: user.created_at,
+      phoneNumber: user.phone_number || ''
     };
 
     return NextResponse.json(userData);
 
-  } catch (error: unknown) {
-    console.error('Error fetching user data:', error)
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { message: 'Internal server error', error: error.message },
-        { status: 500 }
-      )
-    } else {
-      return NextResponse.json(
-        { message: 'Internal server error' },
-        { status: 500 }
-      )
-    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch user data' },
+      { status: 500 }
+    );
   }
 }
 
 // PUT: Update user data
 export async function PUT(req: NextRequest) {
+  const connection = await pool.getConnection();
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
-      )
+      );
     }
 
-    const user = await getUserByEmail(session.user.email)
+    const user = await getUserByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
-      )
+      );
     }
 
-    const data = await req.json()
+    const data = await req.json();
     
-    // Handle password update separately
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10)
+    await connection.beginTransaction();
+
+    // Update users table
+    if (Object.keys(data).some(key => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))) {
+      const userUpdateFields = Object.entries(data)
+        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))
+        .map(([key]) => `${key} = ?`)
+        .join(', ');
+
+      const userUpdateValues = Object.entries(data)
+        .filter(([key]) => ['first_name', 'last_name', 'company_name', 'phone_number', 'about', 'languages'].includes(key))
+        .map(([_, value]) => typeof value === 'object' ? JSON.stringify(value) : value);
+
+      if (userUpdateFields) {
+        await connection.execute(
+          `UPDATE users SET ${userUpdateFields} WHERE user_id = ?`,
+          [...userUpdateValues, user.user_id]
+        );
+      }
     }
 
-    // Update user data directly using pool
-    const updateFields = Object.entries(data)
-      .filter(([key, value]) => value !== undefined)
-      .map(([key, value]) => `${key} = ?`)
-      .join(', ');
+    // Update login_cred table
+    if (Object.keys(data).some(key => ['email'].includes(key))) {
+      await connection.execute(
+        'UPDATE login_cred SET email = ? WHERE user_id = ?',
+        [data.email, user.user_id]
+      );
+    }
 
-    const updateValues = Object.entries(data)
-      .filter(([key, value]) => value !== undefined)
-      .map(([key, value]) => value);
+    await connection.commit();
 
-    const query = `
-      UPDATE users 
-      SET ${updateFields}
-      WHERE user_id = ?
-    `;
+    // Fetch updated user data
+    const updatedUser = await getUserByEmail(data.email || session.user.email);
 
-    await pool.query(query, [...updateValues, user.user_id]);
+    return NextResponse.json({
+      message: 'Profile updated successfully',
+      user: {
+        userId: updatedUser.user_id,
+        accountType: updatedUser.account_type,
+        firstName: updatedUser.first_name,
+        lastName: updatedUser.last_name,
+        email: updatedUser.email,
+        companyName: updatedUser.company_name,
+        about: updatedUser.about || '',
+        avatar: updatedUser.avatar || '/images/avatars/default.png',
+        languages: updatedUser.languages ? JSON.parse(updatedUser.languages) : ['English'],
+        createdAt: updatedUser.created_at,
+        phoneNumber: updatedUser.phone_number || ''
+      }
+    });
 
-    return NextResponse.json({ message: 'User updated successfully' })
   } catch (error) {
-    console.error('Error updating user data:', error)
+    await connection.rollback();
+    console.error('Error updating user data:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to update profile' },
       { status: 500 }
-    )
+    );
+  } finally {
+    connection.release();
   }
 }
 

@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { RootState } from '../store';
-import { getDateJoined } from "@/utils/helpers";
 
-//TODO: fields naming from API Endpoint
 interface UserProfileState {
   userId: string;
   accountType: string;
@@ -23,7 +20,7 @@ interface UserProfileState {
 
 const initialState: UserProfileState = {
   userId: '',
-  accountType :'',
+  accountType: '',
   avatar: '/images/avatars/default.png',
   companyName: '',
   firstName: '',
@@ -31,31 +28,52 @@ const initialState: UserProfileState = {
   email: '',
   address: '',
   phoneNumber: '',
-  about: '',
+  about: 'Hi! I am new here.',
+  languages: ['English'],
   createdAt: '',
-  languages: [],
   isLoading: false,
   error: null
 };
 
-// Async thunk for updating user profile
+export const fetchUserProfile = createAsyncThunk(
+  'userProfile/fetchUserProfile',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('/api/user-data');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch user profile');
+      }
+      
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const updateUserProfile = createAsyncThunk(
   'userProfile/updateUserProfile',
-  async ({ formData, userId }: { formData: Partial<UserProfileState>; userId: string }, { rejectWithValue }) => {
+  async (userData: Partial<UserProfileState>, { rejectWithValue }) => {
     try {
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/updateUser`,
-        { ...formData, userId: userId }
-      );
-
-      if (response.status === 200) {
-        console.log("Profile updated successfully");
-        return response.data;
-      } else {
-        return rejectWithValue('Failed to update profile');
+      const response = await fetch('/api/user-data', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update profile');
       }
+      
+      return data.user;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update profile');
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -65,48 +83,96 @@ const userProfileSlice = createSlice({
   initialState,
   reducers: {
     setUserProfile: (state, action: PayloadAction<Partial<UserProfileState>>) => {
-      Object.assign(state, action.payload);
+      return { ...state, ...action.payload };
+    },
+    clearUserProfile: (state) => {
+      return initialState;
     },
     setAvatar: (state, action: PayloadAction<string>) => {
       state.avatar = action.payload;
     },
-    resetUserProfile: () => initialState
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        return {
+          ...state,
+          ...action.payload,
+          isLoading: false,
+          error: null
+        };
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
       .addCase(updateUserProfile.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(updateUserProfile.fulfilled, (state, action: PayloadAction<Partial<UserProfileState>>) => {
-        state.isLoading = false;
-        Object.assign(state, action.payload);
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        return {
+          ...state,
+          ...action.payload,
+          isLoading: false,
+          error: null,
+          languages: Array.isArray(action.payload.languages) 
+            ? action.payload.languages 
+            : typeof action.payload.languages === 'string'
+            ? JSON.parse(action.payload.languages)
+            : ['English']
+        };
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });
-  }
+  },
 });
 
-export const getUserId = (state: RootState) => state.userProfile.userId;
-export const getUserAccountType = (state: RootState) => state.userProfile.accountType;
-export const getUserFirstName = (state: RootState) => state.userProfile.firstName;
-export const getUserLastName = (state: RootState) => state.userProfile.lastName;
-export const getUserFullName = (state: RootState) => {
-  const { firstName, lastName } = state.userProfile;
-  return `${firstName} ${lastName}`.trim();
-};
-export const getUserEmail = (state: RootState) => state.userProfile.email;
-export const getUserAvatar = (state: RootState) => state.userProfile.avatar;
-export const getUserLanguages = (state: RootState) => state.userProfile.languages;
-export const getUserCompanyName = (state: RootState) => state.userProfile.companyName;
-export const getUserLoading = (state: RootState) => state.userProfile.isLoading;
-export const getUserAbout = (state: RootState) => state.userProfile.about;
-export const getUserCreatedAt = (state: RootState) => {
-  const { createdAt } = state.userProfile;
-  return getDateJoined( createdAt );
+export const { setUserProfile, clearUserProfile, setAvatar } = userProfileSlice.actions;
+
+// Selectors
+export const getUserProfile = (state: RootState) => state.userProfile;
+export const getUserId = (state: RootState) => state.userProfile?.userId || '';
+export const getUserAccountType = (state: RootState) => state.userProfile?.accountType || '';
+export const getUserFirstName = (state: RootState) => state.userProfile?.firstName || '';
+export const getUserLastName = (state: RootState) => state.userProfile?.lastName || '';
+export const getUserEmail = (state: RootState) => state.userProfile?.email || '';
+export const getUserAvatar = (state: RootState) => state.userProfile?.avatar || '/images/avatars/default.png';
+export const getUserAbout = (state: RootState) => 
+  state.userProfile?.about || 'Hi! I am new here.';
+export const getUserLoading = (state: RootState) => state.userProfile?.isLoading || false;
+export const getUserCreatedAt = (state: RootState) => state.userProfile?.createdAt || '';
+export const getUserFullName = (state: RootState) => 
+  `${state.userProfile?.firstName || ''} ${state.userProfile?.lastName || ''}`.trim();
+export const getUserLanguages = (state: RootState) => {
+  try {
+    if (!state.userProfile?.languages) {
+      return ['English']; // Return default if no languages set
+    }
+    
+    // If languages is a string (from DB), parse it
+    if (typeof state.userProfile.languages === 'string') {
+      const parsed = JSON.parse(state.userProfile.languages);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['English'];
+    }
+    
+    // If languages is already an array, return it if not empty
+    if (Array.isArray(state.userProfile.languages)) {
+      return state.userProfile.languages.length > 0 ? 
+        state.userProfile.languages : ['English'];
+    }
+    
+    return ['English']; // Default fallback
+  } catch (error) {
+    console.error('Error parsing languages:', error);
+    return ['English'];
+  }
 };
 
-export const { setUserProfile, setAvatar, resetUserProfile } = userProfileSlice.actions;
 export default userProfileSlice.reducer;

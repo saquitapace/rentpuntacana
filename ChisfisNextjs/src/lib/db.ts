@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'root',
   database: process.env.DB_NAME || 'rentpuntacana',
-  port: parseInt(process.env.DB_PORT || '8809'),
+  port: parseInt(process.env.DB_PORT || '8889'),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -105,7 +105,6 @@ export async function createUser(userData: {
   try {
     await connection.beginTransaction();
     
-    // Generate userId if not provided
     const userId = userData.user_id || generateUserId();
 
     // First check if email already exists
@@ -138,9 +137,9 @@ export async function createUser(userData: {
         userData.last_name,
         userData.company_name || '',
         userData.avatar || '/images/avatars/default.png',
-        0,  // Default phone_number as 0 instead of empty string
-        '', // Default about
-        '[]' // Default languages as empty array
+        0,
+        'Hi! I am new here.',
+        JSON.stringify(['English'])
       ]
     );
 

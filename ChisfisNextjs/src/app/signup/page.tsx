@@ -9,6 +9,10 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import googleSvg from "@/images/Google.svg";
 import bcrypt from "bcryptjs";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { signUpUser, resetSignUpState } from '@/store/slices/signUpSlice';
+import { signInUser, resetAuthState } from '@/store/slices/authSlice';
 
 export interface PageSignUpProps {}
 
@@ -22,6 +26,9 @@ const loginSocials = [
 
 const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading: signUpLoading, error: signUpError } = useSelector((state: RootState) => state.signUp);
+  const { isLoading: authLoading, error: authError } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -61,52 +68,26 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
-      setError("");
-
       if (formData.password !== formData.confirmPassword) {
         setError("Passwords do not match");
         return;
       }
 
-      // Create account
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          accountType: formData.accountType,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          companyName: formData.companyName,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || data.details || "Failed to create account");
-      }
-
-      // Sign in the user
-      const result = await signIn("credentials", {
+      // First create the account
+      await dispatch(signUpUser({
+        accountType: formData.accountType,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        redirect: false,
-      });
+        companyName: formData.companyName,
+      })).unwrap();
 
-      if (result?.error) {
-        setError(result.error);
-        return;
-      }
-
-      if (!result?.ok) {
-        setError("Failed to sign in after account creation");
-        return;
-      }
+      // Then sign in
+      await dispatch(signInUser({
+        email: formData.email,
+        password: formData.password,
+      })).unwrap();
 
       router.push("/");
       router.refresh();
@@ -114,7 +95,8 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
       console.error("Signup error:", error);
       setError(error.message || "An error occurred during sign up");
     } finally {
-      setIsLoading(false);
+      dispatch(resetSignUpState());
+      dispatch(resetAuthState());
     }
   };
 

@@ -9,6 +9,10 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { signInUser, resetAuthState } from '@/store/slices/authSlice';
+import { fetchUserProfile } from '@/store/slices/userProfileSlice';
 
 export interface PageLoginProps {}
 
@@ -27,8 +31,12 @@ const loginSocials = [
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading: reduxLoading, error: authError } = useSelector((state: RootState) => state.auth);
+  
+  // Local state for form handling
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localError, setLocalError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -43,8 +51,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
 
   const handleSocialLogin = async (provider: string) => {
     try {
-      setIsLoading(true);
-      setError("");
+      dispatch(resetAuthState());
+      setLocalLoading(true);
+      setLocalError("");
       
       await signIn(provider, {
         callbackUrl: "/",
@@ -52,48 +61,40 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred during login");
+      setLocalError("An error occurred during login");
     } finally {
-      setIsLoading(false);
+      setLocalLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     try {
-      setIsLoading(true);
-      setError("");
-
-      console.log(formData.email,formData.password)
-
-      const result = await signIn("credentials", {
-        redirect: false,
+      setLocalLoading(true);
+      setLocalError("");
+      
+      const result = await dispatch(signInUser({
         email: formData.email,
         password: formData.password,
-      });
+      })).unwrap();
 
-      if (result?.error) {
-        setError(result.error);
-        return;
+      if (result?.ok) {
+        await dispatch(fetchUserProfile()).unwrap();
+        router.push("/");
+        router.refresh();
       }
-      
-      setTimeout(function(){
-        console.log("delaying load, may have to change");
-       // void router.push('/login') console.log("Hello World");
-       void router.push("/author");
-    }, 2000);
-      //here fore debugging why redux values are lost
-      //router.push("/author");
-      //router.refresh();
-
-
-    } catch (error) {
-      setError("An error occurred during login");
+    } catch (error: any) {
       console.error("Login error:", error);
+      setLocalError(error.message || "An error occurred during login");
     } finally {
-      setIsLoading(false);
+      setLocalLoading(false);
+      dispatch(resetAuthState());
     }
   };
+
+  // Update the button disabled state to use both loading states
+  const isSubmitting = localLoading || reduxLoading;
 
   return (
     <div className={`nc-PageLogin`}>
@@ -109,7 +110,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 key={index}
                 className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
                 onClick={() => handleSocialLogin(item.provider)}
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
                 <Image
                   className="flex-shrink-0"
@@ -132,8 +133,10 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           </div>
 
           {/* FORM */}
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+          {(authError || localError) && (
+            <div className="text-red-500 text-sm text-center">
+              {authError || localError}
+            </div>
           )}
           <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
             <label className="block">
@@ -164,8 +167,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
                 required
               />
             </label>
-            <ButtonPrimary type="submit" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Continue"}
+            <ButtonPrimary type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Continue"}
             </ButtonPrimary>
           </form>
 

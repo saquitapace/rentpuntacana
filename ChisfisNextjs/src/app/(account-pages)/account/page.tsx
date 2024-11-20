@@ -5,7 +5,6 @@ import Label from "@/components/Label";
 import Avatar from "@/shared/Avatar";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
-import Checkbox from "@/shared/Checkbox";
 import Textarea from "@/shared/Textarea";
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,203 +15,184 @@ import {
   updateUserProfile,
   getUserId,
   getUserFullName,
-  getUserLanguages,
   getUserLoading,
   getUserAbout,
   getUserCreatedAt,
-  getUserAvatar 
+  getUserAvatar,
+  fetchUserProfile
 } from '@/store/slices/userProfileSlice';
 import { useSession } from "next-auth/react";
 
-const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000';
-
-export interface AccountPageProps {}
 export interface AccountFormInputs {
   accountType?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   phoneNumber?: string;
   about?: string;
-  languages?: string[];
+  languages: string[];
   companyName?: string;
   address?: string;
-  avatar?: string;
 }
 
 const AccountPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userProfile = useSelector((state: RootState) => state.userProfile);
   const { data: session, update: updateSession } = useSession();
-  const user = session?.user;
-  
-  const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<AccountFormInputs>({
+  const userProfile = useSelector((state: RootState) => state.userProfile);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<AccountFormInputs>({
     defaultValues: {
-      languages: []
+      firstName: userProfile.firstName || '',
+      lastName: userProfile.lastName || '',
+      email: userProfile.email || '',
+      phoneNumber: userProfile.phoneNumber || '',
+      about: userProfile.about || '',
+      languages: userProfile.languages || ['English'],
+      companyName: userProfile.companyName || '',
+      address: userProfile.address || '',
     }
   });
 
-  const userId = useSelector(getUserId) as string;
-  const fullName = useSelector(getUserFullName) as string;
-  const avatar = useSelector(getUserAvatar) as string;
-  const about = useSelector(getUserAbout) as string;
-  const isLoading = useSelector(getUserLoading) as boolean;
-  const dateJoined = useSelector(getUserCreatedAt) as string;
-
-  const [generalError, setGeneralError] = useState<string>("");
-
-  // Set initial checked state for languages
-  const languages = watch("languages", []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
   const languageOptions = [
-    { name: 'English', defaultChecked: userProfile.languages.includes('English') },
-    { name: 'Spanish', defaultChecked: userProfile.languages.includes('Spanish') },
-    { name: 'French', defaultChecked: userProfile.languages.includes('French') },
+    { name: 'English', defaultChecked: true },
+    { name: 'Spanish', defaultChecked: false },
+    { name: 'French', defaultChecked: false },
   ];
 
-  // Update Redux store with session data
+  // Set initial form values when userProfile changes
   useEffect(() => {
-    if (user) {
-      dispatch(setUserProfile({
-        userId: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
-        accountType: user.account_type,
-        avatar: user.avatar,
-        // Set other fields with defaults if they don't exist in session
-        phoneNumber: userProfile.phoneNumber || '',
-        about: userProfile.about || '',
-        languages: userProfile.languages || [],
-        companyName: userProfile.companyName || '',
-        address: userProfile.address || '',
-      }));
+    if (userProfile) {
+      setValue('companyName', userProfile.companyName || '');
+      setValue('firstName', userProfile.firstName || '');
+      setValue('lastName', userProfile.lastName || '');
+      setValue('phoneNumber', userProfile.phoneNumber || '');
+      setValue('about', userProfile.about || '');
+      setValue('languages', userProfile.languages || ['English']);
+      setValue('address', userProfile.address || '');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, dispatch]);
-
-  // Load additional user data
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user?.id) {
-        const data = await fetchUserData();
-        if (data) {
-          dispatch(setUserProfile({
-            ...data,
-            // Preserve session data
-            userId: user.id,
-            firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email,
-            accountType: user.account_type,
-            avatar: user.avatar,
-          }));
-        }
-      }
-    };
-
-    loadUserData();
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, dispatch]);
-
-  // Sync form with Redux state
-  useEffect(() => {
-    setValue('companyName', userProfile.companyName);
-    setValue('firstName', userProfile.firstName);
-    setValue('lastName', userProfile.lastName);
-    setValue('email', userProfile.email);
-    setValue('phoneNumber', userProfile.phoneNumber);
-    setValue('about', userProfile.about);
-    setValue('languages', userProfile.languages);
-    setValue('address', userProfile.address);
   }, [userProfile, setValue]);
 
-  const fetchUserData = async () => {
+  const onSubmit = async (data: AccountFormInputs) => {
     try {
-      const response = await fetch('/api/user-data?userId=' + (user?.id || userId));
-      if (response.ok) {
-        return await response.json();
+      setIsLoading(true);
+      setError('');
+      setNotification({ type: null, message: '' });
+
+      // Update the profile
+      const result = await dispatch(updateUserProfile(data)).unwrap();
+      
+      // Fetch the updated profile to ensure Redux state is in sync
+      await dispatch(fetchUserProfile()).unwrap();
+
+      setNotification({
+        type: 'success',
+        message: 'Profile updated successfully'
+      });
+
+      // Update session if needed
+      if (session?.user) {
+        await updateSession({
+          ...session,
+          user: {
+            ...session.user,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+          }
+        });
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
+
+    } catch (err: any) {
+      setError(err.message || 'Failed to update profile');
+      setNotification({
+        type: 'error',
+        message: 'Failed to update profile'
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      
-      // Create filename using user ID for consistency
-      const fileName = `UserProfile_${user?.id}.png`;
+      const fileName = `UserProfile_${userProfile.userId}.png`;
       const filePath = `/images/avatars/${fileName}`;
-      
-      // Create local URL for immediate display
-      const localUrl = URL.createObjectURL(file);
-      
-      // Update Redux immediately for instant UI feedback
-      dispatch(setAvatar(localUrl));
       
       const formData = new FormData();
       formData.append('avatar', file);
       formData.append('filePath', filePath);
 
       try {
-        // Start the upload in the background
-        const uploadPromise = fetch('/api/update-avatar', {
+        const response = await fetch('/api/update-avatar', {
           method: 'POST',
           body: formData,
         });
 
-        // Update session in parallel
-        const sessionPromise = updateSession({
-          ...session,
-          user: {
-            ...session?.user,
-            avatar: filePath // Use the expected final path
+        if (response.ok) {
+          const data = await response.json();
+          dispatch(setAvatar(data.avatarUrl));
+          if (session?.user) {
+            await updateSession({
+              ...session,
+              user: {
+                ...session.user,
+                avatar: data.avatarUrl
+              }
+            });
           }
-        });
-
-        // Wait for both operations to complete
-        const [response] = await Promise.all([uploadPromise, sessionPromise]);
-
-        if (!response.ok) {
-          const error = await response.json();
-          console.error('Failed to update avatar:', error);
-          // Revert Redux state on error
-          dispatch(setAvatar(user?.avatar || ''));
+          setNotification({
+            type: 'success',
+            message: 'Avatar updated successfully'
+          });
+        } else {
+          throw new Error('Failed to update avatar');
         }
-
-        // Clean up local URL
-        URL.revokeObjectURL(localUrl);
-      } catch (error) {
-        console.error('Error updating avatar:', error);
-        // Revert Redux state on error
-        dispatch(setAvatar(user?.avatar || ''));
+      } catch (err) {
+        console.error('Error updating avatar:', err);
+        setNotification({
+          type: 'error',
+          message: 'Failed to update avatar'
+        });
       }
-    }
-  };
-
-  const onUpdateSubmit = async (data: Partial<AccountFormInputs>) => {
-    try {
-      const currentUserId = user?.id || userId;
-      await dispatch(updateUserProfile({ formData: data, userId: currentUserId })).unwrap();
-    } catch (error) {
-      console.error('Error updating profile:', error);
     }
   };
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/*<h2 className="text-3xl font-semibold">Account information</h2> */}
+      {/* Notification banner */}
+      {notification.type && (
+        <div className={`p-4 rounded-md ${
+          notification.type === 'success' 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {notification.message}
+        </div>
+      )}
+
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
             <Avatar 
-              imgUrl={avatar} 
+              imgUrl={userProfile.avatar} 
               sizeClass="w-32 h-32"
-              userName={`${fullName}`}
+              userName={`${userProfile.firstName} ${userProfile.lastName}`}
             />
             <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
               <svg
@@ -241,109 +221,120 @@ const AccountPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onUpdateSubmit)} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
-          {generalError && <div className="text-red-600 text-sm">{generalError}</div>}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+          {error && <div className="text-red-600 text-sm">{error}</div>}
           
+          {/* Company Name */}
           <div>
             <Label>Company Name</Label>
             <Input 
               className="mt-1.5"
-              { ...register("companyName", { required: "Company Name is required" }) }
+              defaultValue={userProfile.companyName}
+              {...register("companyName")}
             />
-            { errors.companyName && <div className="text-red-600 text-sm">{ errors.companyName.message }</div> }
           </div>
 
+          {/* First Name */}
           <div>
             <Label>First Name</Label>
             <Input 
               className="mt-1.5"
-              { ...register("firstName", { required: "First Name is required" }) }
+              defaultValue={userProfile.firstName}
+              {...register("firstName", { required: "First Name is required" })}
             />
-            { errors.firstName && <div className="text-red-600 text-sm">{ errors.firstName.message }</div> }
+            {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName.message}</div>}
           </div>
 
+          {/* Last Name */}
           <div>
             <Label>Last Name</Label>
             <Input 
               className="mt-1.5"
-              { ...register("lastName", { required: "Last Name is required"}) }
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
             />
-            { errors.lastName && <div className="text-red-600 text-sm">{ errors.lastName.message }</div> }
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
           </div>
 
+          {/* Email - Read Only */}
           <div>
             <Label>Email</Label>
             <Input 
-              className="mt-1.5"
-              { ...register("email", { required: "Email is required" }) }
+              className="mt-1.5 bg-neutral-100 dark:bg-neutral-800"
+              value={userProfile.email}
+              disabled
+              readOnly
             />
-            { errors.email && <div className="text-red-600 text-sm">{ errors.email.message }</div> }
           </div>
 
+          {/* Phone Number */}
+          <div>
+            <Label>Phone Number</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
+          </div>
+
+          {/* Address */}
           <div>
             <Label>Address</Label>
             <Input 
               className="mt-1.5"
-              { ...register("address", { required: "Address is required" }) }
+              defaultValue={userProfile.address}
+              {...register("address")}
             />
-            { errors.address && <div className="text-red-600 text-sm">{ errors.address.message }</div> }
           </div>
 
-          <div>
-            <Label>Phone number</Label>
-            <Input 
-              className="mt-1.5"
-              { ...register("phoneNumber", { required: "Phone Number is required" }) }
-            />
-            { errors.phoneNumber && <div className="text-red-600 text-sm">{ errors.phoneNumber.message }</div> }
-          </div>
-          
+          {/* Languages */}
           <div>
             <Label>Languages</Label>
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
               <div className="flex flex-wrap gap-4 px-5 py-6">
-                {languageOptions.map((item) => (
-                  <Controller
-                    key={item.name}
-                    name="languages"
-                    control={control}
-                    render={({ field }) => (
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id={item.name}
-                          checked={languages.includes(item.name)}
-                          onChange={(e) => {
-                            const updatedLanguages = e.target.checked
-                              ? [...languages, item.name]
-                              : languages.filter((lang) => lang !== item.name);
-                            setValue("languages", updatedLanguages);
-                          }}
-                          className="form-checkbox h-5 w-5 text-primary-600"
-                        />
-                        <label htmlFor={item.name} className="text-sm font-medium">
-                          {item.name}
-                        </label>
-                      </div>
-                    )}
-                  />
-                ))}
+                <Controller
+                  name="languages"
+                  control={control}
+                  defaultValue={userProfile.languages}
+                  render={({ field }) => (
+                    <>
+                      {languageOptions.map((option) => (
+                        <div key={option.name} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id={option.name}
+                            checked={field.value?.includes(option.name)}
+                            onChange={(e) => {
+                              const newValue = e.target.checked
+                                ? [...(field.value || []), option.name]
+                                : field.value?.filter((lang) => lang !== option.name) || [];
+                              field.onChange(newValue);
+                            }}
+                            className="form-checkbox h-5 w-5"
+                          />
+                          <label htmlFor={option.name} className="ml-2">
+                            {option.name}
+                          </label>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                />
               </div>
             </div>
-            {errors.languages && (
-              <div className="text-red-600 text-sm">{errors.languages.message}</div>
-            )}
           </div>
 
+          {/* About */}
           <div>
-            <Label>About you</Label>
+            <Label>About</Label>
             <Textarea 
               className="mt-1.5"
-              { ...register("about", { required: "About you is required" }) }
+              defaultValue={userProfile.about}
+              {...register("about")}
             />
-             { errors.about && <div className="text-red-600 text-sm">{ errors.about.message }</div> }
           </div>
 
+          {/* Submit Button */}
           <div className="pt-2">
             <ButtonPrimary type="submit" disabled={isLoading}>
               {isLoading ? "Updating..." : "Update info"}

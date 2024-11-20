@@ -9,7 +9,7 @@ import { Metadata } from 'next'
 import NewHeader from './(client-components)/(Header)/NewHeader'
 import { getServerSession } from "next-auth/next"
 import { authOptions } from './api/auth/[...nextauth]/route'
-import Providers from '@/components/providers/Providers'
+import { Providers } from '@/components/providers/Providers'
 import ClientCommons from './ClientCommons'
 
 const poppins = Poppins({
