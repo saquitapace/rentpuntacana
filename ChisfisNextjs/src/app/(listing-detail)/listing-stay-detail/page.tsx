@@ -22,7 +22,10 @@ import GuestsInput from './GuestsInput'
 import SectionDateRange from '../SectionDateRange'
 import { Route } from 'next'
 import ShareBtn from '@/components/ShareBtn'
+import Textarea from '@/shared/Textarea'
+import Link from 'next/link'
 export interface ListingStayDetailPageProps {}
+
 
 const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 	//
@@ -49,26 +52,28 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 			<div className="listingSection__wrap !space-y-6">
 				{/* 1 */}
 				<div className="flex items-center justify-between">
-					<Badge name="Wooden house" />
+					{/*<Badge name="Wooden house" /> */}
+					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
+					Beach House in Collingwood
+				</h2>
 					<div className="flow-root ">
+
 						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
-
-						<ShareBtn
-							text="Share"
-							url="https://www.google.com"
-							title="Check this listing"
-						/>
-						<LikeSaveBtns />
-
+							<ShareBtn
+								text="Share"
+								url="https://www.google.com"
+								title="Check this listing"
+							/>
+							<LikeSaveBtns />
 						</div>
 					</div>
 
 				</div>
 
 				{/* 2 */}
-				<h2 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
+				{/*<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 					Beach House in Collingwood
-				</h2>
+				</h2> */}
 
 				{/* 3 */}
 				<div className="flex items-center space-x-4">
@@ -522,8 +527,58 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 			</div>
 		)
 	}
+	
+	const item = { name:"Kevin Francis", avatar:"default.png", description:"whats app",time:"phone",status:"s", whatsapp:"12345"};
+	
+	{/*
+		
+		Leasing Agent
+Property Results, LLC
+
+Leasing consultant
+
+Verified
+
+By choosing to contact a property, you consent to receive calls or texts at the number you provided, which may involve use of automated means and prerecorded/artificial voices, from Zillow Group and the rental manager(s) you choose to contact about any inquiries you submit through our services. You don't need to consent as a condition of renting any property or buying any other goods or services. Message/data rates may apply. You also agree to Zillow's Terms of Use and Privacy Policy.
+
+*/
+}
 
 	const renderSidebar = () => {
+		return (
+			<div className="listingSectionSidebar__wrap shadow-xl">
+				<div className="flex">
+					<Avatar
+						imgUrl={item.avatar}
+						sizeClass="w-30 h-30 sm:w-12 sm:h-12"
+					/>
+					<div className="ml-3 sm:ml-4 space-y-1">
+						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
+						{item.name}
+						</p>
+						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+						{item.description}
+						</p>
+						<p className="text-xs text-gray-400 dark:text-gray-400">
+						<ButtonSecondary className="whatsapp">
+							<Link aria-label="Chat on WhatsApp" href="https://wa.me/1XXXXXXXXXX"> 
+								<i className="lab la-whatsapp text-3xl whatsapp"></i> Message on Whatsapp
+							</Link>
+						</ButtonSecondary>
+						</p>
+					</div>
+				</div>
+				<Textarea>
+					Hi, Is this listing still available?
+
+				</Textarea>
+				<ButtonPrimary>
+					Send Message
+				</ButtonPrimary>
+			</div>
+		)
+	}
+	const renderSidebarOld = () => {
 		return (
 			<div className="listingSectionSidebar__wrap shadow-xl">
 				{/* PRICE */}

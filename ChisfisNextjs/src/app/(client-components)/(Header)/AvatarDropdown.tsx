@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { 
   EnvelopeIcon,
   UserCircleIcon,
+  ShieldExclamationIcon,
   HeartIcon,
   ArrowLeftStartOnRectangleIcon 
 } from "@heroicons/react/24/outline";
@@ -86,7 +87,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                       onClick={() => close()}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
-                        <UserCircleIcon className="h-6 w-6" />
+                        <ShieldExclamationIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium">{"Account"}</p>
@@ -95,7 +96,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
 
                     {/* Messages Link */}
                     <Link
-                      href="#"
+                      href="/blank"
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
                     >
