@@ -4,9 +4,9 @@ import { Fragment, useState } from 'react'
 import PriceRangeInput from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PriceRangeInput";
 import PropertyTypeSelect from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PropertyTypeSelect";
 import ButtonSubmit from '../(client-components)/(HeroSearchFormSmall)/ButtonSubmit';
+import ToggleSwitch from '@/shared/ToggleSwitch';
 
 import {
-
 	Dialog,
 	DialogTitle,
 	Popover,
@@ -836,18 +836,20 @@ const TabFilters = () => {
 		)
 	}
 
+	const handleMapToggle = () => {
+
+	}
 	const renderMapViewToggle = () => {
 		return(
 			<><Link href="/listing-stay-map">
 				
 			<div className="text-neutral-300 dark:text-neutral-400">
-<i className="las la-map-marked text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
               {/*<HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" /> */}
             </div>
-            <div className="flex-1">
+            <div className="flex-1"><ToggleSwitch label="" />
 			<span className="block xl:text-sm font-semibold truncate">
 			<span className="line-clamp-1 mr-10">
-                  Map View
+
                 </span>
               </span>
              {/* <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">

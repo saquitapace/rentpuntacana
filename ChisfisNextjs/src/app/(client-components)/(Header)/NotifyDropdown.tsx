@@ -5,11 +5,11 @@ import { useEffect, useState, FC, Fragment } from "react";
 import Avatar from "@/shared/Avatar";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/outline";
-
+import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from "moment";
 import Cookies from "js-cookie";
-
+import { useSelector, UseSelector } from "react-redux";
 import { getUserId } from "@/store/slices/userProfileSlice";
 
 interface Props {
@@ -18,8 +18,17 @@ interface Props {
 
 const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   const authToken = Cookies.get('authToken');
+  console.log("authToken:");
+  console.log(authToken);
 
-  console.log(getUserId);
+  const uid = useSelector(getUserId);
+  console.log("useSelector(getUserId:");
+  console.log(uid);
+
+  const { data: session } = useSession();
+  const user = session?.user;
+  console.log("{ data: session } = useSession();");
+  console.log(user);
 
   const [newNotifications, setNewNotifications] = useState(0);
   const [notifications, setNotifications] = useState([]); // initials state of notifications
@@ -39,29 +48,31 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   }
 
   useEffect(() => {
-    if (authToken) {
+    if (user) {
       loadNotificationData();
     }
     else
     {
     // return
     }
-  }, [authToken]);
+  }, [user])
 
   const loadNotificationData = async () => {
-    const data = await fetchNotificationsData();
+  {/*   const data = await fetchNotificationsData();
     
-    if (data) {
+   if (data) {
       data.map((str) => {
         str.time = moment(new Date(str.time)).fromNow();   
       });
 
       setNotifications(data);
-    }
+    } */}
   };
 
   const fetchNotificationsData = async () => {
-    const userId = authToken;
+    console.log("fetchNotificationsData")
+    {/* const userId = authToken;
+    console.log(authToken);
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/getNotifications`, {userId:userId})
@@ -73,7 +84,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
       console.error('Error fetching notification data:', error);
       // alert("Loading notifications failed. Network error. Please contact helpdesk. Error code: 500.");
     } finally {
-    }
+    } */}
   };
 
   const handleItemClick = (item) => {

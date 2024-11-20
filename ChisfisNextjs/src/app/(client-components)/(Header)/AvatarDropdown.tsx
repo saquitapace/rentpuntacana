@@ -25,6 +25,11 @@ export default function AvatarDropdown({ className = "" }: Props) {
   const { data: session } = useSession();
   const user = session?.user;
 
+  console.log("data from useSession()")
+  console.log(user)
+
+  console.log("avatar dropdown");
+
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
   };

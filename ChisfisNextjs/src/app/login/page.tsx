@@ -64,6 +64,8 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       setIsLoading(true);
       setError("");
 
+      console.log(formData.email,formData.password)
+
       const result = await signIn("credentials", {
         redirect: false,
         email: formData.email,
@@ -74,9 +76,17 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
         setError(result.error);
         return;
       }
+      
+      setTimeout(function(){
+        console.log("delaying load, may have to change");
+       // void router.push('/login') console.log("Hello World");
+       void router.push("/author");
+    }, 2000);
+      //here fore debugging why redux values are lost
+      //router.push("/author");
+      //router.refresh();
 
-      router.push("/");
-      router.refresh();
+
     } catch (error) {
       setError("An error occurred during login");
       console.error("Login error:", error);

@@ -20,6 +20,7 @@ import { getUserAvatar, getUserFullName, getUserLanguages,
 
 import { Tab } from "@headlessui/react";
 import ExperiencesCard from "@/components/ExperiencesCard";
+import { useSession, signOut } from "next-auth/react";
 
 export interface AuthorPageProps {}
 
@@ -31,6 +32,12 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const isLoading = useSelector(getUserLoading);
   const dateJoined = useSelector(getUserCreatedAt);
 
+  console.log("author page");
+  console.log("Fullname:", fullName);
+  const { data: session } = useSession();
+  const user = session?.user;
+  console.log(user)
+  
   let [categories] = useState(["Published", "Drafts"]);
 
   const renderSidebar = () => {
@@ -147,7 +154,6 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
       
     );
   };
-
 
   const renderSection1 = () => {
     return (
