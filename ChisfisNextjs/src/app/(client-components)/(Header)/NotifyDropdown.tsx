@@ -8,7 +8,6 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from "moment";
-import Cookies from "js-cookie";
 import { useSelector, UseSelector } from "react-redux";
 import { getUserId } from "@/store/slices/userProfileSlice";
 
@@ -17,19 +16,11 @@ interface Props {
 }
 
 const NotifyDropdown: FC<Props> = ({ className = "" }) => {
-  const authToken = Cookies.get('authToken');
-  console.log("authToken:");
-  console.log(authToken);
-
-  const uid = useSelector(getUserId);
-  console.log("useSelector(getUserId:");
-  console.log(uid);
 
   const { data: session } = useSession();
   const user = session?.user;
-  console.log("{ data: session } = useSession();");
-  console.log(user);
-
+  const userId = user.userId;
+  
   const [newNotifications, setNewNotifications] = useState(0);
   const [notifications, setNotifications] = useState([]); // initials state of notifications
 
@@ -51,14 +42,10 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
     if (user) {
       loadNotificationData();
     }
-    else
-    {
-    // return
-    }
   }, [user])
 
   const loadNotificationData = async () => {
-  {/*   const data = await fetchNotificationsData();
+   const data = await fetchNotificationsData();
     
    if (data) {
       data.map((str) => {
@@ -66,16 +53,12 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
       });
 
       setNotifications(data);
-    } */}
+    } 
   };
 
   const fetchNotificationsData = async () => {
-    console.log("fetchNotificationsData")
-    {/* const userId = authToken;
-    console.log(authToken);
-
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/getNotifications`, {userId:userId})
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/get`, {userId});
 
       if (response) {
        return await response.data[0];
@@ -84,7 +67,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
       console.error('Error fetching notification data:', error);
       // alert("Loading notifications failed. Network error. Please contact helpdesk. Error code: 500.");
     } finally {
-    } */}
+    } 
   };
 
   const handleItemClick = (item) => {
@@ -116,7 +99,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   const deleteNotification = async(id)=>{
     
     const notificationId = parseInt(id);
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/deleteNotification`, {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/delete`, {
       notificationId
     })
     .then((response) => {
@@ -130,7 +113,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   const updateNotification = async(id)=>{
     
     const notificationId = parseInt(id);
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/updateNotification`, {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/update`, {
       notificationId
     })
     .then((response) => {

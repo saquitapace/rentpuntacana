@@ -1,11 +1,17 @@
-// app/api/auth/deleteNotificaitons/route.js 
+// delete notifications
 import { NextResponse } from 'next/server';
-import pool from '../../../../lib/db';
+import { pool } from '../../../../../lib/db';
 
 export async function PUT(request) {
   const { notificationId } = await request.json();
   const value = 2; //setting to 1 is marked as read
-  const response = await pool.query('UPDATE notifications SET status=? WHERE id=?', [value ,notificationId]);
+  const response = await pool.query(`
+    UPDATE 
+      notifications 
+    SET 
+    status=? 
+      WHERE id=?`, 
+    [value ,notificationId]);
   
   return NextResponse.json(response);
 }
