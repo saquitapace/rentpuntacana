@@ -23,7 +23,8 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const user = session?.user;
   const pathname = usePathname();
 
-  console.log("newHeader")
+  console.log( 'TEST ' + session.jti)
+
 
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
