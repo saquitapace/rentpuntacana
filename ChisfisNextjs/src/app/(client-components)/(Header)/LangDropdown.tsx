@@ -16,33 +16,9 @@ export const headerLanguage = [
     active: true,
   },
   {
-    id: "Vietnamese",
-    name: "Vietnamese",
-    description: "Vietnamese",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Belgique",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Canada",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Belgique",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Canada",
+    id: "Spanish",
+    name: "Spanish",
+    description: "Dominican Republic",
     href: "##",
   },
 ];

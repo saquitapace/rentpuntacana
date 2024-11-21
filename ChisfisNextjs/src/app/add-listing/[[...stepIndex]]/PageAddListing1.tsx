@@ -1,11 +1,64 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState } from "react";
+import i18n from "../../../utils/i18n";
+import options from "../../../utils/options";
 import Input from "@/shared/Input";
 import Select from "@/shared/Select";
+import Checkbox from "@/shared/Checkbox";
 import FormItem from "../FormItem";
+//import addListingFormData from "../../../utils/addListingFormData";
+
+// 1 import form to track all changes.
+
+//options for form
+//const listing_types = options.getListingTypes(); // not used yet
+const rental_length = options.getRentalLength();
+const language =  i18n.getLanguage();
+const strings = i18n.getStrings();
+
+const page1FormData = JSON.parse(sessionStorage.getItem("page1FormData"))
 
 export interface PageAddListing1Props {}
 
 const PageAddListing1: FC<PageAddListing1Props> = () => {
+
+  if(!sessionStorage.page1FormData) {
+    sessionStorage.setItem("page1FormData",JSON.stringify({listingType:"",title:"", rentalLength: []}));
+  }
+  const page1FormData = JSON.parse(sessionStorage.getItem("page1FormData"))
+
+  const [formData, setFormData] = useState({
+    listingType: page1FormData.listingType,
+    title:page1FormData.title,
+    rentalLength: page1FormData.rentalLength
+  });
+  
+  const {
+    listingType,
+    title,
+    rentalLength,
+  } = formData;
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    //console.log(name, value);
+    console.log(formData)
+    formData[name] = value;
+    sessionStorage.setItem("page1FormData", JSON.stringify(formData));
+
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    console.log(formData)
+  };
+
+  let rentalTermOptions = rental_length;
+  
+   // Set initial checked state for rentalTermOptions
+  rentalTermOptions.forEach(option => {
+    option.defaultChecked = formData.rentalLength.includes(option.field);
+  });
+
   return (
     <>
       <h2 className="text-2xl font-semibold">Choosing listing categories</h2>
@@ -14,34 +67,65 @@ const PageAddListing1: FC<PageAddListing1Props> = () => {
       <div className="space-y-8">
         {/* ITEM */}
         <FormItem
-          label="Choose a property type"
-          desc="Hotel: Professional hospitality businesses that usually have a unique style or theme defining their brand and decor"
+          label="Choose a listing type"
         >
-          <Select>
+          <Select 
+           name="listingType"
+           value={listingType}
+           onChange={handleChange}>
+            <option value=""></option>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
             <option value="Hotel">Hotel</option>
-            <option value="Cottage">Cottage</option>
-            <option value="Villa">Villa</option>
-            <option value="Cabin">Cabin</option>
-            <option value="Farm stay">Farm stay</option>
-            <option value="Houseboat">Houseboat</option>
-            <option value="Lighthouse">Lighthouse</option>
           </Select>
         </FormItem>
         <FormItem
-          label="Place name"
+          label="Listing Title"
           desc="A catchy name usually includes: House name + Room name + Featured property + Tourist destination"
         >
-          <Input placeholder="Places name" />
+          <Input 
+          name="title"
+          value={title}
+          onChange={handleChange}
+          placeholder="Listing Title (**Cannot be the Property Name)" />
         </FormItem>
+        
         <FormItem
-          label="Rental form"
-          desc="Entire place: Guests have the whole place to themselves—there's a private entrance and no shared spaces. A bedroom, bathroom, and kitchen are usually included."
-        >
-          <Select>
-            <option value="Hotel">Entire place</option>
-            <option value="Private room">Private room</option>
-            <option value="Share room">Share room</option>
-          </Select>
+          label="Rental length (Check all that apply)">
+          <div className="flex flex-wrap">
+                {rentalTermOptions.map((item, index) => (
+                  <div key={item.field} className="pr-5">
+                    <Checkbox
+                      name={item.field}
+                      label={item[language]}
+                      defaultChecked= {item.defaultChecked}
+                      onChange={(e) => {
+                        var idx = rentalLength.indexOf(item.field, 0);
+                        
+                        if(idx >=0 && e == true){
+                        // do nothing item is in the array
+                        }
+                        
+                        if(idx>=0 && e == false){
+                          rentalLength.splice(idx,1);
+                          // remove from array
+                        }
+
+                        if(idx==-1 && e == true){
+                          rentalLength.push(item.field);
+                        }
+                        //formData.rentalLength = rentalLength;
+                        //console.log(formData)
+
+                        sessionStorage.setItem("page1FormData", JSON.stringify(formData));
+                        setFormData((prevData) => ({ ...prevData, [rentalLength]: rentalLength }));
+                        console.log(JSON.parse(sessionStorage.getItem("page1FormData")));
+
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
         </FormItem>
       </div>
     </>

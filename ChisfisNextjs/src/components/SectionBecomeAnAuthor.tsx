@@ -29,7 +29,7 @@ const SectionBecomeAnAuthor: FC<SectionBecomeAnAuthorProps> = ({
           apartments... becomes fast, convenient and easy.
         </span>
         <ButtonPrimary className="mt-6 sm:mt-11">
-          Become an author
+          Become a Listing Agent
         </ButtonPrimary>
       </div>
       <div className="flex-grow">

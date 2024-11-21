@@ -107,7 +107,7 @@ function PageHome2() {
       <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
         <SectionHero2 className="" />
 
-        <div className="ncSectionLogos grid grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-16">
+        {/*<div className="ncSectionLogos grid grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-16">
           <div className="flex items-end justify-center">
             <Image className="block dark:hidden" src={logo1} alt="logo1" />
             <Image className="hidden dark:block" src={logo1Dark} alt="logo1" />
@@ -129,6 +129,10 @@ function PageHome2() {
             <Image className="block dark:hidden" src={logo5} alt="logo5" />
             <Image className="hidden dark:block" src={logo5Dark} alt="logo5" />
           </div>
+        </div> */}
+      <div className="relative py-16">
+          <BackgroundSection />
+          <SectionGridFeatureProperty />
         </div>
 
         <SectionHowItWork
@@ -157,34 +161,29 @@ function PageHome2() {
           ]}
         />
 
-        <div className="relative py-16">
-          <BackgroundSection />
-          <SectionGridFeatureProperty />
-        </div>
-
         <SectionOurFeatures type="type2" rightImg={rightImgPng} />
 
         <SectionDowloadApp />
 
-        <SectionSliderNewCategories
+       {/*} <SectionSliderNewCategories
           categories={DEMO_CATS_2}
           categoryCardType="card4"
           itemPerRow={4}
           heading="Suggestions for discovery"
           subHeading="Popular places to stay that Chisfis recommends for you"
-        />
+        /> */}
 
         <div className="relative py-16">
           <BackgroundSection className="bg-neutral-100 dark:bg-black dark:bg-opacity-20 " />
           <SectionGridAuthorBox boxCard="box2" />
         </div>
 
-        <SectionSliderNewCategories
+       {/* <SectionSliderNewCategories
           heading="Explore by types of stays"
           subHeading="Explore houses based on 10 types of stays"
           categoryCardType="card5"
           itemPerRow={5}
-        />
+        /> */}
 
         <SectionSubscribe2 />
       </div>

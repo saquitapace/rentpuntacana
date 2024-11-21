@@ -1,6 +1,7 @@
+"use client";
+
 import { avatarColors } from "@/contains/contants";
-import React, { FC } from "react";
-import avatar1 from "@/images/avatars/Image-1.png";
+import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 
 export interface AvatarProps {
@@ -11,44 +12,100 @@ export interface AvatarProps {
   userName?: string;
   hasChecked?: boolean;
   hasCheckedClass?: string;
+  isLoading?: boolean;
 }
 
 const Avatar: FC<AvatarProps> = ({
   containerClassName = "ring-1 ring-white dark:ring-neutral-900",
   sizeClass = "h-6 w-6 text-sm",
   radius = "rounded-full",
-  imgUrl = avatar1,
+  imgUrl,
   userName,
   hasChecked,
   hasCheckedClass = "w-4 h-4 -top-0.5 -right-0.5",
 }) => {
-  const url = imgUrl || "";
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | StaticImageData | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (imgUrl) {
+      setIsLoading(true);
+      const urlString = typeof imgUrl === 'string' ? imgUrl : imgUrl.src;
+      
+      if (urlString.startsWith('/images/avatars/')) {
+        setImageSrc(`${urlString}?t=${new Date().getTime()}`);
+        setImageError(false);
+      } else {
+        setImageSrc(urlString);
+        setImageError(false);
+      }
+    }
+  }, [imgUrl]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/images/avatars/')) {
+      interval = setInterval(() => {
+        setImageSrc(`${imageSrc.split('?')[0]}?t=${new Date().getTime()}`);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [imageSrc]);
+
   const name = userName || "John Doe";
   const _setBgColor = (name: string) => {
-    const backgroundIndex = Math.floor(
-      name.charCodeAt(0) % avatarColors.length
-    );
+    const backgroundIndex = Math.floor(name.charCodeAt(0) % avatarColors.length);
     return avatarColors[backgroundIndex];
+  };
+
+  const handleImageError = () => {
+    console.log('Image failed to load:', imageSrc);
+    setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
   };
 
   return (
     <div
       className={`wil-avatar relative flex-shrink-0 inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
-      style={{ backgroundColor: url ? undefined : _setBgColor(name) }}
+      style={{ backgroundColor: imageError ? _setBgColor(name) : undefined }}
     >
-      {url && (
-        <Image
-          className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={url}
-          alt={name}
-        />
+      {imageSrc && !imageError ? (
+        <>
+          <Image
+            className={`absolute inset-0 w-full h-full object-cover ${radius} ${
+              isLoading ? 'opacity-0' : 'opacity-100'
+            } transition-opacity duration-200`}
+            src={imageSrc}
+            alt={name}
+            width={100}
+            height={100}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            priority
+            unoptimized
+          />
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center text-sm">
+              <span className="animate-pulse">Loading...</span>
+            </div>
+          )}
+        </>
+      ) : (
+        <span className="wil-avatar__name">{name[0]}</span>
       )}
-      <span className="wil-avatar__name">{name[0]}</span>
 
       {hasChecked && (
-        <span
-          className={` bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute  ${hasCheckedClass}`}
-        >
+        <span className={`bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute ${hasCheckedClass}`}>
           <i className="las la-check"></i>
         </span>
       )}

@@ -22,7 +22,7 @@ const SectionGridFeatureProperty: FC<SectionGridFeaturePropertyProps> = ({
   heading = "Featured Properties",
   subHeading = "text goes here",
   headingIsCenter,
-  tabs = ["New York", "Tokyo", "Paris", "London"],
+  tabs = [],
 }) => {
   const renderCard = (stay: StayDataType, index: number) => {
     return <PropertyCardH key={index} className="h-full" data={stay} />;

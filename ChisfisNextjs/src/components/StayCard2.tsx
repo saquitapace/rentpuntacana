@@ -47,8 +47,42 @@ const StayCard2: FC<StayCard2Props> = ({
           imageClass="rounded-lg"
           href={href}
         />
-        <BtnLikeIcon isLiked={like} className="absolute right-3 top-3 z-[1]" />
+        <BtnLikeIcon isLiked={like} id={`${id}`} className="absolute right-3 top-3 z-[1]" />
         {saleOff && <SaleOffBadge className="absolute left-3 top-3" />}
+      </div>
+    );
+  };
+  const renderTienIch = () => {
+    return (
+      <div className="inline-grid grid-cols-3 gap-5">
+        <div className="flex items-center space-x-2">
+          <span className="hidden sm:inline-block">
+            <i className="las la-bed text-lg"></i>
+          </span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            2 beds
+          </span>
+        </div>
+
+        {/* ---- */}
+        <div className="flex items-center space-x-2">
+          <span className="hidden sm:inline-block">
+            <i className="las la-bath text-lg"></i>
+          </span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            2 baths
+          </span>
+        </div>
+
+        {/* ---- */}
+        <div className="flex items-center space-x-2">
+          <span className="hidden sm:inline-block">
+            <i className="las la-expand-arrows-alt text-lg"></i>
+          </span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+          1200 m<sup>2</sup>
+          </span>
+        </div>
       </div>
     );
   };
@@ -58,7 +92,7 @@ const StayCard2: FC<StayCard2Props> = ({
       <div className={size === "default" ? "mt-3 space-y-3" : "mt-2 space-y-2"}>
         <div className="space-y-2">
           <span className="text-sm text-neutral-500 dark:text-neutral-400">
-            {listingCategory.name} · {bedrooms} beds
+            {/*{listingCategory.name} · {bedrooms} beds*/}
           </span>
           <div className="flex items-center space-x-2">
             {isAds && <Badge name="ADS" color="green" />}
@@ -71,7 +105,7 @@ const StayCard2: FC<StayCard2Props> = ({
             </h2>
           </div>
           <div className="flex items-center text-neutral-500 dark:text-neutral-400 text-sm space-x-1.5">
-            {size === "default" && (
+          {/*  {size === "default" && (
               <svg
                 className="h-4 w-4"
                 fill="none"
@@ -91,13 +125,20 @@ const StayCard2: FC<StayCard2Props> = ({
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-            )}
-            <span className="">{address}</span>
+            )} 
+            {/*<span className="">{address}</span>*/}
+          {renderTienIch()}
+
+
           </div>
         </div>
         <div className="w-14 border-b border-neutral-100 dark:border-neutral-800"></div>
         <div className="flex justify-between items-center">
-          <span className="text-base font-semibold">
+         {!!reviewStart && (
+            <StartRating reviewCount={reviewCount} point={reviewStart} />
+         )}
+
+         {/*} <span className="text-base font-semibold">
             {price}
             {` `}
             {size === "default" && (
@@ -105,10 +146,11 @@ const StayCard2: FC<StayCard2Props> = ({
                 /night
               </span>
             )}
-          </span>
-          {!!reviewStart && (
-            <StartRating reviewCount={reviewCount} point={reviewStart} />
-          )}
+          </span> */}
+          <span className="flex items-center justify-center px-2.5 py-1.5 border-2 border-secondary-500 rounded-lg leading-none text-sm font-medium text-secondary-500">
+              {`${price},000`}
+            </span>
+          
         </div>
       </div>
     );

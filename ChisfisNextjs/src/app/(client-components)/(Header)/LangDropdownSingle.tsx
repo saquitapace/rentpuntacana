@@ -14,35 +14,11 @@ export const headerLanguage = [
     active: true,
   },
   {
-    id: "Vietnamese",
-    name: "Vietnamese",
-    description: "Vietnamese",
+    id: "Spanish",
+    name: "Spanish",
+    description: "D. Republic",
     href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Belgique",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Canada",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Belgique",
-    href: "##",
-  },
-  {
-    id: "Francais",
-    name: "Francais",
-    description: "Canada",
-    href: "##",
-  },
+  }
 ];
 
 interface LangDropdownProps {
@@ -62,9 +38,10 @@ const LangDropdown: FC<LangDropdownProps> = ({
                 ${open ? "" : "text-opacity-80"}
              group px-3 py-1.5 border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              <GlobeAltIcon className="w-[18px] h-[18px] opacity-80" />
+              {/*<GlobeAltIcon className="w-[18px] h-[18px] opacity-80" /> */}
+              <GlobeAltIcon className="h-6 w-6" />
 
-              <span className="ml-2 select-none">Language</span>
+              <span className="ml-2 select-none">Eng</span>
               <ChevronDownIcon
                 className={`${open ? "-rotate-180" : "text-opacity-70"}
                   ml-2 h-4 w-4  group-hover:text-opacity-80 transition ease-in-out duration-150`}

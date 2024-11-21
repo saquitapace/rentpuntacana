@@ -83,12 +83,6 @@ const demoChildMenus: NavItemType[] = [
 
 const otherPageChildMenus: NavItemType[] = [
 	{ id: ncNanoId(), href: '/add-listing/1' as Route, name: '+ Add listing' },
-	{ id: ncNanoId(), href: '/blog', name: 'Blog page' },
-	{ id: ncNanoId(), href: '/blog/single' as Route, name: 'Blog single' },
-	{ id: ncNanoId(), href: '/about', name: 'About' },
-	{ id: ncNanoId(), href: '/contact', name: 'Contact us' },
-	{ id: ncNanoId(), href: '/login', name: 'Login' },
-	{ id: ncNanoId(), href: '/signup', name: 'Signup' },
 ]
 
 const templatesChildrenMenus: NavItemType[] = [
@@ -150,18 +144,6 @@ const templatesChildrenMenus: NavItemType[] = [
 			},
 		],
 	},
-	//
-	{ id: ncNanoId(), href: '/checkout', name: 'Checkout' },
-	{ id: ncNanoId(), href: '/pay-done', name: 'Pay done' },
-	//
-	{ id: ncNanoId(), href: '/author', name: 'Author page' },
-	{ id: ncNanoId(), href: '/account', name: 'Account page' },
-	//
-	{
-		id: ncNanoId(),
-		href: '/subscription',
-		name: 'Subscription',
-	},
 ]
 
 export const NAVIGATION_DEMO: NavItemType[] = [
@@ -169,129 +151,17 @@ export const NAVIGATION_DEMO: NavItemType[] = [
 		id: ncNanoId(),
 		href: '/',
 		name: 'Home',
-		type: 'dropdown',
 		children: demoChildMenus,
 		isNew: true,
-	},
-	{
-		id: ncNanoId(),
-		href: '/listing-stay',
-		name: 'Listing Page',
-		type: 'dropdown',
-		children: [
-			{
-				id: ncNanoId(),
-				href: '/listing-stay',
-				name: 'Stay listings',
-				type: 'dropdown',
-				children: [
-					{ id: ncNanoId(), href: '/listing-stay', name: 'Stay page' },
-					{
-						id: ncNanoId(),
-						href: '/listing-stay-map',
-						name: 'Stay page (map)',
-					},
-					{ id: ncNanoId(), href: '/listing-stay-detail', name: 'Stay Detail' },
-				],
-			},
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-experiences',
-				name: 'Experiences listings',
-				type: 'dropdown',
-				children: [
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences',
-						name: 'Experiences page',
-					},
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences-map',
-						name: 'Experiences page (map)',
-					},
-					{
-						id: ncNanoId(),
-						href: '/listing-experiences-detail',
-						name: 'Experiences Detail',
-					},
-				],
-			},
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-car',
-				name: 'Cars listings',
-				type: 'dropdown',
-				children: [
-					{ id: ncNanoId(), href: '/listing-car', name: 'Cars page' },
-					{ id: ncNanoId(), href: '/listing-car-map', name: 'Cars page (map)' },
-					{ id: ncNanoId(), href: '/listing-car-detail', name: 'Car Detail' },
-				],
-			},
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-real-estate',
-				name: 'Real Estate Listings',
-				type: 'dropdown',
-				children: [
-					{
-						id: ncNanoId(),
-						href: '/listing-real-estate',
-						name: 'Real Estate Listings',
-					},
-					{
-						id: ncNanoId(),
-						href: '/listing-real-estate-map',
-						name: 'Real Estate Maps',
-					},
-				],
-			},
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-flights',
-				name: 'Flights listings',
-			},
-		],
-	},
-	{
-		id: ncNanoId(),
-		href: '/author',
-		name: 'Templates',
-		type: 'dropdown',
-		children: templatesChildrenMenus,
-	},
-
-	{
-		id: ncNanoId(),
-		href: '/blog',
-		name: 'Other pages',
-		type: 'dropdown',
-		children: otherPageChildMenus,
-	},
+	}
 ]
 
 export const NAVIGATION_DEMO_2: NavItemType[] = [
-	{
-		id: ncNanoId(),
-		href: '/',
-		name: 'Home',
-		type: 'dropdown',
-		children: demoChildMenus,
-		isNew: true,
-	},
-
 	//
 	{
 		id: ncNanoId(),
 		href: '/listing-stay',
-		name: 'Listing pages',
+		name: 'Listing pages user for how it works',
 		children: [
 			{ id: ncNanoId(), href: '/listing-stay', name: 'Stay listings' },
 			{
@@ -300,23 +170,6 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
 				name: 'Stay listings (map)',
 			},
 			{ id: ncNanoId(), href: '/listing-stay-detail', name: 'Stay detail' },
-
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-experiences',
-				name: 'Experiences listings',
-			},
-			{
-				id: ncNanoId(),
-				href: '/listing-experiences-map',
-				name: 'Experiences (map)',
-			},
-			{
-				id: ncNanoId(),
-				href: '/listing-experiences-detail',
-				name: 'Experiences detail',
-			},
 		],
 	},
 	{
@@ -324,10 +177,6 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
 		href: '/listing-car',
 		name: 'Listing pages',
 		children: [
-			{ id: ncNanoId(), href: '/listing-car', name: 'Cars listings' },
-			{ id: ncNanoId(), href: '/listing-car-map', name: 'Cars listings (map)' },
-			{ id: ncNanoId(), href: '/listing-car-detail', name: 'Car detail' },
-
 			//
 			{
 				id: ncNanoId(),
@@ -338,12 +187,6 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
 				id: ncNanoId(),
 				href: '/listing-real-estate-map',
 				name: 'Real estate (map)',
-			},
-			//
-			{
-				id: ncNanoId(),
-				href: '/listing-flights',
-				name: 'Flights listings',
 			},
 		],
 	},

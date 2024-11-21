@@ -1,100 +1,175 @@
 "use client";
 
-import React, { FC, useState  } from "react";
-import axios from "axios";
-
-
-import facebookSvg from "@/images/Facebook.svg";
-import twitterSvg from "@/images/Twitter.svg";
-import googleSvg from "@/images/Google.svg";
+import React, { FC, useState } from "react";
 import Input from "@/shared/Input";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import facebookSvg from "@/images/Facebook.svg";
+import googleSvg from "@/images/Google.svg";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { signInUser, resetAuthState } from '@/store/slices/authSlice';
+import { fetchUserProfile } from '@/store/slices/userProfileSlice';
 
 export interface PageLoginProps {}
 
 const loginSocials = [
   {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
-  },
-  {
-    name: "Continue with Twitter",
-    href: "#",
-    icon: twitterSvg,
-  },
-  {
     name: "Continue with Google",
-    href: "#",
+    provider: "google",
     icon: googleSvg,
+  },
+  {
+    name: "Continue with Facebook",
+    provider: "facebook",
+    icon: facebookSvg,
   },
 ];
 
-
 const PageLogin: FC<PageLoginProps> = ({}) => {
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading: reduxLoading, error: authError } = useSelector((state: RootState) => state.auth);
   
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  // Local state for form handling
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localError, setLocalError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    try 
-    {
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/sign-in`, {
-        email,
-        password,
+  const handleSocialLogin = async (provider: string) => {
+    try {
+      dispatch(resetAuthState());
+      setLocalLoading(true);
+      setLocalError("");
+      
+      await signIn(provider, {
+        callbackUrl: "/",
       });
       
-      if (response.status === 200) {
-        console.log( response.data );
-      }
-    } 
-    catch ( err ) 
-    {
-      if (axios.isAxiosError(err)) {
-        console.log(err.response?.data?.msg || "An error occurred");
-      } else {
-        console.log("An unknown error occurred");
-      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLocalError("An error occurred during login");
+    } finally {
+      setLocalLoading(false);
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      setLocalLoading(true);
+      setLocalError("");
+      
+      const result = await dispatch(signInUser({
+        email: formData.email,
+        password: formData.password,
+      })).unwrap();
+
+      if (result?.ok) {
+        await dispatch(fetchUserProfile()).unwrap();
+        router.push("/");
+        router.refresh();
+      }
+    } catch (error: any) {
+      console.error("Login error:", error);
+      setLocalError(error.message || "An error occurred during login");
+    } finally {
+      setLocalLoading(false);
+      dispatch(resetAuthState());
+    }
+  };
+
+  // Update the button disabled state to use both loading states
+  const isSubmitting = localLoading || reduxLoading;
 
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
           Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
+          {/* SOCIAL LOGIN BUTTONS */}
+          <div className="grid gap-3">
+            {loginSocials.map((item, index) => (
+              <button
+                key={index}
+                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                onClick={() => handleSocialLogin(item.provider)}
+                disabled={isSubmitting}
+              >
+                <Image
+                  className="flex-shrink-0"
+                  src={item.icon}
+                  alt={item.name}
+                />
+                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                  {item.name}
+                </h3>
+              </button>
+            ))}
+          </div>
+
+          {/* OR */}
+          <div className="relative text-center">
+            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
+              OR
+            </span>
+            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
+          </div>
+
           {/* FORM */}
-          <form onSubmit={ handleSubmit } className="grid grid-cols-1 gap-6" method="post">
+          {(authError || localError) && (
+            <div className="text-red-500 text-sm text-center">
+              {authError || localError}
+            </div>
+          )}
+          <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address
               </span>
               <Input
                 type="email"
+                name="email"
                 placeholder="example@example.com"
                 className="mt-1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange}
+                required
               />
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Password
-                <Link href="/login" className="text-sm underline font-medium">
+                <Link href="/forgotPassword" className="text-sm underline">
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" value={password} onChange={(e) => setPassword(e.target.value)}/>
+              <Input
+                type="password"
+                name="password"
+                className="mt-1"
+                onChange={handleChange}
+                required
+              />
             </label>
-            <ButtonPrimary type="submit"
-            >Continue</ButtonPrimary>
+            <ButtonPrimary type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Continue"}
+            </ButtonPrimary>
           </form>
 
           {/* ==== */}

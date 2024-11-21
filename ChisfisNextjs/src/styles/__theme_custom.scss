@@ -76,7 +76,8 @@
 
 // HERO
 .nc-hero-field-padding {
-  @apply py-3 px-4 md:py-4 md:px-7 xl:py-6 xl:px-8;
+ // original => @apply py-3 px-4 md:py-4 md:px-7 xl:py-6 xl:px-8;
+  @apply py-3 px-4 md:py-1 md:px-3 xl:py-2 xl:px-4;
 }
 
 .nc-hero-field-padding--small {

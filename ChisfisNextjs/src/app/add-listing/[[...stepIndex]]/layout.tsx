@@ -3,6 +3,7 @@ import { FC } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import { Route } from "@/routers/types";
+//import listingHelper from "../listingHelper";
 
 export interface CommonLayoutProps {
   children: React.ReactNode;
@@ -20,12 +21,14 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children, params }) => {
     index > 1 ? `/add-listing/${index - 1}` : `/add-listing/${1}`
   ) as Route;
   const nextBtnText = index > 9 ? "Publish listing" : "Continue";
+
   return (
     <div
-      className={`nc-PageAddListing1 px-4 max-w-3xl mx-auto pb-24 pt-14 sm:py-24 lg:pb-32`}
+      className={`nc-PageAddListing1 px-3 max-w-3xl mx-auto pb-24 pt-14 sm:py-4 lg:pb-32`}
     >
-      <div className="space-y-11">
-        <div>
+      <div className="space-y-5">
+          <h2 className="text-4xl font-semibold">Add New Listing</h2>
+       <div>
           <span className="text-4xl font-semibold">{index}</span>{" "}
           <span className="text-lg text-neutral-500 dark:text-neutral-400">
             / 10
@@ -37,7 +40,10 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children, params }) => {
 
         {/* --------------------- */}
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href={backtHref}>Go back</ButtonSecondary>
+        {index != 1  && (
+
+         <ButtonSecondary href={backtHref}>Go back</ButtonSecondary>
+        )}
           <ButtonPrimary href={nextHref}>
             {nextBtnText || "Continue"}
           </ButtonPrimary>

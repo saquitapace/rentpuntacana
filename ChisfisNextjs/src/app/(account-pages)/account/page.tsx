@@ -1,23 +1,199 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Label from "@/components/Label";
 import Avatar from "@/shared/Avatar";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
-import Select from "@/shared/Select";
 import Textarea from "@/shared/Textarea";
+import { useForm, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { 
+  setUserProfile, 
+  setAvatar, 
+  updateUserProfile,
+  getUserId,
+  getUserFullName,
+  getUserLoading,
+  getUserAbout,
+  getUserCreatedAt,
+  getUserAvatar,
+  fetchUserProfile
+} from '@/store/slices/userProfileSlice';
+import { useSession } from "next-auth/react";
 
-export interface AccountPageProps {}
+export interface AccountFormInputs {
+  accountType?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  about?: string;
+  languages: string[];
+  companyName?: string;
+  address?: string;
+}
 
 const AccountPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: session, update: updateSession } = useSession();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<AccountFormInputs>({
+    defaultValues: {
+      firstName: userProfile.firstName || '',
+      lastName: userProfile.lastName || '',
+      email: userProfile.email || '',
+      phoneNumber: userProfile.phoneNumber || '',
+      about: userProfile.about || '',
+      languages: userProfile.languages || ['English'],
+      companyName: userProfile.companyName || '',
+      address: userProfile.address || '',
+    }
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const languageOptions = [
+    { name: 'English', defaultChecked: true },
+    { name: 'Spanish', defaultChecked: false },
+    { name: 'French', defaultChecked: false },
+  ];
+
+  // Set initial form values when userProfile changes
+  useEffect(() => {
+    if (userProfile) {
+      setValue('companyName', userProfile.companyName || '');
+      setValue('firstName', userProfile.firstName || '');
+      setValue('lastName', userProfile.lastName || '');
+      setValue('phoneNumber', userProfile.phoneNumber || '');
+      setValue('about', userProfile.about || '');
+      setValue('languages', userProfile.languages || ['English']);
+      setValue('address', userProfile.address || '');
+    }
+  }, [userProfile, setValue]);
+
+  const onSubmit = async (data: AccountFormInputs) => {
+    try {
+      setIsLoading(true);
+      setError('');
+      setNotification({ type: null, message: '' });
+
+      // Update the profile
+      const result = await dispatch(updateUserProfile(data)).unwrap();
+      
+      // Fetch the updated profile to ensure Redux state is in sync
+      await dispatch(fetchUserProfile()).unwrap();
+
+      setNotification({
+        type: 'success',
+        message: 'Profile updated successfully'
+      });
+
+      // Update session if needed
+      if (session?.user) {
+        await updateSession({
+          ...session,
+          user: {
+            ...session.user,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+          }
+        });
+      }
+
+    } catch (err: any) {
+      setError(err.message || 'Failed to update profile');
+      setNotification({
+        type: 'error',
+        message: 'Failed to update profile'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const fileName = `UserProfile_${userProfile.userId}.png`;
+      const filePath = `/images/avatars/${fileName}`;
+      
+      const formData = new FormData();
+      formData.append('avatar', file);
+      formData.append('filePath', filePath);
+
+      try {
+        const response = await fetch('/api/update-avatar', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          dispatch(setAvatar(data.avatarUrl));
+          if (session?.user) {
+            await updateSession({
+              ...session,
+              user: {
+                ...session.user,
+                avatar: data.avatarUrl
+              }
+            });
+          }
+          setNotification({
+            type: 'success',
+            message: 'Avatar updated successfully'
+          });
+        } else {
+          throw new Error('Failed to update avatar');
+        }
+      } catch (err) {
+        console.error('Error updating avatar:', err);
+        setNotification({
+          type: 'error',
+          message: 'Failed to update avatar'
+        });
+      }
+    }
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* HEADING */}
-      <h2 className="text-3xl font-semibold">Account infomation</h2>
+      {/* Notification banner */}
+      {notification.type && (
+        <div className={`p-4 rounded-md ${
+          notification.type === 'success' 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {notification.message}
+        </div>
+      )}
+
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
-            <Avatar sizeClass="w-32 h-32" />
+            <Avatar 
+              imgUrl={userProfile.avatar} 
+              sizeClass="w-32 h-32"
+              userName={`${userProfile.firstName} ${userProfile.lastName}`}
+            />
             <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
               <svg
                 width="30"
@@ -34,63 +210,137 @@ const AccountPage = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-
               <span className="mt-1 text-xs">Change Image</span>
             </div>
             <input
               type="file"
               className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={handleFileChange}
+              accept="image/*"
             />
           </div>
         </div>
-        <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
+          {error && <div className="text-red-600 text-sm">{error}</div>}
+          
+          {/* Company Name */}
           <div>
-            <Label>Name</Label>
-            <Input className="mt-1.5" defaultValue="Eden Tuan" />
+            <Label>Company Name</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.companyName}
+              {...register("companyName")}
+            />
           </div>
-          {/* ---- */}
+
+          {/* First Name */}
           <div>
-            <Label>Gender</Label>
-            <Select className="mt-1.5">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </Select>
+            <Label>First Name</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.firstName}
+              {...register("firstName", { required: "First Name is required" })}
+            />
+            {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName.message}</div>}
           </div>
-          {/* ---- */}
+
+          {/* Last Name */}
           <div>
-            <Label>Username</Label>
-            <Input className="mt-1.5" defaultValue="@eden_tuan" />
+            <Label>Last Name</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
+            />
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
           </div>
-          {/* ---- */}
+
+          {/* Email - Read Only */}
           <div>
             <Label>Email</Label>
-            <Input className="mt-1.5" defaultValue="example@email.com" />
+            <Input 
+              className="mt-1.5 bg-neutral-100 dark:bg-neutral-800"
+              value={userProfile.email}
+              disabled
+              readOnly
+            />
           </div>
-          {/* ---- */}
-          <div className="max-w-lg">
-            <Label>Date of birth</Label>
-            <Input className="mt-1.5" type="date" defaultValue="1990-07-22" />
-          </div>
-          {/* ---- */}
+
+          {/* Phone Number */}
           <div>
-            <Label>Addess</Label>
-            <Input className="mt-1.5" defaultValue="New york, USA" />
+            <Label>Phone Number</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
           </div>
-          {/* ---- */}
+
+          {/* Address */}
           <div>
-            <Label>Phone number</Label>
-            <Input className="mt-1.5" defaultValue="003 888 232" />
+            <Label>Address</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.address}
+              {...register("address")}
+            />
           </div>
-          {/* ---- */}
+
+          {/* Languages */}
           <div>
-            <Label>About you</Label>
-            <Textarea className="mt-1.5" defaultValue="..." />
+            <Label>Languages</Label>
+            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+              <div className="flex flex-wrap gap-4 px-5 py-6">
+                <Controller
+                  name="languages"
+                  control={control}
+                  defaultValue={userProfile.languages}
+                  render={({ field }) => (
+                    <>
+                      {languageOptions.map((option) => (
+                        <div key={option.name} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id={option.name}
+                            checked={field.value?.includes(option.name)}
+                            onChange={(e) => {
+                              const newValue = e.target.checked
+                                ? [...(field.value || []), option.name]
+                                : field.value?.filter((lang) => lang !== option.name) || [];
+                              field.onChange(newValue);
+                            }}
+                            className="form-checkbox h-5 w-5"
+                          />
+                          <label htmlFor={option.name} className="ml-2">
+                            {option.name}
+                          </label>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                />
+              </div>
+            </div>
           </div>
+
+          {/* About */}
+          <div>
+            <Label>About</Label>
+            <Textarea 
+              className="mt-1.5"
+              defaultValue={userProfile.about}
+              {...register("about")}
+            />
+          </div>
+
+          {/* Submit Button */}
           <div className="pt-2">
-            <ButtonPrimary>Update info</ButtonPrimary>
+            <ButtonPrimary type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update info"}
+            </ButtonPrimary>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

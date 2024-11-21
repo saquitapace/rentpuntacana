@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import rightImgPng from "@/images/our-features.png";
+import rightImgPng from "@/images/our-features-2.png";
 import Image, { StaticImageData } from "next/image";
 import Badge from "@/shared/Badge";
 
@@ -30,7 +30,7 @@ const SectionOurFeatures: FC<SectionOurFeaturesProps> = ({
         }`}
       >
         <span className="uppercase text-sm text-gray-400 tracking-widest">
-          BENnefits
+          Benefits
         </span>
         <h2 className="font-semibold text-4xl mt-5">Happening cities </h2>
 

@@ -1,95 +1,55 @@
 import React from "react";
-import SectionSubscribe2 from "@/components/SectionSubscribe2";
+import SectionHero from "../app/(server-components)/SectionHero2";
+import BgGlassmorphism from "@/components/BgGlassmorphism";
+import SectionOurFeatures from "@/components/SectionOurFeatures";
 import BackgroundSection from "@/components/BackgroundSection";
-import { TaxonomyType } from "@/data/types";
-import SectionGridFeatureProperty from "@/app/(home)/SectionGridFeatureProperty";
-import SectionHero2 from "@/app/(server-components)/SectionHero2";
-import SectionGridFilterCard from "../app/(stay-listings)/SectionGridFilterCard";
+import SectionGridFeaturePlaces from "@/components/SectionGridFeaturePlaces";
+import SectionHowItWork from "@/components/SectionHowItWork";
+import SectionSubscribe2 from "@/components/SectionSubscribe2";
+import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
+import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor";
+import SectionClientSay from "@/components/SectionClientSay";
 
-const DEMO_CATS_2: TaxonomyType[] = [
-  {
-    id: "1",
-    href: "/listing-real-estate",
-    name: "Enjoy the great cold",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/5764100/pexels-photo-5764100.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  },
-  {
-    id: "2",
-    href: "/listing-real-estate",
-    name: "Sleep in a floating way",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/2869499/pexels-photo-2869499.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "3",
-    href: "/listing-real-estate",
-    name: "In the billionaire's house",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/7031413/pexels-photo-7031413.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "4",
-    href: "/listing-real-estate",
-    name: "Cool in the deep forest",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/247532/pexels-photo-247532.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "5",
-    href: "/listing-real-estate",
-    name: "In the billionaire's house",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/7031413/pexels-photo-7031413.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "6",
-    href: "/listing-real-estate",
-    name: "Sleep in a floating way",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/2869499/pexels-photo-2869499.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "7",
-    href: "/listing-real-estate",
-    name: "In the billionaire's house",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/7031413/pexels-photo-7031413.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-];
-
-function PageHome2() {
+function PageHome() {
   return (
-    <main className="nc-PageHome2 relative overflow-hidden">
-      <div className="container relative space-y-20 mb-20 lg:space-y-24 lg:mb-24">
-        <SectionHero2 className="" />
+    <main className="nc-PageHome relative overflow-hidden">
+      {/* GLASSMOPHIN */}
+      <BgGlassmorphism />
 
-        <div className="relative py-1">
-          <BackgroundSection />
-          <SectionGridFeatureProperty />
-        </div>
+      <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
+        {/* SECTION HERO */}
+        <SectionHero className="pt-0 lg:pt-0 lg:pb-0" />
+       {/*<SectionHero className="pt-10 lg:pt-16 lg:pb-16" /> */}
+
+        {/* SECTION 1 */}
+
+        <SectionGridFeaturePlaces cardType="card1" />
+        
+        <SectionHowItWork />
+
+        <SectionOurFeatures />
+
         <div className="relative py-16">
-          <SectionGridFilterCard className="pb-24 lg:pb-28" />
+          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
+          <SectionGridAuthorBox boxCard="box2" />
+          
         </div>
+
+        <div className="relative py-16">
+          <BackgroundSection />
+          <SectionBecomeAnAuthor />
+        </div>
+
+        <div className="relative py-16">
+          <BackgroundSection />
+          <SectionClientSay />
+        </div> 
 
         <SectionSubscribe2 />
+
       </div>
     </main>
   );
 }
 
-export default PageHome2;
+export default PageHome;

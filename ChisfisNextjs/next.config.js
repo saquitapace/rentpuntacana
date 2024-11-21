@@ -33,6 +33,18 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "http",         // Allowing localhost
+        hostname: "localhost",
+        port: "3000",             // Specify the port if necessary
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      }
     ],
   },
 };

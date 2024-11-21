@@ -154,17 +154,23 @@ function PageHome() {
 
       <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
         {/* SECTION HERO */}
-        <SectionHero className="pt-10 lg:pt-16 lg:pb-16" />
+        <SectionHero className="pt-0 lg:pt-0 lg:pb-0" />
+       {/*<SectionHero className="pt-10 lg:pt-16 lg:pb-16" /> */}
 
         {/* SECTION 1 */}
-        <SectionSliderNewCategories categories={DEMO_CATS} />
 
-        <SectionOurFeatures />
+        {/*<SectionSliderNewCategories categories={DEMO_CATS} /> */}
 
         <SectionGridFeaturePlaces cardType="card2" />
 
         <SectionHowItWork />
 
+        <SectionOurFeatures />
+        <div className="relative py-16">
+          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
+          <SectionGridAuthorBox />
+        </div>
+{/*
         <div className="relative py-16">
           <BackgroundSection className="bg-orange-50 dark:bg-black/20" />
           <SectionSliderNewCategories
@@ -175,35 +181,36 @@ function PageHome() {
             subHeading="Popular places to stay that Chisfis recommends for you"
             sliderStyle="style2"
           />
-        </div>
+        </div> /*}
 
-        <SectionSubscribe2 />
 
-        <div className="relative py-16">
-          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
-          <SectionGridAuthorBox />
-        </div>
+        
 
-        <SectionGridCategoryBox />
+{/*
+        <SectionGridCategoryBox /> 
+        */}
 
         <div className="relative py-16">
           <BackgroundSection />
           <SectionBecomeAnAuthor />
         </div>
-
+{/*
         <SectionSliderNewCategories
           heading="Explore by types of stays"
           subHeading="Explore houses based on 10 types of stays"
           categoryCardType="card5"
           itemPerRow={5}
-        />
+        /> 
 
-        <SectionVideos />
+        <SectionVideos /> */}
 
         <div className="relative py-16">
           <BackgroundSection />
           <SectionClientSay />
-        </div>
+        </div> 
+
+        <SectionSubscribe2 />
+
       </div>
     </main>
   );

@@ -30,8 +30,8 @@ const NAV: NavItem[] = [
     icon: MagnifyingGlassIcon,
   },
   {
-    name: "Wishlists",
-    link: "/account-savelists",
+    name: "Favorites",
+    link: "/favorites",
     icon: HeartIcon,
   },
   {
@@ -47,7 +47,7 @@ const NAV: NavItem[] = [
 
 const FooterNav = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
+  
   const pathname = usePathname();
 
   useEffect(() => {

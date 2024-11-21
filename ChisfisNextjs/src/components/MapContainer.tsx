@@ -7,12 +7,12 @@ import {
 import AnyReactComponent from '@/components/AnyReactComponent/AnyReactComponent'
 import { FC } from 'react'
 import Checkbox from '@/shared/Checkbox'
-import { CarDataType, ExperiencesDataType, StayDataType } from '@/data/types'
+import {ExperiencesDataType, StayDataType } from '@/data/types'
 
 interface MapContainerProps {
 	currentHoverID: string | number
-	DEMO_DATA: CarDataType[] | ExperiencesDataType[] | StayDataType[]
-	listingType: 'car' | 'experiences' | 'stay'
+	DEMO_DATA: ExperiencesDataType[] | StayDataType[]
+	listingType: 'experiences' | 'stay'
 }
 
 const MapContainer: FC<MapContainerProps> = ({
@@ -54,7 +54,6 @@ const MapContainer: FC<MapContainerProps> = ({
 							key={item.id}
 							lat={item.map.lat}
 							lng={item.map.lng}
-							car={listingType === 'car' ? (item as CarDataType) : undefined}
 							experiences={
 								listingType === 'experiences'
 									? (item as ExperiencesDataType)
