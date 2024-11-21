@@ -1,18 +1,18 @@
 "use client";
 
 import React, { FC, useState } from "react";
+import Link from "next/link";
+import { Route } from "@/routers/types";
+import { useSession } from "next-auth/react";
+import { usePathname } from 'next/navigation';
+import NotifyDropdown from "./NotifyDropdown";
+import AvatarDropdown from "./AvatarDropdown";
 import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdownSingle from "./LangDropdownSingle";
-import NotifyDropdown from "./NotifyDropdown";
-import AvatarDropdown from "./AvatarDropdown";
-import Link from "next/link";
-import { Route } from "@/routers/types";
-import { useSession } from "next-auth/react";
-import { usePathname } from 'next/navigation';
 
 export interface NewHeaderProps {
   className?: string;
@@ -23,7 +23,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const user = session?.user;
   const pathname = usePathname();
 
-  console.log("newHeader")
+  console.log("newHeader");
 
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
@@ -79,8 +79,6 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
                 )}
                 <NotifyDropdown />
               </div>
-
-              
             )}
             
             <div className="flex space-x-2">
