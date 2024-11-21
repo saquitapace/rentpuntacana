@@ -24,7 +24,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const pathname = usePathname();
 
   console.log("newHeader");
-  console.log( 'TEST ' + session.jti)
+  console.log( 'TEST ' + session?.jti)
 
 
   return (
