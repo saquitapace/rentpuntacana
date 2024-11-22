@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
-import { pool } from '@/lib/db';
-import { getServerSession } from "next-auth/next"
-import { authOptions } from '../auth/[...nextauth]/route'
+import { pool } from '../../../../../lib/db';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../[...nextauth]/route';
 
 export async function POST(request: Request) {
   try {

@@ -163,6 +163,23 @@ export async function createUser(userData: {
       ]
     );
 
+    await connection.execute(
+      `INSERT INTO notifications (
+        userId,
+        fromId,
+        description,
+        url,
+        status
+      ) VALUES (?, ?, ?, ?, ?)`,
+      [
+        userId,
+        'ADMIN',
+        'Welcome to Rent Punta Cana. Complete your profile.',
+        '#',
+        0
+      ]
+    );
+
     await connection.commit();
     
     return {
