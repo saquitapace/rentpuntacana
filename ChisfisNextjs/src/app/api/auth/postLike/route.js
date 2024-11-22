@@ -1,6 +1,6 @@
 // app/api/auth/postLike/route.js
 import { NextResponse } from 'next/server';
-import pool from '../../../../lib/db';
+import { pool } from '../../../../lib/db';
 
 export async function POST(request) {
   const { userId, property_id } = await request.json();

@@ -551,6 +551,7 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 					<Avatar
 						imgUrl={item.avatar}
 						sizeClass="w-30 h-30 sm:w-12 sm:h-12"
+						userName={item.name}
 					/>
 					<div className="ml-3 sm:ml-4 space-y-1">
 						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">

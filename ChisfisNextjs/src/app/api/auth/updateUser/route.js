@@ -1,6 +1,6 @@
 // app/api/auth/signup/route.js
 import { NextResponse } from 'next/server';
-import pool from '../../../../lib/db';
+import { pool } from '../../../../lib/db';
 
 export async function PUT(request) {
   const {companyName, firstName, lastName, email, phoneNumber, languages, about, userId} = await request.json();

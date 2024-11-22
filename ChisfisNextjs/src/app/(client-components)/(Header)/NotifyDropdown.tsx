@@ -46,7 +46,6 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
 
   const loadNotificationData = async () => {
    const data = await fetchNotificationsData();
-    
    if (data) {
       data.map((str) => {
         str.time = moment(new Date(str.time)).fromNow();   
@@ -185,6 +184,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
                         
                         <Avatar
                           imgUrl={item.avatar}
+                          userName={item.name}
                           sizeClass="w-8 h-8 sm:w-12 sm:h-12"
                         />
                         <div className="ml-3 sm:ml-4 space-y-1">

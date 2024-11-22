@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
       email: user.email,
       companyName: user.companyName,
       about: user.about || '',
-      avatar: user.avatar || '/images/avatars/default.png',
+      avatar: user.avatar || '',
       languages: user.languages ? JSON.parse(user.languages) : [],
       createdAt: user.createdAt,
       phoneNumber: user.phoneNumber || ''

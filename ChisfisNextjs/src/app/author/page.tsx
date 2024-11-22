@@ -82,6 +82,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
       <div className="w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
         <Avatar
           imgUrl={avatar}
+          userName={fullName}
           hasChecked
           hasCheckedClass="w-6 h-6 -top-0.5 right-2"
           sizeClass="w-28 h-28"

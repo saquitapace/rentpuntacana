@@ -13,7 +13,7 @@ export async function POST(request) {
       notifications.description,
       notifications.url AS href,
       notifications.status,
-      notifications.timestamp AS TIME,
+      notifications.timestamp AS time,
       users.avatar,
       users.firstName,
       users.lastName,
@@ -24,9 +24,9 @@ export async function POST(request) {
               SUBSTRING(users.firstName, 1, 1),
               ''
           )
-      ) AS NAME
+      ) AS name
     FROM
-        notifications
+        notifications 
     LEFT JOIN users ON users.userId = notifications.fromId
     WHERE
         notifications.status <= 1 AND notifications.userId = ?`, [userId]);

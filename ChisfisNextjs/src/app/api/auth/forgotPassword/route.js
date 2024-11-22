@@ -1,7 +1,7 @@
 // app/api/auth/forgotPassword/route.js
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
-import pool from '../../../../lib/db';
+import { pool } from '../../../../lib/db';
 
 export async function PUT(request) {
   const { email } = await request.json();
