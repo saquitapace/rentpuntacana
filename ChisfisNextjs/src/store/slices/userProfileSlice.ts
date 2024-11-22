@@ -143,7 +143,7 @@ export const getUserAccountType = (state: RootState) => state.userProfile?.accou
 export const getUserFirstName = (state: RootState) => state.userProfile?.firstName || '';
 export const getUserLastName = (state: RootState) => state.userProfile?.lastName || '';
 export const getUserEmail = (state: RootState) => state.userProfile?.email || '';
-export const getUserAvatar = (state: RootState) => state.userProfile?.avatar || '/images/avatars/default.png';
+export const getUserAvatar = (state: RootState) => state.userProfile?.avatar || '';
 export const getUserAbout = (state: RootState) => 
   state.userProfile?.about || 'Hi! I am new here.';
 export const getUserLoading = (state: RootState) => state.userProfile?.isLoading || false;

@@ -30,7 +30,7 @@ function PageHome() {
         <SectionOurFeatures />
 
         <div className="relative py-16">
-          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
+          <BackgroundSection className="dark:bg-black dark:bg-opacity-20 " />
           <SectionGridAuthorBox boxCard="box2" />
           
         </div>

@@ -40,6 +40,8 @@ const AccountPage = () => {
   const { data: session, update: updateSession } = useSession();
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
+  console.log(userProfile)
+
   const {
     register,
     handleSubmit,
@@ -128,6 +130,7 @@ const AccountPage = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       const fileName = `UserProfile_${userProfile.userId}.png`;

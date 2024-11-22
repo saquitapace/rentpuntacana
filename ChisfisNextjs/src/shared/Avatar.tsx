@@ -1,6 +1,5 @@
 "use client";
 
-import { avatarColors } from "@/contains/contants";
 import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 
@@ -46,24 +45,20 @@ const Avatar: FC<AvatarProps> = ({
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
-    if (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/images/avatars/')) {
+   /* if (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/images/avatars/')) {
       interval = setInterval(() => {
         setImageSrc(`${imageSrc.split('?')[0]}?t=${new Date().getTime()}`);
       }, 1000);
-    }
+    } */
 
     return () => {
-      if (interval) {
+     {/*} if (interval) {
         clearInterval(interval);
-      }
+      } */}
     };
   }, [imageSrc]);
 
-  const name = userName || "John Doe";
-  const _setBgColor = (name: string) => {
-    const backgroundIndex = Math.floor(name.charCodeAt(0) % avatarColors.length);
-    return avatarColors[backgroundIndex];
-  };
+  const name = userName || "";
 
   const handleImageError = () => {
     console.log('Image failed to load:', imageSrc);
@@ -76,8 +71,7 @@ const Avatar: FC<AvatarProps> = ({
 
   return (
     <div
-      className={`wil-avatar relative flex-shrink-0 inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
-      style={{ backgroundColor: imageError ? _setBgColor(name) : undefined }}
+      className={`wil-avatar relative flex-shrink-0 inline-flex items-center justify-center bg-green-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
     >
       {imageSrc && !imageError ? (
         <>

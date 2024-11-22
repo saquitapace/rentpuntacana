@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           accountType: user.accountType,
-          avatar: user.avatar || '/images/avatars/default.png',
+          avatar: user.avatar,
           auth_type: user.auth_type
         };
       }
