@@ -1,7 +1,7 @@
 // update Password service
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import pool from "../../../../lib/db";
+import { pool } from "../../../../lib/db";
 
 export async function POST(req) {
   try {
