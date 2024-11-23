@@ -23,6 +23,7 @@ import {
   getUserLoading,
   getUserCreatedAt
 } from '@/store/slices/userProfileSlice';
+import { formatDateJoined } from "@/utils/helpers";
 
 export interface AuthorPageProps {}
 
@@ -38,26 +39,11 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
   const isLoading = useSelector(getUserLoading);
-  const dateJoined = useSelector(getUserCreatedAt);
+  const dateJoined = formatDateJoined( useSelector(getUserCreatedAt) );
 
   // Debug logs
   console.log("Session:", session);
   console.log("UserProfile:", userProfile);
-
-  // Fetch user profile data when component mounts or session changes
-  useEffect(() => {
-    const fetchData = async () => {
-      if (session?.user?.email) {
-        try {
-          await dispatch(fetchUserProfile()).unwrap();
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-        }
-      }
-    };
-
-    fetchData();
-  }, [dispatch, session?.user?.email]);
 
   // Show loading state
   if (isLoading) {
@@ -68,12 +54,13 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     );
   }
 
+  ///TODO: move to helpers
   // Format date properly
-  const formattedDate = dateJoined ? new Date(dateJoined).toLocaleDateString('en-US', {
+  /* const formattedDate = dateJoined ? new Date(dateJoined).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long'
   }) : '';
-
+ */
   // Format languages properly
   const formattedLanguages = Array.isArray(languages) ? languages.join(', ') : '';
 
@@ -176,7 +163,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
-              Joined in {formattedDate}
+              Joined in {dateJoined}
             </span>
           </div>
         </div>

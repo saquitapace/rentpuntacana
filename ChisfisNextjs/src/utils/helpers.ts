@@ -1,4 +1,4 @@
-export const getDateJoined = (dateString: string | null): string => {
+export const formatDateJoined = (dateString: string | null): string => {
   if (!dateString) return "";
   
   const date = new Date(dateString);

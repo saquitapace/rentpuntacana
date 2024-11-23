@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           accountType: user.accountType,
-          avatar: user.avatar,
+          avatar: user.avatar || '/images/avatars/default.png',
           auth_type: user.auth_type
         };
       }
@@ -69,13 +69,16 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = token.user as any;
+      session = token as any;
       return session;
     }
   },
   session: {
     strategy: "jwt"
   },
+  /* jwt: {
+    secret: process.env.JWT_SECRET
+  }, */
   debug: process.env.NODE_ENV === 'development',
 };
 

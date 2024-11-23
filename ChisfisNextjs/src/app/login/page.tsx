@@ -12,7 +12,8 @@ import googleSvg from "@/images/Google.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { signInUser, resetAuthState } from '@/store/slices/authSlice';
-import { fetchUserProfile } from '@/store/slices/userProfileSlice';
+import { fetchUserProfile, setUserProfile } from '@/store/slices/userProfileSlice';
+import { redirect } from "@/utils/helpers";
 
 export interface PageLoginProps {}
 
@@ -71,7 +72,6 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
     e.preventDefault();
     
     try {
-      setLocalLoading(true);
       setLocalError("");
       
       const result = await dispatch(signInUser({
@@ -80,15 +80,14 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       })).unwrap();
 
       if (result?.ok) {
-        await dispatch(fetchUserProfile()).unwrap();
-        router.push("/");
-        router.refresh();
+        const response = await dispatch(fetchUserProfile()).unwrap();
+        dispatch(setUserProfile(response));
+        router.push( redirect( response.accountType ) );
       }
     } catch (error: any) {
       console.error("Login error:", error);
       setLocalError(error.message || "An error occurred during login");
     } finally {
-      setLocalLoading(false);
       dispatch(resetAuthState());
     }
   };
