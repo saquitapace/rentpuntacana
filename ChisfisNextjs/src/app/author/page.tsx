@@ -44,21 +44,6 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   console.log("Session:", session);
   console.log("UserProfile:", userProfile);
 
-  // Fetch user profile data when component mounts or session changes
-  useEffect(() => {
-    const fetchData = async () => {
-      if (session?.user?.email) {
-        try {
-          await dispatch(fetchUserProfile()).unwrap();
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-        }
-      }
-    };
-
-    fetchData();
-  }, [dispatch, session?.user?.email]);
-
   // Show loading state
   if (isLoading) {
     return (

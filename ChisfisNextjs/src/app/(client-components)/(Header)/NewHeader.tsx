@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import { useSession } from "next-auth/react";
@@ -13,12 +13,16 @@ import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdownSingle from "./LangDropdownSingle";
+import { fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from "@/store/store";
 
 export interface NewHeaderProps {
   className?: string;
 }
 
 const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
   const user = session?.user;
   const pathname = usePathname();
@@ -27,6 +31,23 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   console.log( 'TEST ' + session?.jti)
 
 
+   // Fetch user profile data when component mounts or session changes
+   useEffect(() => {
+    const fetchData = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await dispatch(fetchUserProfile()).unwrap();
+          dispatch(setUserProfile(response));
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [dispatch, session?.user?.email]);
+
+ 
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
       <div className={`relative z-10 ${className}`}>
