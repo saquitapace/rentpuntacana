@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
 import { setUserProfile, resetUserProfile } from '@/store/slices/userProfileSlice';
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { 
   EnvelopeIcon,
@@ -25,11 +24,6 @@ interface Props {
 export default function AvatarDropdown({ className = "" }: Props) {
   const { data: session } = useSession();
   const user = session?.user;
-
-  console.log("data from useSession()")
-  console.log(user)
-
-  console.log("avatar dropdown");
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
@@ -61,7 +55,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                       <Avatar imgUrl={user?.avatar} userName={user?.firstName} />
                       <div className="flex-grow">
                         <h4 className="font-semibold">{user?.firstName} {user?.lastName}</h4>
-                        <p className="text-sm text-neutral-500">{user?.email}</p>
+                        {/*<p className="text-sm text-neutral-500">{user?.email}</p> */}
                       </div>
                     </div>
 

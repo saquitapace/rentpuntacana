@@ -40,57 +40,118 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const isLoading = useSelector(getUserLoading);
   const dateJoined = useSelector(getUserCreatedAt);
 
-  // Debug logs
-  console.log("Session:", session);
-  console.log("UserProfile:", userProfile);
+  // Set initial form values when userProfile changes
+  useEffect(() => {
+    if (userProfile) {
+      setValue('companyName', userProfile.companyName || '');
+      setValue('firstName', userProfile.firstName || '');
+      setValue('lastName', userProfile.lastName || '');
+      setValue('phoneNumber', userProfile.phoneNumber || '');
+      setValue('about', userProfile.about || '');
+      setValue('languages', userProfile.languages || ['English']);
+      setValue('address', userProfile.address || '');
+    }
+  }, [userProfile, setValue]);
 
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-      </div>
-    );
-  }
+  const onSubmit = async (data: AccountFormInputs) => {
+    try {
+      setIsLoading(true);
+      setError('');
+      setNotification({ type: null, message: '' });
 
-  // Format date properly
-  const formattedDate = dateJoined ? new Date(dateJoined).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long'
-  }) : '';
+      // Update the profile
+      const result = await dispatch(updateUserProfile(data)).unwrap();
+      
+      // Fetch the updated profile to ensure Redux state is in sync
+      await dispatch(fetchUserProfile()).unwrap();
 
-  // Format languages properly
-  const formattedLanguages = Array.isArray(languages) ? languages.join(', ') : '';
+      setNotification({
+        type: 'success',
+        message: 'Profile updated successfully'
+      });
 
-  const renderSidebar = () => {
-    return (
-      <div className="w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
-        <Avatar
-          imgUrl={avatar}
-          userName={fullName}
-          hasChecked
-          hasCheckedClass="w-6 h-6 -top-0.5 right-2"
-          sizeClass="w-28 h-28"
-          isLoading={isLoading}
-        />
+      // Update session if needed
+      if (session?.user) {
+        await updateSession({
+          ...session,
+          user: {
+            ...session.user,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+          }
+        });
+      }
 
-        {/* User Info */}
-        <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">{fullName || 'Loading...'}</h2>
-          <StartRating className="!text-base" />
+    } catch (err: any) {
+      setError(err.message || 'Failed to update profile');
+      setNotification({
+        type: 'error',
+        message: 'Failed to update profile'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const fileName = `UserProfile_${userProfile.userId}.png`;
+      const filePath = `/images/avatars/${fileName}`;
+      
+      const formData = new FormData();
+      formData.append('avatar', file);
+      formData.append('filePath', filePath);
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/avatar/update`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          dispatch(setAvatar(data.avatarUrl));
+          if (session?.user) {
+            await updateSession({
+              ...session,
+              user: {
+                ...session.user,
+                avatar: data.avatarUrl
+              }
+            });
+          }
+          setNotification({
+            type: 'success',
+            message: 'Avatar updated successfully'
+          });
+        } else {
+          throw new Error('Failed to update avatar');
+        }
+      } catch (err) {
+        console.error('Error updating avatar:', err);
+        setNotification({
+          type: 'error',
+          message: 'Failed to update avatar'
+        });
+      }
+    }
+  };
+
+  return (
+    <div className="space-y-6 sm:space-y-8">
+      {/* Notification banner */}
+      {notification.type && (
+        <div className={`p-4 rounded-md ${
+          notification.type === 'success' 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {notification.message}
         </div>
-
-        {/* About Section */}
-        {about ? (
-          <p className="text-neutral-500 dark:text-neutral-400">
-            {about}
-          </p>
-        ) : (
-          <div className="flex bg-red-200 text-red-700 px-4 py-2 rounded-lg" role="alert">
-            <ExclamationTriangleIcon className="h-6 w-6 mr-2" /> 
-            <span>Complete Profile</span>
-          </div>              
-        )}
+      )}
 
         {/* Social Links */}
         <SocialsList

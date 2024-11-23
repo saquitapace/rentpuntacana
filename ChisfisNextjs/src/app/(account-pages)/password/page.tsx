@@ -9,8 +9,6 @@ import Input from "@/shared/Input";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getUserEmail } from "@/store/slices/userProfileSlice";
-import sessionState from "@/utils/sessionState";
-// import { set } from "js-cookie";
 import { MailSlurp } from 'mailslurp-client';
 
 interface PasswordUpdateFormInputs {
@@ -21,13 +19,9 @@ interface PasswordUpdateFormInputs {
 }
 
 const AccountPass: React.FC = () => {
-   const email = useSelector(getUserEmail);
-   console.log("user email: ",email)
+  const email = useSelector(getUserEmail);
+  console.log("user email: ",email)
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  // const email = sessionState.getEmail()
-  
-  
 
   const {
     register,
