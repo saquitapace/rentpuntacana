@@ -88,29 +88,3 @@ export interface StayDataType {
     lng: number;
   };
 }
-
-//
-export interface ExperiencesDataType {
-  id: string | number;
-  author: AuthorType;
-  date: string;
-  href: Route<string>;
-  title: string;
-  featuredImage: StaticImageData | string;
-  commentCount: number;
-  viewCount: number;
-  address: string;
-  reviewStart: number;
-  reviewCount: number;
-  like: boolean;
-  galleryImgs: (StaticImageData | string)[];
-  price: string;
-  listingCategory: TaxonomyType;
-  maxGuests: number;
-  saleOff?: string | null;
-  isAds: boolean | null;
-  map: {
-    lat: number;
-    lng: number;
-  };
-}

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import GallerySlider from "@/components/GallerySlider";
-import { DEMO_EXPERIENCES_LISTINGS } from "@/data/listings";
+import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import { ExperiencesDataType } from "@/data/types";
 import StartRating from "@/components/StartRating";
 import BtnLikeIcon from "@/components/BtnLikeIcon";
@@ -16,7 +16,7 @@ export interface ExperiencesCardProps {
   size?: "default" | "small";
 }
 
-const DEMO_DATA: ExperiencesDataType = DEMO_EXPERIENCES_LISTINGS[0];
+const DEMO_DATA: ExperiencesDataType = DEMO_STAY_LISTINGS[0];
 
 const ExperiencesCard: FC<ExperiencesCardProps> = ({
   size = "default",

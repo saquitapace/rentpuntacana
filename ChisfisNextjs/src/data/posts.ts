@@ -1,5 +1,4 @@
 import __posts from "./jsons/__posts.json";
-import { DEMO_CATEGORIES } from "./taxonomies";
 import { PostDataType } from "./types";
 import { DEMO_AUTHORS } from "./authors";
 

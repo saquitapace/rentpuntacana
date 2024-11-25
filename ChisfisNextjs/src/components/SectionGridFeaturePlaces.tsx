@@ -1,24 +1,16 @@
 "use client";
 
-import React, { FC, ReactNode } from "react";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import { StayDataType } from "@/data/types";
+import React, { useState, useEffect, FC, ReactNode } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import HeaderFilter from "./HeaderFilter";
 import { usePathname } from 'next/navigation';
 import StayCard from "./StayCard";
-//import StayCard2 from "./StayCard2";
 import TabFilters from "../app/(stay-listings)/TabFilters";
-import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+import axios from "axios";
 
-// OTHER DEMO WILL PASS PROPS
-const DEMO_DATA: StayDataType[] = DEMO_STAY_LISTINGS.filter((_, i) => i < 8);
-
-//
 export interface SectionGridFeaturePlacesProps {
-  stayListings?: StayDataType[];
+  stayListings?: [];
   gridClass?: string;
   heading?: ReactNode;
   subHeading?: ReactNode;
@@ -30,35 +22,74 @@ export interface SectionGridFeaturePlacesProps {
 const pathname = usePathname;
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
-  stayListings = DEMO_DATA,
+  stayListings = [],
   gridClass = "",
   heading = "",
   subHeading = "",
   headingIsCenter,
-  tabs = ["New York", "Tokyo", "Paris", "London"],
-  cardType = "card1",
 }) => {
-  const renderCard = (stay: StayDataType) => {
-    let CardName = StayCard;
-  
-    return <CardName key={stay.id} data={stay} />;
+
+  const [listings, setListings] = useState([]); // initials state of listings
+  const [limit, setLimit] = useState(8); // initials state of listings
+
+  useEffect(() => {
+    if (listings) {
+      loadListingsData();
+    }
+  }, [])
+
+  const loadListingsData = async () => {
+   const data = await fetchListingsData();
+   if (data) {
+      console.log(data)
+      setListings(data);
+    } 
+  };
+
+  const fetchListingsData = async () => {
+    try {
+      console.log("getting listing data");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`);
+
+      if (response) {
+        console.log("************")
+        console.log(response)
+
+       return await response.data[0];
+      }
+    } catch (error) {
+      console.error('Error fetching listings data:', error);
+      // alert("Loading listings failed. Network error. Please contact helpdesk. Error code: 500.");
+    } finally {
+    } 
   };
 
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">
-    
       <TabFilters />
-
-     {/*} <HeaderFilter
-        tabActive={"New York"}
-        subHeading={subHeading}
-        tabs={tabs}
-        heading={heading}
-      /> */}
+saquita - SectionGridFeaturePlaces.tsx
       <div
         className={`grid gap-6 py-5 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${gridClass}`}
       >
-        {stayListings.map((stay) => renderCard(stay))}
+  
+      {listings.length == 0 ? (
+        <div> 0 Listings found</div>
+      ) : (
+""
+        
+      )}
+
+      
+      {listings.filter((_, i) => i < limit).map((stay) => (
+        <StayCard key={stay.id} data={stay} />
+      ))}
+      
+      
+      {/*}
+      {DEMO_STAY_LISTINGS.filter((_, i) => i < limit).map((stay) => (
+        <StayCard key={stay.id} data={stay} />
+      ))} */}
+
       </div>
       <div className="flex mt-16 justify-center items-center">
 
@@ -70,7 +101,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
 				<span>View all</span>
 				<ArrowRightIcon className="w-5 h-5 ml-3" />
 				</div>
-			</ButtonSecondary>
+			  </ButtonSecondary>
 				)}
 
       </div>
