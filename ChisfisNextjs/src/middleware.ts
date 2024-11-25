@@ -11,7 +11,7 @@ export const config = {
   ]
 }
 
-/* export default withAuth(
+export default withAuth(
   function middleware(req) {
     return NextResponse.next()
   },
@@ -20,23 +20,4 @@ export const config = {
       authorized: ({ token }) => !!token
     },
   }
-) */ 
-
-export default withAuth(
-  async (req) => {
-    const token = req.nextauth.token;
-
-    if (!token) {
-      const url = new URL("/login", req.url);
-      url.searchParams.set("callbackUrl", req.url); // Add a callback URL to redirect back after login
-      return NextResponse.redirect(url);
-    }
-    
-    return NextResponse.next();
-  },
-  {
-    pages: {
-      signIn: "/login", // Fallback sign-in page if necessary
-    },
-  }
-);
+)
