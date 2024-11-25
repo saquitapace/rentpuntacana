@@ -20,3 +20,9 @@ export const redirect = (accountType: 'renter' | 'property' | 'default') => {
       return '/';
   }
 };
+
+export const isTokenValid = (exp?: number): boolean => {
+  if (!exp) return false;
+  const currentTime = Math.floor(Date.now() / 1000); 
+  return exp > currentTime;
+}; 

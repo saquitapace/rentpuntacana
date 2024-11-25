@@ -6,7 +6,7 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,8 +34,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading: reduxLoading, error: authError } = useSelector((state: RootState) => state.auth);
-  
-  // Local state for form handling
+  const { data: session } = useSession();
+
+  // Local state for form handlingD
   const [localLoading, setLocalLoading] = useState(false);
   const [localError, setLocalError] = useState("");
   const [formData, setFormData] = useState({
@@ -82,6 +83,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       if (result?.ok) {
         const response = await dispatch(fetchUserProfile()).unwrap();
         dispatch(setUserProfile(response));
+
+        //TODO: save to DB
+        console.log( session?.jti, session?.exp, response.email )
         router.push( redirect( response.accountType ) );
       }
     } catch (error: any) {

@@ -16,6 +16,7 @@ import LangDropdownSingle from "./LangDropdownSingle";
 import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
+import { isTokenValid } from "@/utils/helpers";
 
 export interface NewHeaderProps {
   className?: string;
@@ -28,9 +29,6 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const pathname = usePathname();
 
   console.log("newHeader");
-  console.log( session?.user)
-  console.log( session?.jti)
-
 
   // Fetch user profile data when component mounts or session changes
   useEffect(() => {
@@ -38,6 +36,15 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
       if (session?.user?.email) {
         try {
           const response = await dispatch(fetchUserProfile()).unwrap();
+
+          //TODO: if token has expired, signout
+          alert( 'isTokenValid ' + isTokenValid( 1735116781 ) )
+          if ( !isTokenValid( 1735116781 ) )
+          {
+
+            return;
+          }
+
           dispatch(setUserProfile(response));
         } catch (error) {
           console.error("Error fetching user profile:", error);
