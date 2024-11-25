@@ -2,12 +2,12 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
 import Link from "next/link";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { setUserProfile, resetUserProfile } from '@/store/slices/userProfileSlice';
+import { clearUserProfile, setUserProfile } from '@/store/slices/userProfileSlice';
 import { useRouter } from "next/navigation";
 import { 
   EnvelopeIcon,
@@ -24,10 +24,18 @@ interface Props {
 export default function AvatarDropdown({ className = "" }: Props) {
   const { data: session } = useSession();
   const user = session?.user;
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSignOut = () => {
+    dispatch(clearUserProfile());
     signOut({ callbackUrl: '/' });
   };
+
+ /*  useEffect(() => {
+    if (!session?.user?.email) {
+      handleSignOut
+    }
+  }, [ dispatch, session?.user?.email ]); */
 
   return (
     <>

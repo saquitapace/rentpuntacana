@@ -11,7 +11,7 @@ import SocialsList from "@/shared/SocialsList";
 import { ExclamationTriangleIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import ExperiencesCard from "@/components/ExperiencesCard";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { 
@@ -21,7 +21,8 @@ import {
   getUserLanguages,
   getUserAbout,
   getUserLoading,
-  getUserCreatedAt
+  getUserCreatedAt,
+  clearUserProfile
 } from '@/store/slices/userProfileSlice';
 import { formatDateJoined } from "@/utils/helpers";
 
@@ -44,6 +45,23 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   // Debug logs
   console.log("Session:", session);
   console.log("UserProfile:", userProfile);
+
+  const handleSignOut = () => {
+    dispatch(clearUserProfile());
+    signOut({ callbackUrl: '/' });
+  };
+
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      
+    }
+    else
+    {
+      handleSignOut()
+    }    
+  }, [dispatch, session?.user?.email ]);
+
 
   // Show loading state
   if (isLoading) {

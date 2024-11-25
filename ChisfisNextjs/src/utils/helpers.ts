@@ -25,4 +25,9 @@ export const isTokenValid = (exp?: number): boolean => {
   if (!exp) return false;
   const currentTime = Math.floor(Date.now() / 1000); 
   return exp > currentTime;
-}; 
+};
+
+export const generateUserId = () => {
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
+}

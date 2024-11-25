@@ -3,8 +3,8 @@
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Route } from "@/routers/types";
-import { useSession } from "next-auth/react";
-import { usePathname } from 'next/navigation';
+import { signOut, useSession } from "next-auth/react";
+import { usePathname, useRouter } from 'next/navigation';
 import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
 import Logo from "@/shared/Logo";
@@ -15,7 +15,7 @@ import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchF
 import LangDropdownSingle from "./LangDropdownSingle";
 import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
-import { fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
+import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 
 export interface NewHeaderProps {
@@ -27,6 +27,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const { data: session } = useSession();
   const user = session?.user;
   const pathname = usePathname();
+  const router = useRouter();
 
   console.log("newHeader");
 
@@ -38,10 +39,9 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
           const response = await dispatch(fetchUserProfile()).unwrap();
 
           //TODO: if token has expired, signout
-          alert( 'isTokenValid ' + isTokenValid( 1735116781 ) )
-          if ( !isTokenValid( 1735116781 ) )
+          alert( 'isTokenValid ' + isTokenValid( 173511678 ) )
+          if ( !isTokenValid( 173511678 ) )
           {
-
             return;
           }
 
@@ -50,10 +50,13 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
           console.error("Error fetching user profile:", error);
         }
       }
+      else
+      {
+      }
     };
 
     fetchData();
-  }, [useDispatch, session?.user?.email]);
+  }, [dispatch, session?.user?.email]);
 
 
   return (

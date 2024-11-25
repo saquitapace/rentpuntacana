@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]/route'
-import { getUserByEmail, pool } from '@/lib/db'
+import { pool } from '@/lib/db'
 import bcrypt from 'bcryptjs'
+import { getUserByEmail } from '@/lib/db-functions'
 
 // GET: Fetch user data
 export async function GET(req: NextRequest) {
