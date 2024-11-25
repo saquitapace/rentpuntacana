@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, Fragment, useState } from 'react'
+import { FC, Fragment, useEffect, useState } from 'react'
 import { Dialog, Transition, TransitionChild } from '@headlessui/react'
 import { ArrowRightIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
 import CommentListing from '@/components/CommentListing'
@@ -24,17 +24,26 @@ import { Route } from 'next'
 import ShareBtn from '@/components/ShareBtn'
 import Textarea from '@/shared/Textarea'
 import Link from 'next/link'
+import axios from 'axios'
 export interface ListingStayDetailPageProps {}
 
-
 const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
-	//
 
 	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false)
 
 	const thisPathname = usePathname()
 	const router = useRouter()
 
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	const [listingId, setListingId] = useState(urlParams.get('lid')); // initials state of Listing for listing detail
+	let listingObject = {
+		title:''
+	}
+
+	const [listing, setListing] = useState(listingObject); // initials state of Listing for listing detail
+
+	//const listing.title ='';
 	function closeModalAmenities() {
 		setIsOpenModalAmenities(false)
 	}
@@ -47,15 +56,48 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
 	}
 
+	useEffect(() => {
+		if (listingId) {
+			loadListingDetailData();
+		}
+		}, 
+		[listingId]
+	);
+
+	const loadListingDetailData = async () => {
+
+		const data = await fetchListingDetailData();
+		console.log(data)
+		setListing(data);
+	}
+
+	const fetchListingDetailData = async () => {
+		try {
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId});
+	
+			if (response) {
+				console.log(response)
+			return await response.data[0][0];
+			}
+		} catch (error) {
+			console.error('Error fetching listing detail data:', error);
+			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
+		} finally {
+		} 
+	}
+
 	const renderSection1 = () => {
+
 		return (
 			<div className="listingSection__wrap !space-y-6">
 				{/* 1 */}
 				<div className="flex items-center justify-between">
 					{/*<Badge name="Wooden house" /> */}
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
-					Beach House in Collingwood
-				</h2>
+					{listing ? listing.title :'' }
+
+					(lid: {listingId})
+					</h2>
 					<div className="flow-root ">
 
 						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
@@ -570,8 +612,7 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 					</div>
 				</div>
 				<Textarea>
-					Hi, Is this listing still available?
-
+					
 				</Textarea>
 				<ButtonPrimary>
 					Send Message
@@ -682,6 +723,8 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 			<main className="relative z-10 mt-11 flex flex-col lg:flex-row">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-3/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
+
+				
 					{renderSection1()}
 					{renderSection2()}
 					{renderSection3()}

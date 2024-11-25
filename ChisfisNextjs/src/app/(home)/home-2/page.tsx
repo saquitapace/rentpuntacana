@@ -1,4 +1,3 @@
-import SectionSliderNewCategories from "@/components/SectionSliderNewCategories";
 import React from "react";
 import SectionSubscribe2 from "@/components/SectionSubscribe2";
 import SectionOurFeatures from "@/components/SectionOurFeatures";
@@ -165,25 +164,10 @@ function PageHome2() {
 
         <SectionDowloadApp />
 
-       {/*} <SectionSliderNewCategories
-          categories={DEMO_CATS_2}
-          categoryCardType="card4"
-          itemPerRow={4}
-          heading="Suggestions for discovery"
-          subHeading="Popular places to stay that Chisfis recommends for you"
-        /> */}
-
         <div className="relative py-16">
           <BackgroundSection className="bg-neutral-100 dark:bg-black dark:bg-opacity-20 " />
           <SectionGridAuthorBox boxCard="box2" />
         </div>
-
-       {/* <SectionSliderNewCategories
-          heading="Explore by types of stays"
-          subHeading="Explore houses based on 10 types of stays"
-          categoryCardType="card5"
-          itemPerRow={5}
-        /> */}
 
         <SectionSubscribe2 />
       </div>
