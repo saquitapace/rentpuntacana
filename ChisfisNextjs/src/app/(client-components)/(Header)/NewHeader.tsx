@@ -17,6 +17,7 @@ import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
+import { updateJWT } from "@/store/slices/authSlice";
 
 export interface NewHeaderProps {
   className?: string;
@@ -31,6 +32,13 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
 
   console.log("newHeader");
 
+  const handleSignOut = async () => {
+    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
+
+    dispatch(clearUserProfile());
+    signOut({ callbackUrl: '/' });
+  };
+
   // Fetch user profile data when component mounts or session changes
   useEffect(() => {
     const fetchData = async () => {
@@ -38,10 +46,19 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
         try {
           const response = await dispatch(fetchUserProfile()).unwrap();
 
-          //TODO: if token has expired, signout
-          alert( 'isTokenValid ' + isTokenValid( 173511678 ) )
-          if ( !isTokenValid( 173511678 ) )
+          const jwt = response.jwt;
+          const exp = response.jwtExpiresAt;
+          
+          //save jwt to DB
+          if ( jwt === null )
           {
+            await dispatch( updateJWT( session ) );
+          }
+          else if ( !isTokenValid( exp ) )
+          {
+            //if token has expired, signout
+            //alert( 'isTokenValid ' + isTokenValid( exp ) )
+            handleSignOut();
             return;
           }
 
@@ -116,7 +133,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
             )}
             
             <div className="flex space-x-2">
-              {user && <AvatarDropdown />}
+              {user && <AvatarDropdown handleSignOut={handleSignOut} />}
             </div>
           </div>
         </div>

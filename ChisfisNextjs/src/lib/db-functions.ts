@@ -5,7 +5,7 @@ export async function getUserByEmail(email: string) {
   try {
     console.log('Fetching user for email:', email);
     const [rows] = await pool.execute(
-      `SELECT u.*, lc.email, lc.password, lc.google_id, lc.auth_type 
+      `SELECT u.*, lc.email, lc.password, lc.google_id, lc.auth_type, lc.jwt, lc.jwtExpiresAt
        FROM users u 
        JOIN login_cred lc ON u.userId = lc.userId 
        WHERE lc.email = ?`,

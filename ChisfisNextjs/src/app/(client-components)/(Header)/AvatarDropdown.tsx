@@ -16,20 +16,19 @@ import {
   HeartIcon,
   ArrowLeftStartOnRectangleIcon 
 } from "@heroicons/react/24/outline";
+import { updateJWT } from "@/store/slices/authSlice";
 
 interface Props {
   className?: string;
+  handleSignOut: () => Promise<void>;
 }
 
-export default function AvatarDropdown({ className = "" }: Props) {
+export default function AvatarDropdown({ className = "", handleSignOut }: Props) {
   const { data: session } = useSession();
   const user = session?.user;
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleSignOut = () => {
-    dispatch(clearUserProfile());
-    signOut({ callbackUrl: '/' });
-  };
+  
 
  /*  useEffect(() => {
     if (!session?.user?.email) {

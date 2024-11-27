@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 interface AuthState {
@@ -14,6 +15,25 @@ const initialState: AuthState = {
   isLoading: false,
   error: null
 };
+
+export const updateJWT = createAsyncThunk(
+  'auth/updateJWT',
+  async (session: { user?: { email?: string }; jti?: string | null; exp?: string | null }, { rejectWithValue }) => {
+    try {
+      const email = session?.user?.email;
+      const jwt = session?.jti;
+      const exp = session?.exp;
+
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/loginCred/jwt/update`, {
+        email, jwt, exp,
+      });
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to update JWT');
+    }
+  }
+);
 
 export const signInUser = createAsyncThunk(
   'auth/signIn',
@@ -62,9 +82,20 @@ const authSlice = createSlice({
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(updateJWT.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateJWT.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateJWT.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
 export const { resetAuthState, setUser } = authSlice.actions;
-export default authSlice.reducer; 
+export default authSlice.reducer;

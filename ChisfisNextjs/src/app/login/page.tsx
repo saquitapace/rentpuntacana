@@ -11,7 +11,7 @@ import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
-import { signInUser, resetAuthState } from '@/store/slices/authSlice';
+import { signInUser, resetAuthState, updateJWT } from '@/store/slices/authSlice';
 import { fetchUserProfile, setUserProfile } from '@/store/slices/userProfileSlice';
 import { redirect } from "@/utils/helpers";
 
@@ -83,9 +83,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       if (result?.ok) {
         const response = await dispatch(fetchUserProfile()).unwrap();
         dispatch(setUserProfile(response));
-
-        //TODO: save to DB
-        console.log( session?.jti, session?.exp, response.email )
+        
         router.push( redirect( response.accountType ) );
       }
     } catch (error: any) {

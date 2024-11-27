@@ -38,7 +38,9 @@ export async function GET(req: NextRequest) {
       avatar: user.avatar || '',
       languages: user.languages ? JSON.parse(user.languages) : [],
       createdAt: user.createdAt,
-      phoneNumber: user.phoneNumber || ''
+      phoneNumber: user.phoneNumber || '',
+      jwt: user.jwt || null,
+      jwtExpiresAt: user.jwtExpiresAt || null
     };
 
     return NextResponse.json(userData);
