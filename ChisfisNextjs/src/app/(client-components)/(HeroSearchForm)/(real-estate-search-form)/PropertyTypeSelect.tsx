@@ -8,21 +8,25 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 const defaultPropertyType: ClassOfProperties[] = [
   {
     name: "Apartment",
+    abbreviation:"Apt",
     description: "",
-    checked: true,
+    checked: false,
   },
   {
     name: "House",
+    abbreviation:"House",
     description: "",
     checked: false,
   },
   {
     name: "Hotel",
+    abbreviation:"Hotel",
     description:"",
     checked: false,
   },
   {
     name: "Other",
+    abbreviation:"Other",
     description: "",
     checked: false,
   },
@@ -35,7 +39,7 @@ export interface PropertyTypeSelectProps {
 
 const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
-  fieldClassName = "[ nc-hero-field-padding ]",
+  fieldClassName = "",
 }) => {
   const [typeOfProperty, setTypeOfProperty] =
     React.useState<ClassOfProperties[]>(defaultPropertyType);
@@ -45,7 +49,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     typeOfPropertyText = typeOfProperty
       .filter((item) => item.checked)
       .map((item) => {
-        return item.name;
+        return item.abbreviation;
       })
       .join(", ");
   }
@@ -55,7 +59,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
         <>
           <Popover.Button
             className={`flex z-10 text-left w-full flex-shrink-0 items-center ${fieldClassName} space-x-3 focus:outline-none cursor-pointer ${
-              open ? "nc-hero-field-focused" : ""
+              open ? "" : ""
             }`}
             onClickCapture={() => document.querySelector("html")?.click()}
           >
@@ -65,19 +69,14 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             <div className="flex-1">
               <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
-                  {typeOfPropertyText || `Type`}
+                  {typeOfPropertyText || `Select`}
                 </span>
               </span>
-              <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
+              <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
                 Property type
               </span>
             </div>
           </Popover.Button>
-
-{/*}
-          {open && (
-            <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -inset-x-0.5 bg-white dark:bg-neutral-800"></div>
-          )} */}
 
           <Transition
             as={Fragment}

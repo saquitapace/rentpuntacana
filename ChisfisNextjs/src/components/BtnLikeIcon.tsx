@@ -8,46 +8,47 @@ import axios from 'axios';
 export interface BtnLikeIconProps {
   className?: string;
   colorClass?: string;
-  isLiked?: boolean;
+  isLiked?: number;
   id?: string;
 }
 
 const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   className = "",
-  colorClass = "text-white",
+  colorClass = "",
   isLiked,
-  id = "",
+  id
 }) => {
+  //current State
   const [likedState, setLikedState] = useState(isLiked);
+  const [listingId, setListingId] = useState(id);
   const { data: session } = useSession();
   const router = useRouter();
 
-  const postLike = async (propertyId: string) => {
+  const createLike = async () => {
+
     try {
-      const response = await axios.post(`/api/likes`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/likes/create`, {
         userId: session?.user?.id,
-        propertyId: parseInt(propertyId),
+        listingId: listingId,
       });
 
-      if (response.data) {
-        setLikedState(true);
+      if (response) {
+        setLikedState(1);
       }
     } catch (error) {
-      console.error("Error posting like:", error);
+      console.error("Error creating like:", error);
     }
   };
 
-  const deleteLike = async (propertyId: string) => {
+  const deleteLike = async () => {
     try {
-      const response = await axios.delete(`/api/likes`, {
-        params: { 
-          userId: session?.user?.id,
-          propertyId: parseInt(propertyId)
-        }
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/auth/likes/delete`, {
+        userId: session?.user?.id,
+        listingId: listingId
       });
 
       if (response.data) {
-        setLikedState(false);
+        setLikedState(0);
       }
     } catch (error) {
       console.error("Error deleting like:", error);
@@ -56,15 +57,16 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
 
   const handleClick = async () => {
     if (!session?.user) {
-      router.push('/login');
+      alert("add the login modal or message; do not redirect");
+      //router.push('/login');
       return;
     }
-
+    
     try {
-      if (!likedState) {
-        await postLike(id);
-      } else {
-        await deleteLike(id);
+      if (!likedState) { // value is 0 
+        await createLike();
+      } else { // value is 1 
+        await deleteLike();
       }
     } catch (error) {
       console.error("Error handling like:", error);

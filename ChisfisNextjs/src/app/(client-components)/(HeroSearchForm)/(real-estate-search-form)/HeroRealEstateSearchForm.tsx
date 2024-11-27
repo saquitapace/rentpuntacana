@@ -19,7 +19,7 @@ const HeroRealEstateSearchForm: FC<HeroRealEstateSearchFormProps> = ({
 
   const renderTab = () => {
     return (
-      <ul className="ml-6 md:ml-16 xl:ml-20 inline-flex space-x-4 sm:space-x-8 lg:space-x-10 bg-white dark:bg-neutral-900 pb-6 md:p-6 !pl-0 xl:p-0 rounded-t-3xl">
+      <ul className="homepg ml-6 rounded-3xl lg:rounded-full  md:ml-16 xl:ml-20 inline-flex space-x-4 sm:space-x-8 lg:space-x-10 bg-white dark:bg-neutral-900 pb-6 md:p-6 !pl-0 xl:p-0 rounded-t-3xl">
         {tabs.map((tab) => {
           const active = tab === tabActive;
           return (

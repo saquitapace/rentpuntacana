@@ -1,6 +1,6 @@
 'use client'
 
-import BackgroundSection from '@/components/BackgroundSection'
+//import BackgroundSection from '@/components/BackgroundSection'
 import ListingImageGallery from '@/components/listing-image-gallery/ListingImageGallery'
 import { usePathname } from 'next/navigation'
 import { ReactNode, Suspense } from 'react'

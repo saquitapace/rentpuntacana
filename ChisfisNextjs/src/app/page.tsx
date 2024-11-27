@@ -1,6 +1,5 @@
 import React from "react";
-import SectionHero from "../app/(server-components)/SectionHero2";
-import BgGlassmorphism from "@/components/BgGlassmorphism";
+import SectionHero2 from "../app/(server-components)/SectionHero2";
 import SectionOurFeatures from "@/components/SectionOurFeatures";
 import BackgroundSection from "@/components/BackgroundSection";
 import SectionGridFeaturePlaces from "@/components/SectionGridFeaturePlaces";
@@ -13,37 +12,30 @@ import SectionClientSay from "@/components/SectionClientSay";
 function PageHome() {
   return (
     <main className="nc-PageHome relative overflow-hidden">
-      {/* GLASSMOPHIN */}
-      <BgGlassmorphism />
-
-      <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
-        {/* SECTION HERO */}
-        <SectionHero className="pt-0 lg:pt-0 lg:pb-0" />
-       {/*<SectionHero className="pt-10 lg:pt-16 lg:pb-16" /> */}
-
-        {/* SECTION 1 */}
+      <div className="container relative space-y-5 mb-5 lg:space-y-5 lg:mb-5">
+        
+        <SectionHero2 className="pt-0 lg:pt-0 lg:pb-0" />
 
         <SectionGridFeaturePlaces cardType="card1" />
         
-        <SectionHowItWork />
-
-        <SectionOurFeatures />
-
-        <div className="relative py-16">
-          <BackgroundSection className="dark:bg-black dark:bg-opacity-20 " />
-          <SectionGridAuthorBox boxCard="box2" />
-          
-        </div>
-
-        <div className="relative py-16">
+        <div className="relative py-5">
           <BackgroundSection />
-          <SectionBecomeAnAuthor />
+          <SectionHowItWork />
+          </div>
+
+          <SectionOurFeatures />
+
+        <div className="relative py-5">
+          <BackgroundSection />
+          <SectionGridAuthorBox boxCard="box2" />
         </div>
 
-        <div className="relative py-16">
+        <SectionBecomeAnAuthor />
+
+        <div className="relative py-5">
           <BackgroundSection />
           <SectionClientSay />
-        </div> 
+        </div>
 
         <SectionSubscribe2 />
 

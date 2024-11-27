@@ -63,7 +63,7 @@ export async function GET(request) {
     FROM
         saved_properties
     WHERE
-        saved_properties.property_id =  listings.listing_id and saved_properties.userId = 'M29SZDR4QDJBB6' and  saved_properties.status > 0
+        saved_properties.property_id =  listings.listing_id and saved_properties.userId = 'M29SZDR4QDJBB6'
 	) AS likes
 FROM listings  
 `
