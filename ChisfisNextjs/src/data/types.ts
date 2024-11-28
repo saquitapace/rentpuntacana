@@ -74,7 +74,34 @@ export interface StayDataType {
   address: string;
   reviewStart: number;
   reviewCount: number;
-  like: boolean;
+  likes: boolean;
+  galleryImgs: (StaticImageData | string)[];
+  price: string;
+  listingCategory: TaxonomyType;
+  maxGuests: number;
+  bedrooms: number;
+  bathrooms: number;
+  saleOff?: string | null;
+  isAds: boolean | null;
+  map: {
+    lat: number;
+    lng: number;
+  };
+}
+
+export interface ListingDetailType {
+  id: string | number;
+  author: AuthorType;
+  date: string;
+  href: Route<string>;
+  title: string;
+  featuredImage: StaticImageData | string;
+  commentCount: number;
+  viewCount: number;
+  address: string;
+  reviewStart: number;
+  reviewCount: number;
+  likes: boolean;
   galleryImgs: (StaticImageData | string)[];
   price: string;
   listingCategory: TaxonomyType;

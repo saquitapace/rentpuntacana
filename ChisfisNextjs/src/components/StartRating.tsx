@@ -1,28 +1,45 @@
-import { StarIcon } from "@heroicons/react/24/solid";
+import { StarIcon as SolidStarIcon} from "@heroicons/react/24/solid";
+import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
+
 import React, { FC } from "react";
 
 export interface StartRatingProps {
   className?: string;
-  point?: number;
-  reviewCount?: number;
+  point?: null | number;
+  reviewCount?: null | number;
 }
 
 const StartRating: FC<StartRatingProps> = ({
   className = "",
-  point = 4.5,
-  reviewCount = 112,
+  point = null,
+  reviewCount = null,
 }) => {
+
   return (
     <div
       className={`nc-StartRating flex items-center space-x-1 text-sm  ${className}`}
       data-nc-id="StartRating"
     >
       <div className="pb-[2px]">
-        <StarIcon className="w-[18px] h-[18px] text-orange-500" />
+        {point && (
+          <SolidStarIcon className="w-[18px] h-[18px] text-orange-500" />
+        )}
+        {!point && (
+          <OutlineStarIcon className="w-[18px] h-[18px] text-orange-500" />
+        )}
       </div>
+
       <span className="font-medium ">{point}</span>
+
       <span className="text-neutral-500 dark:text-neutral-400">
-        ({reviewCount})
+        {reviewCount >0 && (
+          "("+reviewCount+")"
+        )}
+
+        {!reviewCount && (
+          "no reviews"
+        )}
+
       </span>
     </div>
   );

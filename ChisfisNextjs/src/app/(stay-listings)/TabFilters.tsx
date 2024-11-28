@@ -1,11 +1,10 @@
 'use client'
 
-import { Fragment, useState } from 'react'
-import PriceRangeInput from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PriceRangeInput";
-import PropertyTypeSelect from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/PropertyTypeSelect";
-import ButtonSubmit from '../(client-components)/(HeroSearchFormSmall)/ButtonSubmit';
+import { FC, Fragment, useState } from 'react';
+import PriceRangeInput from "../../components/PriceRangeInput";
+import PropertyTypeSelect from "../../components/PropertyTypeSelect";
 import ToggleSwitch from '@/shared/ToggleSwitch';
-
+import options from '@/utils/options';
 import {
 	Dialog,
 	DialogTitle,
@@ -15,89 +14,43 @@ import {
 	Transition,
 	TransitionChild,
 } from '@headlessui/react'
-import NcInputNumber from '@/components/NcInputNumber'
-import ButtonPrimary from '@/shared/ButtonPrimary'
-import ButtonSecondary from '@/shared/ButtonSecondary'
-import ButtonThird from '@/shared/ButtonThird'
+import NcInputNumber from '@/components/NcInputNumber';
+import ButtonPrimary from '@/shared/ButtonPrimary';
+import ButtonSecondary from '@/shared/ButtonSecondary';
+import ButtonThird from '@/shared/ButtonThird';
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import ButtonClose from '@/shared/ButtonClose'
-import Checkbox from '@/shared/Checkbox'
-import FlightDateRangeInput from "../(client-components)/(HeroSearchForm)/(flight-search-form)/FlightDateRangeInput";
-import { usePathname } from 'next/navigation'
-import Slider from 'rc-slider'
-import Link from 'next/link'
-//import ButtonSubmit from "../(client-components)/(HeroSearchFormSmall)/ButtonSubmit"  
+import ButtonClose from '@/shared/ButtonClose';
+import Checkbox from '@/shared/Checkbox';
+import FlightDateRangeInput from "../../components/FlightDateRangeInput";
+import Slider from 'rc-slider';
+import Link from 'next/link';
+import convertNumbThousand from '@/utils/convertNumbThousand';
 
-import convertNumbThousand from '@/utils/convertNumbThousand'
+export interface TabFiltersProps {
+	viewAll?: boolean;
+	viewMap?: boolean;
+}
 
-// DEMO DATA
-const typeOfPaces = [
-	{
-		name: 'Entire place',
-		description: 'Have a place to yourself',
-	},
-	{
-		name: 'Private room',
-		description: 'Have your own room and share some common spaces',
-	},
-	{
-		name: 'Hotel room',
-		description:
-			'Have a private or shared room in a boutique hotel, hostel, and more',
-	},
-	{
-		name: 'Shared room',
-		description: 'Stay in a shared space, like a common room',
-	},
-]
+const TabFilters: FC<TabFiltersProps> = ({
+	viewAll = "",
+	viewMap = ""
+	}) => {
 
-const moreFilter1 = [
-	{ name: 'Kitchen', defaultChecked: true },
-	{ name: 'Air conditioning', defaultChecked: true },
-	{ name: 'Heating' },
-	{ name: 'Dryer' },
-	{ name: 'Washer' },
-	{ name: 'Wifi' },
-	{ name: 'Indoor fireplace' },
-	{ name: 'Breakfast' },
-	{ name: 'Hair dryer' },
-	{ name: ' Dedicated workspace' },
-]
+	const moreFilter1 = options.getGeneralAmenities();
+	const moreFilter2 = options.getOtherAmenities();
+	const moreFilter3 = options.getSafeAmenities();
+	const moreFilter4 = options.getHouseRulesAmenities();
 
-const moreFilter2 = [
-	{ name: ' Free parking on premise' },
-	{ name: 'Hot tub' },
-	{ name: 'Gym' },
-	{ name: ' Pool' },
-	{ name: ' EV charger' },
-]
-
-const moreFilter3 = [
-	{ name: ' House' },
-	{ name: 'Bed and breakfast' },
-	{ name: 'Apartment', defaultChecked: true },
-	{ name: ' Boutique hotel' },
-	{ name: ' Bungalow' },
-	{ name: ' Chalet', defaultChecked: true },
-	{ name: ' Condominium', defaultChecked: true },
-	{ name: ' Cottage' },
-	{ name: ' Guest suite' },
-	{ name: ' Guesthouse' },
-]
-
-const moreFilter4 = [{ name: ' Pets allowed' }, { name: 'Smoking allowed' }]
-
-const TabFilters = () => {
-	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false)
-	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false)
-	const [rangePrices, setRangePrices] = useState([0, 1000])
-	//
-	const closeModalMoreFilter = () => setisOpenMoreFilter(false)
-	const openModalMoreFilter = () => setisOpenMoreFilter(true)
-	//
-	const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false)
-	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true)
-
+	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
+	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
+	const [rangePrices, setRangePrices] = useState([0, 1000]);
+	
+	const closeModalMoreFilter = () => setisOpenMoreFilter(false);
+	const openModalMoreFilter = () => setisOpenMoreFilter(true);
+	
+	const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false);
+	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true);
+	
 	const renderXClear = () => {
 		return (
 			<span className="ml-3 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-primary-500 text-white">
@@ -117,92 +70,29 @@ const TabFilters = () => {
 		)
 	}
 
-	const renderTabsTypeOfPlace = () => {
-		return (
-			<Popover className="relative">
-				{({ open, close }) => (
-					<>
-						<PopoverButton
-							className={`flex items-center justify-center rounded-full border border-neutral-300 px-4 py-2 text-sm hover:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:hover:border-neutral-6000 ${
-								open ? '!border-primary-500' : ''
-							}`}
-						>
-							<span>Type of place</span>
-							<i className="las la-angle-down ml-2"></i>
-						</PopoverButton>
-						<Transition
-							as={Fragment}
-							enter="transition ease-out duration-200"
-							enterFrom="opacity-0 translate-y-1"
-							enterTo="opacity-100 translate-y-0"
-							leave="transition ease-in duration-150"
-							leaveFrom="opacity-100 translate-y-0"
-							leaveTo="opacity-0 translate-y-1"
-						>
-							<PopoverPanel className="absolute left-0 z-10 mt-3 w-screen max-w-sm px-4 sm:px-0 lg:max-w-md">
-								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900">
-									<div className="relative flex flex-col space-y-5 px-5 py-6">
-										{typeOfPaces.map((item) => (
-											<div key={item.name} className="">
-												<Checkbox
-													name={item.name}
-													label={item.name}
-													subLabel={item.description}
-												/>
-											</div>
-										))}
-									</div>
-									<div className="flex items-center justify-between bg-neutral-50 p-5 dark:border-t dark:border-neutral-800 dark:bg-neutral-900">
-										<ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
-											Clear
-										</ButtonThird>
-										<ButtonPrimary
-											onClick={close}
-											sizeClass="px-4 py-2 sm:px-5"
-										>
-											Apply
-										</ButtonPrimary>
-									</div>
-								</div>
-							</PopoverPanel>
-						</Transition>
-					</>
-				)}
-			</Popover>
-		)
-	}
-
 	const renderTabsRoomAndBeds = () => {
 		return (
-			<Popover className="relative">
+			<Popover className="flex relative flex-1">
 				{({ open, close }) => (
 					<>
-						<Popover.Button
-							className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] items-center space-x-3 focus:outline-none cursor-pointer ${
-								open ? "nc-hero-field-focused" : ""
-							  }`}
+            <Popover.Button
+            className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
+              open ? "filter-field-focused" : ""
+            }`}
 						>
-							{/*<span>Rooms of Beds 2 </span>
-							<i className="las la-angle-down ml-2"></i> */}
-
-
-
-<div className="text-neutral-300 dark:text-neutral-400">
-<i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
-              {/*<HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" /> */}
-            </div>
-            <div className="flex-1">
-			<span className="block xl:text-sm font-semibold truncate">
-			<span className="line-clamp-1">
-                  Bedrooms
-                </span>
-              </span>
-              <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
-                Bed / Bath
-              </span>
-            </div>
-
-
+							<div className="text-neutral-300 dark:text-neutral-400">
+							<i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
+								</div>
+								<div className="flex-1">
+								<span className="block xl:text-sm font-semibold truncate">
+								<span className="line-clamp-1">
+									Bedrooms
+									</span>
+								</span>
+								<span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
+									Bed / Bath
+								</span>
+								</div>
 
 						</Popover.Button>
 						<Transition
@@ -215,14 +105,12 @@ const TabFilters = () => {
 							leaveTo="opacity-0 translate-y-1"
 						>
 
-
-							<PopoverPanel className="absolute left-0 z-10 mt-3 w-screen max-w-sm px-4 sm:px-0 lg:max-w-md">
+							<PopoverPanel className="absolute left-0 z-10 mt-3 m-screen max-w-sm px-4 sm:px-0 lg:max-w-md">
 
 								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900">
 									<div className="relative flex flex-col space-y-5 px-5 py-6">
-										<NcInputNumber label="Beds" max={10} />
-										<NcInputNumber label="Bedrooms" max={10} />
-										<NcInputNumber label="Bathrooms" max={10} />
+										<NcInputNumber label="Bedrooms" max={10} defaultValue={1}  />
+										<NcInputNumber label="Bathrooms" max={10}  defaultValue={1} />
 									</div>
 									<div className="flex hidden items-center justify-between bg-neutral-50 p-5 dark:border-t dark:border-neutral-800 dark:bg-neutral-900">
 										<ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
@@ -355,20 +243,27 @@ const TabFilters = () => {
 
 	const renderMoreFilterItem = (
 		data: {
+			field: string
 			name: string
+			en: string
+			sp: string
 			defaultChecked?: boolean
 		}[],
 	) => {
-		const list1 = data.filter((_, i) => i < data.length / 2)
-		const list2 = data.filter((_, i) => i >= data.length / 2)
+
+		const list1 = data.filter((_, i) => i < data.length / 3)
+		const list2 = data.filter((_, i) => i > list1.length-1 && i <list1.length*2)
+		const list3 = data.filter((_, i) => i > (list1.length + list2.length) -1)
+
 		return (
-			<div className="grid grid-cols-2 gap-8">
+
+			<div className="grid grid-cols-3 gap-4">
 				<div className="flex flex-col space-y-5">
 					{list1.map((item) => (
 						<Checkbox
-							key={item.name}
-							name={item.name}
-							label={item.name}
+							key={item.field}
+							name={item.en}
+							label={item.en}
 							defaultChecked={!!item.defaultChecked}
 						/>
 					))}
@@ -376,9 +271,19 @@ const TabFilters = () => {
 				<div className="flex flex-col space-y-5">
 					{list2.map((item) => (
 						<Checkbox
-							key={item.name}
-							name={item.name}
-							label={item.name}
+							key={item.field}
+							name={item.en}
+							label={item.en}
+							defaultChecked={!!item.defaultChecked}
+						/>
+					))}
+				</div>
+				<div className="flex flex-col space-y-5">
+					{list3.map((item) => (
+						<Checkbox
+							key={item.field}
+							name={item.en}
+							label={item.en}
 							defaultChecked={!!item.defaultChecked}
 						/>
 					))}
@@ -389,33 +294,27 @@ const TabFilters = () => {
 
 	const renderTabMoreFilter = () => {
 		return (
-<Popover className="relative">
+			<Popover className="flex relative flex-1">
 				{({ open, close }) => (
 					<>
 						<Popover.Button
-							className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] items-center space-x-3 focus:outline-none cursor-pointer ${
-								open ? "nc-hero-field-focused" : ""
-							  }`}
-						>
-							{/*<span>Rooms of Beds 2 </span>
-							<i className="las la-angle-down ml-2"></i> */}
-
-
+            className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
+				open ? "filter-field-focused" : ""
+			  }`}
+						  >
 
 <div className="text-neutral-300 dark:text-neutral-400">
 <i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
-              {/*<HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" /> */}
             </div>
             <div className="flex-1">
 			<span className="block xl:text-sm font-semibold truncate">
 			<span className="line-clamp-1">
-                  <span>More filters (3)</span>
+                  <span>More filters</span>
 				{/*}  {renderXClear()} */}
                 </span>
               </span>
               <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
                 More / Filters 			
-
               </span>
             </div>
 
@@ -440,7 +339,6 @@ const TabFilters = () => {
 						{/*	<PopoverPanel className="absolute h-full w-full max-w-4xl transform flex-col left-0 z-10 mt-3 w-screen max-w-4xl px-4 sm:px-0 lg:max-w-lg
 							"> */}
 
-
 								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900
 								
 								">
@@ -448,19 +346,19 @@ const TabFilters = () => {
 								<div className="flex-grow overflow-y-auto">
 										<div className="divide-y divide-neutral-200 px-10 dark:divide-neutral-800">
 											<div className="py-7">
-												<h3 className="text-xl font-medium">Amenities</h3>
+												<h3 className="text-xl font-medium">General Amenities</h3>
 												<div className="relative mt-6">
 													{renderMoreFilterItem(moreFilter1)}
 												</div>
 											</div>
 											<div className="py-7">
-												<h3 className="text-xl font-medium">Facilities</h3>
+												<h3 className="text-xl font-medium">Other Amenities</h3>
 												<div className="relative mt-6">
 													{renderMoreFilterItem(moreFilter2)}
 												</div>
 											</div>
 											<div className="py-7">
-												<h3 className="text-xl font-medium">Property type</h3>
+												<h3 className="text-xl font-medium">Safe Amenities</h3>
 												<div className="relative mt-6">
 													{renderMoreFilterItem(moreFilter3)}
 												</div>
@@ -473,149 +371,12 @@ const TabFilters = () => {
 											</div>
 										</div>
 									</div>
-									{/*<div className="relative flex flex-col space-y-5 px-5 py-6">
-										<NcInputNumber label="Beds" max={10} />
-										<NcInputNumber label="Bedrooms" max={10} />
-										<NcInputNumber label="Bathrooms" max={10} />
-									</div>
-									<div className="flex hidden items-center justify-between bg-neutral-50 p-5 dark:border-t dark:border-neutral-800 dark:bg-neutral-900">
-										<ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
-											Clear
-										</ButtonThird>
-										<ButtonPrimary
-											onClick={close}
-											sizeClass="px-4 py-2 sm:px-5"
-										>
-											Apply
-										</ButtonPrimary>
-									</div> */}
 								</div>
 							</PopoverPanel>
 						</Transition>
 					</>
 				)}
 			</Popover>	)}
-
-	const renderTabMoreFilter2 = () => {
-		return (
-			<div>
-				<div
-							className={`flex z-10 text-left w-full flex-shrink-0 items-center [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer
-								${
-									open ? "nc-hero-field-focused" : ""
-								}`}
-					onClick={openModalMoreFilter}
-				>
-					<span>More filters (3)</span>
-					{renderXClear()}
-				</div>
-
-				<Transition appear show={isOpenMoreFilter} as={Fragment}>
-					<Dialog
-						as="div"
-						className="fixed inset-0 z-50 overflow-y-auto"
-						onClose={closeModalMoreFilter}
-					>
-						<div className="min-h-screen text-center">
-							<TransitionChild
-								as={Fragment}
-								enter="ease-out duration-300"
-								enterFrom="opacity-0"
-								enterTo="opacity-100"
-								leave="ease-in duration-200"
-								leaveFrom="opacity-100"
-								leaveTo="opacity-0"
-							>
-								<div className="fixed inset-0 bg-black bg-opacity-40 dark:bg-opacity-60" />
-							</TransitionChild>
-
-							{/* This element is to trick the browser into centering the modal contents. */}
-							<span
-								className="inline-block h-screen align-middle"
-								aria-hidden="true"
-							>
-								&#8203;
-							</span>
-							<TransitionChild
-								as={'div'}
-								className="inline-block h-screen w-full max-w-4xl px-2 py-8"
-								enter="ease-out duration-300"
-								enterFrom="opacity-0 scale-95"
-								enterTo="opacity-100 scale-100"
-								leave="ease-in duration-200"
-								leaveFrom="opacity-100 scale-100"
-								leaveTo="opacity-0 scale-95"
-							>
-								<div className="inline-flex h-full w-full max-w-4xl transform flex-col overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all dark:border dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100">
-									<div className="relative flex-shrink-0 border-b border-neutral-200 px-6 py-4 text-center dark:border-neutral-800">
-										<DialogTitle
-											as="h3"
-											className="text-lg font-medium leading-6 text-gray-900"
-										>
-											More filters
-										</DialogTitle>
-										<span className="absolute left-3 top-3">
-											<ButtonClose onClick={closeModalMoreFilter} />
-										</span>
-									</div>
-
-									<div className="flex-grow overflow-y-auto">
-										<div className="divide-y divide-neutral-200 px-10 dark:divide-neutral-800">
-											<div className="py-7">
-												<h3 className="text-xl font-medium">Amenities</h3>
-												<div className="relative mt-6">
-													{renderMoreFilterItem(moreFilter1)}
-												</div>
-											</div>
-											<div className="py-7">
-												<h3 className="text-xl font-medium">Facilities</h3>
-												<div className="relative mt-6">
-													{renderMoreFilterItem(moreFilter2)}
-												</div>
-											</div>
-											<div className="py-7">
-												<h3 className="text-xl font-medium">Property type</h3>
-												<div className="relative mt-6">
-													{renderMoreFilterItem(moreFilter3)}
-												</div>
-											</div>
-											<div className="py-7">
-												<h3 className="text-xl font-medium">House rules</h3>
-												<div className="relative mt-6">
-													{renderMoreFilterItem(moreFilter4)}
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<div className="flex flex-shrink-0 items-center justify-between bg-neutral-50 p-6 dark:border-t dark:border-neutral-800 dark:bg-neutral-900">
-										<ButtonThird
-											onClick={closeModalMoreFilter}
-											sizeClass="px-4 py-2 sm:px-5"
-										>
-											Clear
-										</ButtonThird>
-										<ButtonPrimary
-											onClick={closeModalMoreFilter}
-											sizeClass="px-4 py-2 sm:px-5"
-										>
-											Apply
-										</ButtonPrimary>
-									</div>
-								</div>
-							</TransitionChild>
-						</div>
-					</Dialog>
-					
-				</Transition>
-
-
-
-
-				
-			</div>
-		)
-	}
 
 	const renderTabMoreFilterMobile = () => {
 		return (
@@ -679,13 +440,6 @@ const TabFilters = () => {
 
 									<div className="flex-grow overflow-y-auto">
 										<div className="divide-y divide-neutral-200 px-4 dark:divide-neutral-800 sm:px-6">
-											{/* ---- */}
-											<div className="py-7">
-												<h3 className="text-xl font-medium">Type of place</h3>
-												<div className="relative mt-6">
-													{renderMoreFilterItem(typeOfPaces)}
-												</div>
-											</div>
 
 											{/* ---- */}
 											<div className="py-7">
@@ -826,7 +580,7 @@ const TabFilters = () => {
 	const renderViewAllButton = () => {
 		return(
 			<div className="hidden sm:block flex-shrink-0">
-				<ButtonSecondary href="/listing-stay-map" className="!leading-none">
+				<ButtonSecondary href="/listing-stay-map" className="!leading-none mr-3">
 					<div className="flex items-center justify-center self-end">
 					<span>View all</span>
 					<ArrowRightIcon className="w-5 h-5 ml-3" />
@@ -839,6 +593,7 @@ const TabFilters = () => {
 	const handleMapToggle = () => {
 
 	}
+
 	const renderMapViewToggle = () => {
 		return(
 			<><Link href="/listing-stay-map">
@@ -852,58 +607,38 @@ const TabFilters = () => {
 
                 </span>
               </span>
-             {/* <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
-                Bed / Bath
-              </span> */}
             </div>
 			
 			</Link>
-			
-			{/*<Link href="/listing-stay">close view</Link>
-			 */}
 			 </> 
 		)
 	}
 
-	const pathname = usePathname();   
-
-		{/*<form className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center rounded-3xl lg:rounded-full shadow-xl dark:shadow-2xl bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
-
-		<div className="space-x-2 w-full relative shadow-xl dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0 ">
-*/}
 	return (
-		<form className=" w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center shadow-lg dark:shadow-lg dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
-		
+		<form className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
+			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
+				<div className="hidden space-x-2 lg:flex">
+					<PropertyTypeSelect />
+					<PriceRangeInput />
+					{renderTabsRoomAndBeds()}
+					{renderTabMoreFilter()}
+					<FlightDateRangeInput />
 
-		<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
-		
-			<div className="hidden space-x-2 lg:flex">
-				<PropertyTypeSelect />
-        		<PriceRangeInput />
+					{/*spacer */}
+					<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
+					</div>
 
-				{renderTabsRoomAndBeds()}
-
-				{renderTabMoreFilter()}
-				<FlightDateRangeInput />
-
-				<div className="">
-                  <ButtonSubmit href="/listing-stay-map" />
-                </div>
-
-				<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
-				</div>
-				{pathname=="/" ? (
+					{viewAll && (	
+						renderViewAllButton()
+					)}
 					
-					renderViewAllButton()
-				) : (
-					renderMapViewToggle()
-				)}
-				</div>	
-				
+					{viewMap && (	
+						renderMapViewToggle()
+					)}
+				</div>
 				{renderTabMoreFilterMobile()}
-		</div>
+			</div>
 		</form>
 	)
 }
-
-export default TabFilters
+export default TabFilters;

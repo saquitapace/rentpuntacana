@@ -5,13 +5,32 @@
 @import "./header";
 @import "./toggleSwitch";
 
-//custom changes - saquita
-.nc-SectionHero2 {
-    max-height: 400px;
+//custom changes - saquita - I will clean up the temorary css
+
+.notfound{
+  opacity: .5;
+  padding-top:50px;
+  height: 100%
 }
 
-.notification div {
-    max-width: 248px;
+.debug {
+  background-color: pink;
+}
+
+.filter-field-focused {
+  color: rgb(79, 70, 229);
+  background-color: #ffffff;
+  svg, i{
+    color: #4F46E5;
+    opacity: .5;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #4F46E5;
+  opacity: .1;
 }
 
 .notification p{
@@ -37,9 +56,18 @@
     color: red;
   }
 
+  .notification:hover {
+    :hover {
+      cursor:pointer;
+    }
+  }
+
   .notification.deleteable:hover .overlay {
     width:14%;
     left: 86%;
+    :hover {
+      cursor:pointer;
+    }
   }
 
   .whatsapp {

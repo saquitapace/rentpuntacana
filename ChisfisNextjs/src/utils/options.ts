@@ -57,6 +57,11 @@ const options = (function() {
         const options = safeGetOptions();
         return options?.filter(li => li.category === "safe_amenities") || [];
     };
+
+    const getHouseRulesAmenities = function() {
+        const options = safeGetOptions();
+        return options?.filter(li => li.category === "house_options") || [];
+    };
       
     return {
         getListingTypes,
@@ -64,6 +69,7 @@ const options = (function() {
         getGeneralAmenities,
         getOtherAmenities,
         getSafeAmenities,
+        getHouseRulesAmenities
     };
 })();
 

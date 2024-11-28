@@ -1,8 +1,10 @@
 'use client'
 
 import { FC, Fragment, useEffect, useState } from 'react'
-import { Dialog, Transition, TransitionChild } from '@headlessui/react'
+import { Checkbox, Dialog, Transition, TransitionChild } from '@headlessui/react'
 import { ArrowRightIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+import BtnLikeIcon from '@/components/BtnLikeIcon';
+import Price from '@/components/Price';
 import CommentListing from '@/components/CommentListing'
 import FiveStartIconForRate from '@/components/FiveStartIconForRate'
 import StartRating from '@/components/StartRating'
@@ -12,10 +14,9 @@ import ButtonCircle from '@/shared/ButtonCircle'
 import ButtonPrimary from '@/shared/ButtonPrimary'
 import ButtonSecondary from '@/shared/ButtonSecondary'
 import ButtonClose from '@/shared/ButtonClose'
-import Input from '@/shared/Input'
-import LikeSaveBtns from '@/components/LikeSaveBtns'
-import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
+import Input from '@/shared/Input';
+import Image from 'next/image';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { Amenities_demos, PHOTOS } from './constant'
 import StayDatesRangeInput from './StayDatesRangeInput'
 import GuestsInput from './GuestsInput'
@@ -23,67 +24,146 @@ import SectionDateRange from '../SectionDateRange'
 import { Route } from 'next'
 import ShareBtn from '@/components/ShareBtn'
 import Textarea from '@/shared/Textarea'
+import Reviews from '../../../components/Reviews';
 import Link from 'next/link'
-import axios from 'axios'
-export interface ListingStayDetailPageProps {}
+import axios from 'axios';
 
-const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
+import { ListingDetailType } from "@/data/types";
+import { DEMO_STAY_LISTINGS } from "@/data/listings";
 
-	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false)
+const DEMO_DATA = DEMO_STAY_LISTINGS[1];
 
-	const thisPathname = usePathname()
-	const router = useRouter()
+export interface ListingStayDetailPageProps {
+	className?: string;
+	data?: ListingDetailType;
+}
 
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	const [listingId, setListingId] = useState(urlParams.get('lid')); // initials state of Listing for listing detail
-	let listingObject = {
-		title:''
-	}
+const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
+	className = "",
+	data = {},
+}) => {
+	
+	let [listingDetail, setListingDetail]= useState(
+		{
+			galleryImgs:[],
+			listingCategory:'',
+			address:'',
+			title:'',
+			bedrooms:'',
+			bathrooms:'',
+			sqft:'',
+			href:'',
+			likes: 1,
+			saleOff:'',  
+			isAds:'',
+			price:'',
+			reviewStart: null,
+			reviewCount: null,
+			id:'',
+			listing_id:'',
+			authorFirstName:'',
+			authorLastName:'',
+			authorAvatar:'',
+			authorPhoneNumber:'',
+			authorCompanyName: ''
+		  }
+	);
 
-	const [listing, setListing] = useState(listingObject); // initials state of Listing for listing detail
+	let [likes, setLikes]= useState(listingDetail.likes);
+	//let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
+	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 
-	//const listing.title ='';
-	function closeModalAmenities() {
-		setIsOpenModalAmenities(false)
-	}
+	{/*let {
+		galleryImgs,
+		listingCategory,
+		address,
+		title,
+		bedrooms,
+		bathrooms,
+		sqft,
+		href,
+		likes,
+		saleOff,  
+		isAds,
+		price,
+		reviewStart,
+		reviewCount,
+		id,
+		listing_id,
+		authorFirstName,
+		authorLastName,
+		authorAvatar,
+		authorPhoneNumber
 
-	function openModalAmenities() {
-		setIsOpenModalAmenities(true)
-	}
+	  } = listingDetail; */}
 
-	const handleOpenModalImageGallery = () => {
-		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
+	const searchParams = useSearchParams();
+	const thisPathname = usePathname();
+	const router = useRouter();
+	const listingId = searchParams.get("lid");
+	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
+
+	if(!listingId){alert("todo: display error message is the id isnt passed & display mock object data")}
+	
+	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
+	
+	const loadListingDetailData = async () => {
+		const d = await fetchListingDetailData();
+		const prevData = listingDetail;
+		listingDetail = d;
+		console.log(d);
+		setListingDetail(d);
+		//setLikes(listingDetail.likes)
+		setGalleryPhotos(listingDetail['galleryImgs']);
+		setLikes(listingDetail['likes']);
+
+		//likes = 9
+		setListingDetail((listingDetail) => ({ ...listingDetail, d }));
+		console.log(d);
+
+		//setLikes((listingDetail) => ({ ...listingDetail, [likes]: 3 }));
+
+		{/*setListingDetail(prevData => ({ {}
+			
+		})); */}
+
+		// setListingDetail(prevListingDetail => ({
+		// 	...prevListingDetail, // Spread the previous car state
+		// 	listingDetail // Update the year to 2025
+		// }));
 	}
 
 	useEffect(() => {
 		if (listingId) {
 			loadListingDetailData();
 		}
-		}, 
-		[listingId]
-	);
-
-	const loadListingDetailData = async () => {
-
-		const data = await fetchListingDetailData();
-		console.log(data)
-		setListing(data);
-	}
+	},[]);
 
 	const fetchListingDetailData = async () => {
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId});
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId});
 	
 			if (response) {
-				console.log(response)
-			return await response.data[0][0];
+				console.log(response.data)
+			return await response.data;
 			}
 		} catch (error) {
 			console.error('Error fetching listing detail data:', error);
 			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
 		} finally {
 		} 
+	}
+	
+	function closeModalAmenities() {
+		setIsOpenModalAmenities(false);
+	}
+
+	function openModalAmenities() {
+		setIsOpenModalAmenities(true);
+	}
+
+	const handleOpenModalImageGallery = () => {
+		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
 	}
 
 	const renderSection1 = () => {
@@ -94,36 +174,33 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 				<div className="flex items-center justify-between">
 					{/*<Badge name="Wooden house" /> */}
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
-					{listing ? listing.title :'' }
-
-					(lid: {listingId})
+						{listingDetail.title}
 					</h2>
 					<div className="flow-root ">
-
 						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
 							<ShareBtn
 								text="Share"
-								url="https://www.google.com"
-								title="Check this listing"
+								url={shareUrl}
+								title="Check out this listing!"
 							/>
-							<LikeSaveBtns />
+							<div className="flex items-center">
+							{listingDetail.likes}
+        					<BtnLikeIcon isLiked={likes} id={listingId} className="" colorClass="text-gray-700"      
+ />
+ <span>Save</span>
+
+
+							</div>
 						</div>
 					</div>
-
 				</div>
-
-				{/* 2 */}
-				{/*<h2 className="text-1xl sm:text-2xl lg:text-3xl">
-					Beach House in Collingwood
-				</h2> */}
-
 				{/* 3 */}
 				<div className="flex items-center space-x-4">
-					<StartRating />
+				<StartRating reviewCount={listingDetail.reviewCount} point={listingDetail.reviewStart} />
 					<span>·</span>
 					<span>
 						<i className="las la-map-marker-alt"></i>
-						<span className="ml-1"> Tokyo, Jappan</span>
+						<span className="ml-1 text-red-700">City, State</span>
 					</span>
 				</div>
 
@@ -133,7 +210,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 					<span className="ml-2.5 text-neutral-500 dark:text-neutral-400">
 						Hosted by{' '}
 						<span className="font-medium text-neutral-900 dark:text-neutral-200">
-							Kevin Francis
+							{listingDetail.authorFirstName}{' '}{listingDetail.authorLastName}
 						</span>
 					</span>
 				</div>
@@ -143,30 +220,49 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 				{/* 6 */}
 				<div className="flex items-center justify-between space-x-8 text-sm text-neutral-700 dark:text-neutral-300 xl:justify-start xl:space-x-12">
-					<div className="flex items-center space-x-3">
+					{/* <div className="flex items-center space-x-3">
 						<i className="las la-user text-2xl"></i>
 						<span className="">
 							6 <span className="hidden sm:inline-block">guests</span>
 						</span>
-					</div>
+					</div> */}
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							6 <span className="hidden sm:inline-block">beds</span>
+							{listingDetail.bedrooms} <span className="hidden sm:inline-block">bedrooms</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-							3 <span className="hidden sm:inline-block">baths</span>
+						{listingDetail.bedrooms} <span className="hidden sm:inline-block">bathrooms</span>
 						</span>
 					</div>
-					<div className="flex items-center space-x-3">
+					{/* <div className="flex items-center space-x-3">
 						<i className="las la-door-open text-2xl"></i>
 						<span className=" ">
-							2 <span className="hidden sm:inline-block">bedrooms</span>
+						{bedrooms} <span className="hidden sm:inline-block">bedrooms</span>
+						</span>
+					</div> */}
+					<div className="flex items-center space-x-3">
+						<i className="las la-expand-arrows-alt text-lg"></i>
+						<span className=" ">
+						{listingDetail.sqft} m<sup>2</sup>
 						</span>
 					</div>
+
+					<div className="flex items-center space-x-3">
+            <i className="las la-wifi text-lg"></i>
+            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+              Wifi
+            </span>
+          </div>
+		  <div className="flex items-center space-x-3">
+            <i className="las la-smoking-ban text-lg"></i>
+            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+              No smoking
+            </span>
+          </div>
 				</div>
 			</div>
 		)
@@ -174,10 +270,10 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection2 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				<h2 className="text-2xl font-semibold">Stay information</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				<div className="text-neutral-6000 dark:text-neutral-300">
+				<div className="text-neutral-6000 dark:text-neutral-300 text-red-700">
 					<span>
 						Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides
 						accommodation, an outdoor swimming pool, a bar, a shared lounge, a
@@ -202,16 +298,16 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection3 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				<div>
 					<h2 className="text-2xl font-semibold">Amenities </h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400">
+					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
 						{` About the property's amenities and services`}
 					</span>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 				{/* 6 */}
-				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3">
+				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3 text-red-700">
 					{Amenities_demos.filter((_, i) => i < 12).map((item) => (
 						<div key={item.name} className="flex items-center space-x-3">
 							<i className={`las text-3xl ${item.icon}`}></i>
@@ -222,8 +318,8 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 				{/* ----- */}
 				<div className="w-14 border-b border-neutral-200"></div>
-				<div>
-					<ButtonSecondary onClick={openModalAmenities}>
+				<div >
+					<ButtonSecondary className="text-red-700" onClick={openModalAmenities}>
 						View more 20 amenities
 					</ButtonSecondary>
 				</div>
@@ -306,18 +402,18 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection4 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				{/* HEADING */}
 				<div>
 					<h2 className="text-2xl font-semibold">Room Rates </h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400">
+					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
 						Prices may increase on weekends or holidays
 					</span>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 				{/* CONTENT */}
 				<div className="flow-root">
-					<div className="-mb-4 text-sm text-neutral-6000 dark:text-neutral-300 sm:text-base">
+					<div className="-mb-4 text-sm text-neutral-6000 dark:text-neutral-300 sm:text-base text-red-700">
 						<div className="flex items-center justify-between space-x-4 rounded-lg bg-neutral-100 p-4 dark:bg-neutral-800">
 							<span>Monday - Thursday</span>
 							<span>$199</span>
@@ -350,7 +446,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection5 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				{/* HEADING */}
 				<h2 className="text-2xl font-semibold">Host Information</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
@@ -365,7 +461,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 					/>
 					<div>
 						<a className="block text-xl font-medium" href="##">
-							Kevin Francis
+							{listingDetail.authorFirstName} { } {listingDetail.authorLastName}
 						</a>
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
@@ -449,11 +545,15 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection6 = () => {
 		return (
-			<div className="listingSection__wrap">
-				{/* HEADING */}
+
+
+
+		
+
+
+			<div className="listingSection__wrap text-red-700 hidden">
 				<h2 className="text-2xl font-semibold">Reviews (23 reviews)</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-
 				{/* Content */}
 				<div className="space-y-5">
 					<FiveStartIconForRate iconClass="w-6 h-6" className="space-x-0.5" />
@@ -472,7 +572,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 						</ButtonCircle>
 					</div>
 				</div>
-
 				{/* comment */}
 				<div className="divide-y divide-neutral-100 dark:divide-neutral-800">
 					<CommentListing className="py-8" />
@@ -489,11 +588,11 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection7 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				{/* HEADING */}
 				<div>
 					<h2 className="text-2xl font-semibold">Location</h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400">
+					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
 						San Diego, CA, United States of America (SAN-San Diego Intl.)
 					</span>
 				</div>
@@ -518,7 +617,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 
 	const renderSection8 = () => {
 		return (
-			<div className="listingSection__wrap">
+			<div className="listingSection__wrap text-red-700">
 				{/* HEADING */}
 				<h2 className="text-2xl font-semibold">Things to know</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
@@ -569,42 +668,52 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({}) => {
 			</div>
 		)
 	}
-	
-	const item = { name:"Kevin Francis", avatar:"default.png", description:"whats app",time:"phone",status:"s", whatsapp:"12345"};
-	
-	{/*
 		
-		Leasing Agent
+	{/*
+Leasing Agent
 Property Results, LLC
-
 Leasing consultant
-
 Verified
-
 By choosing to contact a property, you consent to receive calls or texts at the number you provided, which may involve use of automated means and prerecorded/artificial voices, from Zillow Group and the rental manager(s) you choose to contact about any inquiries you submit through our services. You don't need to consent as a condition of renting any property or buying any other goods or services. Message/data rates may apply. You also agree to Zillow's Terms of Use and Privacy Policy.
-
 */
 }
 
 	const renderSidebar = () => {
 		return (
 			<div className="listingSectionSidebar__wrap shadow-xl">
-				<div className="flex">
+
+<span className="text-3xl font-semibold">
+						$119
+
+						<Price price={listingDetail.price} />
+						{/* <span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
+							/night
+						</span> */}
+					</span>
+<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
+
+				<div className="flex">					
+					{/* <Badge name="Wooden house" /> */}
 					<Avatar
-						imgUrl={item.avatar}
+						imgUrl={listingDetail.authorAvatar}
 						sizeClass="w-30 h-30 sm:w-12 sm:h-12"
-						userName={item.name}
+						userName={listingDetail.authorFirstName}
 					/>
 					<div className="ml-3 sm:ml-4 space-y-1">
 						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-						{item.name}
+						{listingDetail.authorFirstName}{ }{listingDetail.authorLastName}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-						{item.description}
+						{listingDetail.authorPhoneNumber}
 						</p>
+						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+						{listingDetail.authorCompanyName}
+						
+						</p>
+
 						<p className="text-xs text-gray-400 dark:text-gray-400">
 						<ButtonSecondary className="whatsapp">
-							<Link aria-label="Chat on WhatsApp" href="https://wa.me/1XXXXXXXXXX"> 
+							<Link aria-label="Chat on WhatsApp" href={`https://wa.me/${listingDetail.authorPhoneNumber}`}> 
 								<i className="lab la-whatsapp text-3xl whatsapp"></i> Message on Whatsapp
 							</Link>
 						</ButtonSecondary>
@@ -614,60 +723,21 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 				<Textarea>
 					
 				</Textarea>
+
+				x checkbox for terms & conditions 
 				<ButtonPrimary>
 					Send Message
 				</ButtonPrimary>
 			</div>
 		)
 	}
-	const renderSidebarOld = () => {
-		return (
-			<div className="listingSectionSidebar__wrap shadow-xl">
-				{/* PRICE */}
-				<div className="flex justify-between">
-					<span className="text-3xl font-semibold">
-						$119
-						<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-							/night
-						</span>
-					</span>
-					<StartRating />
-				</div>
 
-				{/* FORM */}
-				<form className="flex flex-col rounded-3xl border border-neutral-200 dark:border-neutral-700">
-					<StayDatesRangeInput className="z-[11] flex-1" />
-					<div className="w-full border-b border-neutral-200 dark:border-neutral-700"></div>
-					<GuestsInput className="flex-1" />
-				</form>
-
-				{/* SUM */}
-				<div className="flex flex-col space-y-4">
-					<div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-						<span>$119 x 3 night</span>
-						<span>$357</span>
-					</div>
-					<div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-						<span>Service charge</span>
-						<span>$0</span>
-					</div>
-					<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-					<div className="flex justify-between font-semibold">
-						<span>Total</span>
-						<span>$199</span>
-					</div>
-				</div>
-
-				{/* SUBMIT */}
-				<ButtonPrimary href={'/checkout'}>Reserve</ButtonPrimary>
-			</div>
-		)
-	}
 
 	return (
 		<div className="nc-ListingStayDetailPage">
 			{/*  HEADER */}
-			<header className="rounded-md sm:rounded-xl">
+			<header className="rounded-md sm:rounded-xl min-h-[260px] p-4">
+				<div className="imageGalleryPlaceholder absolute justify-center items-center">Image Gallery</div>
 				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2">
 					<div
 						className="relative col-span-2 row-span-3 cursor-pointer overflow-hidden rounded-md sm:row-span-2 sm:rounded-xl"
@@ -676,13 +746,13 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 						<Image
 							fill
 							className="rounded-md object-cover sm:rounded-xl"
-							src={PHOTOS[0]}
+							src={galleryPhotos[0]}
 							alt=""
 							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
 						/>
 						<div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 transition-opacity hover:opacity-100"></div>
 					</div>
-					{PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
+					{galleryPhotos.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
 						<div
 							key={index}
 							className={`relative overflow-hidden rounded-md sm:rounded-xl ${
@@ -720,18 +790,17 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 			</header>
 
 			{/* MAIN */}
-			<main className="relative z-10 mt-11 flex flex-col lg:flex-row">
+			<main className="relative z-10 mt-0 flex flex-col lg:flex-row">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-3/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
-
-				
 					{renderSection1()}
 					{renderSection2()}
 					{renderSection3()}
-					{renderSection4()}
+					{/* {renderSection4()} */}
+					<Reviews />
 					<SectionDateRange />
 					{renderSection5()}
-					{renderSection6()}
+					{/* {renderSection6()} */}
 					{renderSection7()}
 					{renderSection8()}
 				</div>

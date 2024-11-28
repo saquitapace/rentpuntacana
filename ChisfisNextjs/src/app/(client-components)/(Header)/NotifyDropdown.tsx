@@ -42,7 +42,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
     if (user) {
       loadNotificationData();
     }
-  }, [user])
+  }, []);
 
   const loadNotificationData = async () => {
    const data = await fetchNotificationsData();
@@ -154,7 +154,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
               <Popover.Panel className="absolute z-10 w-screen max-w-xs sm:max-w-sm px-4 top-full -right-28 sm:right-0 sm:px-0">
                 <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid gap-8 bg-white dark:bg-neutral-800 p-7">
-                    
+
                     <h3 className="text-xl font-semibold flex border-b-solid border-b-2">
                     <BellIcon className="h-6 w-6 mr-3" />
                       Notifications
@@ -167,10 +167,8 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
                     )}
                     </h3>
 
-                    {notifications.length == 0 ? (
+                    {notifications.length == 0 && (
                       <div>You have 0 notifications</div>
-                    ) : (
-                      ""
                     )}
                     {notifications.map((item, index) => (
                       <div
@@ -191,21 +189,16 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-200">
                             {item.name}
                           </p>
-                         {/*} <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-nowrap hover:text-balance text-ellipsis overflow-hidden lg:w-96 ">
+                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-nowrap hover:text-balance text-ellipsis overflow-hidden lg:w-96">
                             {item.description}
-                          </div> */}
-                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                            {item.description}
-                          </p>
+                          </p>           
                           <p className="text-xs text-gray-400 dark:text-gray-400">
                             {item.time}
                           </p>
                         </div>  
                         
-                        {item.status == 0 ? (
-                        <span className="absolute right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-blue-500"></span>
-                        ) : (
-                          ""
+                        {item.status == 0 && (
+                          <span className="absolute right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-blue-500"></span>
                         )}
 
                       <div className="overlay bg-gray-100">

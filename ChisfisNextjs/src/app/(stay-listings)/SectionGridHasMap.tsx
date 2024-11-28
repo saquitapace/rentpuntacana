@@ -62,13 +62,10 @@ const renderMap= () => {
 
 	return (
 		<div>
-			saquita - listing stay map grid
 			<div className="mx-9">
-				<div className="mb-8 lg:mb-11">
+				<div className="mb-5 lg:mb-5">
 					<TabFilters />
-					saquita - has map view
 				</div>
-
 			</div>
 
 			<div className="relative flex min-h-screen">
@@ -94,7 +91,7 @@ const renderMap= () => {
 								key={item.listing_id}
 								onMouseEnter={() => setCurrentHoverID((_) => item.listing_id)}
 								onMouseLeave={() => setCurrentHoverID((_) => -1)}
-							>{item.listing_id}
+							>
 		<StayCard key={item.listing_id} data={item} />
 
 		</div>
