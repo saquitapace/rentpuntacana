@@ -1,4 +1,6 @@
-import { StarIcon } from "@heroicons/react/24/solid";
+import { StarIcon as SolidStarIcon } from "@heroicons/react/24/solid";
+import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
+
 import React, { FC } from "react";
 import Avatar from "@/shared/Avatar";
 
@@ -12,8 +14,13 @@ interface CommentListingDataType {
 
 export interface CommentListingProps {
   className?: string;
-  data?: CommentListingDataType;
+  //data?: CommentListingDataType;
   hasListingTitle?: boolean;
+  name: string;
+  avatar?: string;
+  date: string;
+  comment: string;
+  starPoint: number;
 }
 
 const DEMO_DATA: CommentListingDataType = {
@@ -26,8 +33,14 @@ const DEMO_DATA: CommentListingDataType = {
 
 const CommentListing: FC<CommentListingProps> = ({
   className = "",
-  data = DEMO_DATA,
+ // data = DEMO_DATA,
   hasListingTitle,
+  name,
+  avatar,
+  date,
+  comment,
+  starPoint,
+
 }) => {
   return (
     <div
@@ -38,15 +51,15 @@ const CommentListing: FC<CommentListingProps> = ({
         <Avatar
           sizeClass="h-10 w-10 text-lg"
           radius="rounded-full"
-          userName={data.name}
-          imgUrl={data.avatar}
+          userName={name}
+          imgUrl={avatar}
         />
       </div>
       <div className="flex-grow">
         <div className="flex justify-between space-x-3">
           <div className="flex flex-col">
             <div className="text-sm font-semibold">
-              <span>{data.name}</span>
+              <span>{name}</span>
               {hasListingTitle && (
                 <>
                   <span className="text-neutral-500 dark:text-neutral-400 font-normal">
@@ -57,19 +70,37 @@ const CommentListing: FC<CommentListingProps> = ({
               )}
             </div>
             <span className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
-              {data.date}
+              {date}
             </span>
           </div>
           <div className="flex text-yellow-500">
-            <StarIcon className="w-4 h-4" />
-            <StarIcon className="w-4 h-4" />
-            <StarIcon className="w-4 h-4" />
-            <StarIcon className="w-4 h-4" />
-            <StarIcon className="w-4 h-4" />
+
+            {!!starPoint || starPoint <=0 && (
+            <><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /></>           
+            )}
+
+            {starPoint == 1 && (
+            <><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /></>           
+            )}
+
+            {starPoint == 2 && (
+            <><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /></>           
+            )}
+
+            {starPoint == 3 && (
+            <><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /></>           
+            )}
+            {starPoint == 4 && (
+            <><OutlineStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /></>           
+            )}
+            {starPoint == 5 && (
+            <><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /><SolidStarIcon className="w-4 h-4" /></>           
+            )}
           </div>
+
         </div>
         <span className="block mt-3 text-neutral-6000 dark:text-neutral-300">
-          {data.comment}
+          {comment}
         </span>
       </div>
     </div>

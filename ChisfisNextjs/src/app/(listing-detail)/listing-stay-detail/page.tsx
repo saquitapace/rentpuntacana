@@ -24,6 +24,7 @@ import SectionDateRange from '../SectionDateRange'
 import { Route } from 'next'
 import ShareBtn from '@/components/ShareBtn'
 import Textarea from '@/shared/Textarea'
+import Reviews from '../../../components/Reviews';
 import Link from 'next/link'
 import axios from 'axios';
 
@@ -544,11 +545,15 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
 	const renderSection6 = () => {
 		return (
-			<div className="listingSection__wrap text-red-700">
-				{/* HEADING */}
+
+
+
+		
+
+
+			<div className="listingSection__wrap text-red-700 hidden">
 				<h2 className="text-2xl font-semibold">Reviews (23 reviews)</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-
 				{/* Content */}
 				<div className="space-y-5">
 					<FiveStartIconForRate iconClass="w-6 h-6" className="space-x-0.5" />
@@ -567,7 +572,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 						</ButtonCircle>
 					</div>
 				</div>
-
 				{/* comment */}
 				<div className="divide-y divide-neutral-100 dark:divide-neutral-800">
 					<CommentListing className="py-8" />
@@ -792,10 +796,11 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 					{renderSection1()}
 					{renderSection2()}
 					{renderSection3()}
-					{renderSection4()}
+					{/* {renderSection4()} */}
+					<Reviews />
 					<SectionDateRange />
 					{renderSection5()}
-					{renderSection6()}
+					{/* {renderSection6()} */}
 					{renderSection7()}
 					{renderSection8()}
 				</div>
