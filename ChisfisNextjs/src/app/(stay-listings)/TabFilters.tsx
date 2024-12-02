@@ -1,8 +1,9 @@
 'use client'
-
+//saquita -tabfilters
 import { FC, Fragment, useState } from 'react';
 import PriceRangeInput from "../../components/PriceRangeInput";
 import PropertyTypeSelect from "../../components/PropertyTypeSelect";
+import BedBathSelect from "../../components/BedBathSelect";
 import ToggleSwitch from '@/shared/ToggleSwitch';
 import options from '@/utils/options';
 import {
@@ -21,10 +22,12 @@ import ButtonThird from '@/shared/ButtonThird';
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import ButtonClose from '@/shared/ButtonClose';
 import Checkbox from '@/shared/Checkbox';
-import FlightDateRangeInput from "../../components/FlightDateRangeInput";
+import DateRangeInput from "../../components/DateRangeInput";
 import Slider from 'rc-slider';
 import Link from 'next/link';
 import convertNumbThousand from '@/utils/convertNumbThousand';
+import MoreFiltersSelect from "../../components/MoreFiltersSelect";
+import translations2 from '@/utils/translation2';
 
 export interface TabFiltersProps {
 	viewAll?: boolean;
@@ -36,18 +39,17 @@ const TabFilters: FC<TabFiltersProps> = ({
 	viewMap = ""
 	}) => {
 
+	const [rangePrices, setRangePrices] = useState([0, 1000]);
+	const x = translations2.get();
+	const[t,setT] = useState(x);
 	const moreFilter1 = options.getGeneralAmenities();
 	const moreFilter2 = options.getOtherAmenities();
 	const moreFilter3 = options.getSafeAmenities();
 	const moreFilter4 = options.getHouseRulesAmenities();
-
 	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
 	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
-	const [rangePrices, setRangePrices] = useState([0, 1000]);
-	
 	const closeModalMoreFilter = () => setisOpenMoreFilter(false);
 	const openModalMoreFilter = () => setisOpenMoreFilter(true);
-	
 	const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false);
 	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true);
 	
@@ -67,68 +69,6 @@ const TabFilters: FC<TabFiltersProps> = ({
 					/>
 				</svg>
 			</span>
-		)
-	}
-
-	const renderTabsRoomAndBeds = () => {
-		return (
-			<Popover className="flex relative flex-1">
-				{({ open, close }) => (
-					<>
-            <Popover.Button
-            className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-              open ? "filter-field-focused" : ""
-            }`}
-						>
-							<div className="text-neutral-300 dark:text-neutral-400">
-							<i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
-								</div>
-								<div className="flex-1">
-								<span className="block xl:text-sm font-semibold truncate">
-								<span className="line-clamp-1">
-									Bedrooms
-									</span>
-								</span>
-								<span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
-									Bed / Bath
-								</span>
-								</div>
-
-						</Popover.Button>
-						<Transition
-							as={Fragment}
-							enter="transition ease-out duration-200"
-							enterFrom="opacity-0 translate-y-1"
-							enterTo="opacity-100 translate-y-0"
-							leave="transition ease-in duration-150"
-							leaveFrom="opacity-100 translate-y-0"
-							leaveTo="opacity-0 translate-y-1"
-						>
-
-							<PopoverPanel className="absolute left-0 z-10 mt-3 m-screen max-w-sm px-4 sm:px-0 lg:max-w-md">
-
-								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900">
-									<div className="relative flex flex-col space-y-5 px-5 py-6">
-										<NcInputNumber label="Bedrooms" max={10} defaultValue={1}  />
-										<NcInputNumber label="Bathrooms" max={10}  defaultValue={1} />
-									</div>
-									<div className="flex hidden items-center justify-between bg-neutral-50 p-5 dark:border-t dark:border-neutral-800 dark:bg-neutral-900">
-										<ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
-											Clear
-										</ButtonThird>
-										<ButtonPrimary
-											onClick={close}
-											sizeClass="px-4 py-2 sm:px-5"
-										>
-											Apply
-										</ButtonPrimary>
-									</div>
-								</div>
-							</PopoverPanel>
-						</Transition>
-					</>
-				)}
-			</Popover>
 		)
 	}
 
@@ -582,7 +522,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 			<div className="hidden sm:block flex-shrink-0">
 				<ButtonSecondary href="/listing-stay-map" className="!leading-none mr-3">
 					<div className="flex items-center justify-center self-end">
-					<span>View all</span>
+					<span>{t.viewAll}</span>
 					<ArrowRightIcon className="w-5 h-5 ml-3" />
 					</div>
 				</ButtonSecondary>
@@ -620,9 +560,10 @@ const TabFilters: FC<TabFiltersProps> = ({
 				<div className="hidden space-x-2 lg:flex">
 					<PropertyTypeSelect />
 					<PriceRangeInput />
-					{renderTabsRoomAndBeds()}
-					{renderTabMoreFilter()}
-					<FlightDateRangeInput />
+					<BedBathSelect />
+					<MoreFiltersSelect />
+					{/* {renderTabMoreFilter()} */}
+					<DateRangeInput />
 
 					{/*spacer */}
 					<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;

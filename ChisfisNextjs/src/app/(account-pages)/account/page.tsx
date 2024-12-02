@@ -9,6 +9,8 @@ import Textarea from "@/shared/Textarea";
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
+import PhoneNumberInput from "@/components/PhoneNumberInput";
+
 import { 
   setUserProfile, 
   setAvatar, 
@@ -40,7 +42,7 @@ const AccountPage = () => {
   const { data: session, update: updateSession } = useSession();
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
-  console.log(userProfile)
+  console.log(userProfile);
 
   const {
     register,
@@ -188,7 +190,6 @@ const AccountPage = () => {
         </div>
       )}
 
-      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
@@ -259,6 +260,17 @@ const AccountPage = () => {
             {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
           </div>
 
+          {/* User Name */}
+          {/* <div>
+            <Label>Username</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
+            />
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
+          </div> */}
+
           {/* Email - Read Only */}
           <div>
             <Label>Email</Label>
@@ -271,24 +283,35 @@ const AccountPage = () => {
           </div>
 
           {/* Phone Number */}
-          <div>
+          {/* <div>
             <Label>Phone Number</Label>
             <Input 
               className="mt-1.5"
               defaultValue={userProfile.phoneNumber}
               {...register("phoneNumber")}
             />
+          </div> */}
+
+          {/* Phone Number */}
+          <div>
+            <Label>Phone Number</Label>
+            <PhoneNumberInput
+              className="mt-1.5"
+              phoneNumber={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
           </div>
+          
 
           {/* Address */}
-          <div>
+          {/* <div>
             <Label>Address</Label>
             <Input 
               className="mt-1.5"
               defaultValue={userProfile.address}
               {...register("address")}
             />
-          </div>
+          </div> */}
 
           {/* Languages */}
           <div>

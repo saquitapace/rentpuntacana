@@ -2,6 +2,7 @@
 
 import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
+import translations2 from '@/utils/translation2';
 
 export interface AvatarProps {
   containerClassName?: string;
@@ -26,6 +27,8 @@ const Avatar: FC<AvatarProps> = ({
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | StaticImageData | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+	const x = translations2.get();
+	const[t,setT] = useState(x);
 
   useEffect(() => {
     if (imgUrl) {
@@ -90,7 +93,7 @@ const Avatar: FC<AvatarProps> = ({
           />
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center text-sm">
-              <span className="animate-pulse">Loading...</span>
+              <span className="animate-pulse">{t.loading}...</span>
             </div>
           )}
         </>

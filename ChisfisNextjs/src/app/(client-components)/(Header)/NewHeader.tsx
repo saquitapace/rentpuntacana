@@ -1,3 +1,5 @@
+//saquita - header
+
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
@@ -29,8 +31,6 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const user = session?.user;
   const pathname = usePathname();
   const router = useRouter();
-
-  console.log("newHeader");
 
   const handleSignOut = async () => {
     await dispatch(updateJWT({ ...session, jti: null, exp: null }));
@@ -103,6 +103,12 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
               
                 {pathname === "/" ? (
                   <>
+                  <Link
+                    href={"/howitworks" as Route<string>}
+                    className="self-center text-opacity-90 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                  >
+                    + Add Listing
+                  </Link>
                     <Button 
                       className="self-center block" 
                       href="/login"

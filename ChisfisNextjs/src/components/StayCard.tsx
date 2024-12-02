@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC,useState } from "react";
 import { StayDataType } from "@/data/types";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import StartRating from "@/components/StartRating";
@@ -8,6 +8,8 @@ import SaleOffBadge from "@/components/SaleOffBadge";
 import Badge from "@/shared/Badge";
 import Link from "next/link";
 import GallerySlider from "./GallerySlider";
+import { Route } from "next";
+import translations2 from '@/utils/translation2';
 
 const DEMO_DATA = DEMO_STAY_LISTINGS[0];
 
@@ -41,15 +43,18 @@ const StayCard: FC<StayCardProps> = ({
     id,
     listing_id
   } = data;
+  const x = translations2.get();
+  const[t,setT] = useState(x);
 
   const renderSliderGallery = () => {
+  
     return (
       <div className="relative w-full">
         <GallerySlider
           uniqueID={`StayCard_${listing_id}`}
           ratioClass="aspect-w-4 aspect-h-3 "
           galleryImgs={galleryImgs}
-          href={href}
+          href={href as Route}
           galleryClass={size === "default" ? undefined : ""}
         />
         <BtnLikeIcon isLiked={likes} id={listing_id} colorClass="text-white" className="absolute right-3 top-3 z-[1]" />
@@ -66,7 +71,11 @@ const StayCard: FC<StayCardProps> = ({
             <i className="las la-bed text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {bedrooms} beds
+            {bedrooms} {t.space}
+            {bedrooms <1 && (t.beds) }
+            {bedrooms >1 && (t.beds) }
+            {bedrooms == 1 && (t.bed) }
+
           </span>
         </div>
 
@@ -76,7 +85,10 @@ const StayCard: FC<StayCardProps> = ({
             <i className="las la-bath text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-          {bathrooms} baths
+          {bathrooms} {t.space}
+          {bathrooms <1 && (t.baths) }
+          {bathrooms >1 && (t.baths) }
+          {bathrooms == 1 && (t.bath) }
           </span>
         </div>
 
@@ -91,7 +103,7 @@ const StayCard: FC<StayCardProps> = ({
           (<span>{sqft}  m<sup>2</sup></span>)}
 
           {!sqft && 
-          (<span className="text-red-700"> not set</span>)}
+          (<span className="text-red-700"> {t.notSet}</span>)}
            
           </span>
         </div>
@@ -121,7 +133,7 @@ const StayCard: FC<StayCardProps> = ({
         <div className="w-14 border-b border-neutral-100 dark:border-neutral-800"></div>
         <div className="flex justify-between items-center">
             <StartRating reviewCount={reviewCount} point={reviewStart} />
-            <Price currency="RD" price={price} />
+            <Price className="text-sm" currency="RD" price={price} />
         </div>
       </div>
     );

@@ -1,16 +1,16 @@
-import { Poppins } from 'next/font/google'
-import './globals.css'
-import '@/fonts/line-awesome-1.3.0/css/line-awesome.css'
-import '@/styles/index.scss'
-import 'rc-slider/assets/index.css'
-import Footer from '@/components/Footer'
-import FooterNav from '@/components/FooterNav'
-import { Metadata } from 'next'
-import NewHeader from './(client-components)/(Header)/NewHeader'
-import { getServerSession } from "next-auth/next"
-import { authOptions } from './api/auth/[...nextauth]/route'
-import { Providers } from '@/components/providers/Providers'
-import ClientCommons from './ClientCommons'
+import { Poppins } from 'next/font/google';
+import './globals.css';
+import '@/fonts/line-awesome-1.3.0/css/line-awesome.css';
+import '@/styles/index.scss';
+import 'rc-slider/assets/index.css';
+import Footer from '@/components/Footer';
+import FooterNav from '@/components/FooterNav';
+import { Metadata } from 'next';
+import NewHeader from './(client-components)/(Header)/NewHeader';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from './api/auth/[...nextauth]/route';
+import { Providers } from '@/components/providers/Providers';
+import ClientCommons from './ClientCommons';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -29,7 +29,7 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
-	const session = await getServerSession(authOptions)
+	const session = await getServerSession(authOptions);
 	
 	return (
 		<html lang="en" className={poppins.className}>

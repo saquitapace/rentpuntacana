@@ -8,8 +8,8 @@ import axios from 'axios';
 export interface BtnLikeIconProps {
   className?: string;
   colorClass?: string;
-  isLiked?: number;
-  id?: string;
+  isLiked?: null | number;
+  id?: any;
 }
 
 const BtnLikeIcon: FC<BtnLikeIconProps> = ({
@@ -18,12 +18,12 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   isLiked,
   id
 }) => {
-  //current State
-  const [likedState, setLikedState] = useState(isLiked);
+
+  let [likedState, setLikedState] = useState(isLiked);
   const [listingId, setListingId] = useState(id);
   const { data: session } = useSession();
   const router = useRouter();
-
+  
   const createLike = async () => {
 
     try {

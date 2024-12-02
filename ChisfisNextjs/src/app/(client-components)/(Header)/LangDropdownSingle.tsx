@@ -3,21 +3,25 @@
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
-import { FC, Fragment } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
+import translation2 from "@/utils/translation2";
 
 export const headerLanguage = [
   {
     id: "English",
     name: "English",
     description: "United State",
-    href: "##",
-    active: true,
+    lang: "Eng",
+    code :"en",
+    active: false,
   },
   {
     id: "Spanish",
     name: "Spanish",
     description: "D. Republic",
-    href: "##",
+    lang: "Spg",
+    code :"sp",
+    active: false,
   }
 ];
 
@@ -28,6 +32,62 @@ interface LangDropdownProps {
 const LangDropdown: FC<LangDropdownProps> = ({
   panelClassName = "z-10 w-screen max-w-[280px] px-4 mt-4 right-0 sm:px-0",
 }) => {
+
+{/*}
+window.addEventListener("languagechange", () => {
+  alert(1)
+  console.log("languagechange event detected!");
+});
+
+window.onlanguagechange = (event) => {
+  alert(2)
+  console.log("languagechange event detected!");
+}; */}
+
+const [userPref,setUserPref]= useState('');
+const [lang, setLang]= useState(''); // display Eng or Spg in header
+const [langPref, setLangPref]= useState('');
+
+useEffect(()=>{
+  const localSvalue = localStorage.getItem("langPref"); // check to see if it is set in local storage
+  const userLang = navigator.language; // getting brower language if it isnt stored in storage
+
+  if(localSvalue ==""){
+    console.log("local storage language is not set");
+    if(userLang.includes("en")){
+      console.log("found en in users browser");
+      headerLanguage[0].active = true;
+      setLang(headerLanguage[0].lang);
+    } else {
+      headerLanguage[1].active = true;
+      setLang(headerLanguage[1].lang);
+    }
+  } else {
+    console.log("local storage language is set:", localSvalue);
+    setUserPref(localSvalue);
+    if(localSvalue=="en"){
+      headerLanguage[0].active=true;
+      setLang(headerLanguage[0].lang);
+    } else {
+      headerLanguage[1].active=true;
+      setLang(headerLanguage[1].lang); 
+    }
+  }
+},[]);
+
+  const handleChange = (item) => {
+    localStorage.setItem("langPref", item.code);
+    if(item.code=="en"){
+      headerLanguage[0].active=true;
+      setLang(headerLanguage[0].lang);
+    } else {
+      headerLanguage[1].active=true;
+      setLang(headerLanguage[1].lang); 
+    }
+    console.log("calling service and updating local storage selected language strings")
+    translation2.init();
+  };
+  
   return (
     <div className="LangDropdown">
       <Popover className="relative">
@@ -41,7 +101,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
               {/*<GlobeAltIcon className="w-[18px] h-[18px] opacity-80" /> */}
               <GlobeAltIcon className="h-6 w-6" />
 
-              <span className="ml-2 select-none">Eng</span>
+              <span className="ml-2 select-none">{lang}</span>
               <ChevronDownIcon
                 className={`${open ? "-rotate-180" : "text-opacity-70"}
                   ml-2 h-4 w-4  group-hover:text-opacity-80 transition ease-in-out duration-150`}
@@ -63,8 +123,12 @@ const LangDropdown: FC<LangDropdownProps> = ({
                     {headerLanguage.map((item, index) => (
                       <a
                         key={index}
-                        href={item.href}
-                        onClick={() => close()}
+                        lang={item.lang}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleChange(item);
+                          close();
+                        }}
                         className={`flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50 ${
                           item.active
                             ? "bg-gray-100 dark:bg-neutral-700"

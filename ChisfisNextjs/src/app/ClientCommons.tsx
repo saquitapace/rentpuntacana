@@ -1,13 +1,26 @@
-'use client'
+'use client';
 
-import React, { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
-import { useThemeMode } from '@/utils/useThemeMode'
+import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useThemeMode } from '@/utils/useThemeMode';
+import useInitTranslation from "@/hooks/useInitTranslation";
 
 const ClientCommons = () => {
 	//
 	useThemeMode()
+	//
 
+	const {
+		data,
+		loading,
+		error,
+	  } = useInitTranslation();
+	  
+	//   console.log(data);
+	//   console.log(loading);
+	//   console.log(error);
+
+	  
 	const pathname = usePathname()
 	//  CUSTOM THEME STYLE
 	useEffect(() => {

@@ -1,7 +1,9 @@
+"use client";
 import { StarIcon as SolidStarIcon} from "@heroicons/react/24/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import translations2 from '@/utils/translation2';
 
 export interface StartRatingProps {
   className?: string;
@@ -14,6 +16,8 @@ const StartRating: FC<StartRatingProps> = ({
   point = null,
   reviewCount = null,
 }) => {
+  const x = translations2.get();
+	const[t,setT] = useState(x);
 
   return (
     <div
@@ -37,7 +41,7 @@ const StartRating: FC<StartRatingProps> = ({
         )}
 
         {!reviewCount && (
-          "no reviews"
+          <span>{t.noReviews}</span>
         )}
 
       </span>
