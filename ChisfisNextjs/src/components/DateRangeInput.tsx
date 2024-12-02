@@ -14,14 +14,14 @@ import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import ClearDataButton from "../components/ClearDataButton";
 import translations2 from '@/utils/translation2';
 
-export interface FlightDateRangeInputProps {
+export interface DateRangeInputProps {
   className?: string;
   fieldClassName?: string;
   hasButtonSubmit?: boolean;
   selectsRange?: false;
 }
 
-const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
+const DateRangeInput: FC<DateRangeInputProps> = ({
   className = "",
   fieldClassName = "[ nc-hero-field-padding ]",
   hasButtonSubmit = true,
@@ -54,10 +54,10 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
     setEndDate(end);
   };
 
-  const renderInput = () => {
-    const x = translations2.get();
-    const[t,setT] = useState(x);  
+  const x = translations2.get();
+  const[t,setT] = useState(x);
 
+  const renderInput = () => {
     return (
       <>
         <div className="text-neutral-300 dark:text-neutral-400">
@@ -88,7 +88,7 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
 
   return (
     <>
-      <Popover className={`FlightDateRangeInput flex relative ${className}`}>
+      <Popover className={`DateRangeInput flex relative ${className}`}>
         {({ open }) => (
           <>
 
@@ -160,7 +160,7 @@ className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] s
                       selected={startDate}
                       locale={locale}
                       onChange={(date) => setStartDate(date)}
-                      monthsShown={1}
+                      monthsShown={2}
                       showPopperArrow={false}
                       inline
                       renderCustomHeader={(p) => (
@@ -178,7 +178,7 @@ className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] s
         )}
       </Popover>
     </>
-  );
-};
+  )
+}
 
-export default FlightDateRangeInput;
+export default DateRangeInput;

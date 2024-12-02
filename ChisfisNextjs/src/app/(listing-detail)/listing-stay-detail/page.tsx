@@ -1,5 +1,4 @@
 //saquita
-
 'use client';
 import { FC, Fragment, useEffect, useState } from 'react';
 import ContactForm  from '@/components/ContactForm';
@@ -19,35 +18,29 @@ import { Route } from 'next';
 import ShareBtn from '@/components/ShareBtn';
 import Reviews from '../../../components/Reviews';
 import axios from 'axios';
-import { ListingDetailType } from "@/data/types";
+//import { ListingDetailType } from "@/data/types";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import Link from 'next/link';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { formatDateJoined } from "@/utils/helpers";
 import translations2 from '@/utils/translation2';
 
-const DEMO_DATA = DEMO_STAY_LISTINGS[0];
-
-export interface ListingStayDetailPageProps {
-	className?: string;
-	data?: ListingDetailType;
-	params: { lid: string };
-	searchParams?: { [key: string]: string | string[] | undefined };  
-}
-
-const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
-	className = "",
-	data = {},
+const ListingStayDetailPage = ({
 	params,
-	searchParams
-}) => {
+	searchParams,
+	} : {
+	params: { lid: string };
+	searchParams?: { [key: string]: string | string[] | undefined };
+	}) => {
+
+	const DEMO_DATA = DEMO_STAY_LISTINGS[0];
 
 	let [listingDetail, setListingDetail]= useState(
 		{
 			galleryImgs:[],
 			listingCategory:'',
 			address: null,
-			title: '{ Title }',
+			title: '',
 			bedrooms: 0,
 			bathrooms: 0,
 			sqft: 0,
@@ -125,7 +118,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 			loadListingDetailData();
 		} else {
 			alert("todo: display error message is the id isnt passed & display mock object data");
-			setListingDetail(DEMO_DATA); // load the test view
+			//setListingDetail(DEMO_DATA); // load the test view
 		}
 	},[]);
 
@@ -512,10 +505,9 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 					</div>
 				</div>
 
-				{/* == */}
 				<div>
-					<ButtonSecondary href={`/publicProfile?uid=${listingDetail.authorId}`}
-
+					<ButtonSecondary
+						href={`/publicProfile?uid=${listingDetail.authorId}` as Route<string>}
 					>{t.seeAgentProfile}</ButtonSecondary>
 				</div>
 			</div>
@@ -681,7 +673,7 @@ const print =() => {
 						<Image
 							fill
 							className="rounded-md object-cover sm:rounded-xl"
-							src={galleryPhotos[0]}
+							src={galleryPhotos[0].toString() || ''}
 							alt=""
 							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
 						/>
@@ -693,12 +685,12 @@ const print =() => {
 							className={`relative overflow-hidden rounded-md sm:rounded-xl ${
 								index >= 3 ? 'hidden sm:block' : ''
 							}`}
-						>
+						> 
 							<div className="aspect-h-3 aspect-w-4 sm:aspect-h-5 sm:aspect-w-6">
 								<Image
 									fill
 									className="rounded-md object-cover sm:rounded-xl"
-									src={item || ''}
+									src={item.toString() || ''}
 									alt=""
 									sizes="400px"
 								/>

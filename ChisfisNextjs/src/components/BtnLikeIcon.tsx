@@ -8,7 +8,7 @@ import axios from 'axios';
 export interface BtnLikeIconProps {
   className?: string;
   colorClass?: string;
-  isLiked?: null | number;
+  isLiked?: any;
   id?: any;
 }
 

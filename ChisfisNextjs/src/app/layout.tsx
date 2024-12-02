@@ -8,7 +8,7 @@ import FooterNav from '@/components/FooterNav';
 import { Metadata } from 'next';
 import NewHeader from './(client-components)/(Header)/NewHeader';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from '../utils/authOptions';
 import { Providers } from '@/components/providers/Providers';
 import ClientCommons from './ClientCommons';
 

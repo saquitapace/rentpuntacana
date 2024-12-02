@@ -5,7 +5,7 @@ import translations2 from '@/utils/translation2';
 export interface PriceProps {
   className?: string;
   currency?: string;
-  price?:null | number;
+  price?: any;
 }
 
 const Price: FC<PriceProps> = ({

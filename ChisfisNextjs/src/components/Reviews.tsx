@@ -14,7 +14,7 @@ import translations2 from '@/utils/translation2';
 interface Props {
   className?: string;
   type?: string;
-  id?: string;
+  id?: any;
 }
 
 const Reviews: FC<Props> = ({ 

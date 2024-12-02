@@ -1,4 +1,5 @@
-import React, { FC,useState } from "react";
+"use client";
+import React, { FC, useState } from "react";
 import { StayDataType } from "@/data/types";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import StartRating from "@/components/StartRating";
@@ -27,7 +28,7 @@ const StayCard: FC<StayCardProps> = ({
 
   let {
     galleryImgs,
-    listingCategory,
+    //listingCategory,
     address,
     title,
     bedrooms,

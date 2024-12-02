@@ -25,7 +25,15 @@
     "bathrooms": 3,
     "saleOff": "-10% today",
     "isAds": null,
-    "map": { "lat": 55.2094559, "lng": 61.5594641 }
+    "map": { "lat": 55.2094559, "lng": 61.5594641 },
+    "authorFirstName":"",
+    "authorLastName":"",
+    "authorAvatar":"",
+    "authorPhoneNumber": null,
+    "authorCompanyName": null,
+    "authorListingsCount":null,
+    "authorAbout":null,
+    "authorCreatedAt":null
   },
   { 
     "id": "01",
