@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC, useState, useEffect } from "react";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import { StayDataType } from "@/data/types";
 import Pagination from "@/shared/Pagination";
 import TabFilters from "./TabFilters";
@@ -12,18 +11,15 @@ import ToggleSwitch from '@/shared/ToggleSwitch';
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";
 
-const DEMO_DATA: StayDataType[] = DEMO_STAY_LISTINGS.filter((_, i) => i < 7);
-const DEMO_STAYS = DEMO_STAY_LISTINGS.filter((_, i) => i < 12)
-
 export interface SectionGridHasMapProps {}
 
 const SectionGridHasMap: FC<SectionGridHasMapProps> = () => {
-const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1)
-const [showFullMapFixed, setShowFullMapFixed] = useState(true)
+const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
 const [listings, setListings] = useState([]); // initials state of listings
-const [limit, setLimit] = useState(9); // initials state of listings
+const [limit, setLimit] = useState(7); // initials state of listings
 const [loading, setLoading] = useState(true);
 const [responseError, setReponseError] = useState(false);
+const [mapData, setMapData] = useState([]);
 
 useEffect(() => {
   if (listings) {
@@ -34,7 +30,17 @@ useEffect(() => {
 const loadListingsData = async () => {
  const data = await fetchListingsData();
  if (data) {
-	console.log(data)
+
+    (data).map((d) => {
+      if(d.map !== null){
+        d.map = JSON.parse(d.map); 
+      }
+    });
+  
+  const DEMO_DATA2: StayDataType[] = data.filter((d) => d.map !==null);
+  
+  console.log(DEMO_DATA2)
+  setMapData(DEMO_DATA2);
 	setListings(data);
   setLoading(false);
   } 
@@ -42,21 +48,17 @@ const loadListingsData = async () => {
 
 const fetchListingsData = async () => {
   try {
-	console.log("getting listing data");
 	const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`);
 
 	if (response) {
-	  console.log("************")
-	  console.log(response)
-
 	 return await response.data[0];
 	}
   } catch (error) {
-	console.error('Error fetching listings data:', error);
-  setLoading(false);
-  setReponseError(true);
+    console.error('Error fetching listings data:', error);
+    setLoading(false);
+    setReponseError(true);
 
-	// alert("Loading listings failed. Network error. Please contact helpdesk. Error code: 500.");
+    // alert("Loading listings failed. Network error. Please contact helpdesk. Error code: 500.");
   } finally {
   } 
 };
@@ -84,6 +86,11 @@ const fetchListingsData = async () => {
       setFilterClass("w-full max-w-[1184px] flex-shrink-0 xl:w-[60%] xl:px-8 2xl:w-[60%]");  
     }
   }
+
+  const handleFilterChange = (e) =>{
+    alert(1)
+  }
+
   return (
 
 <div className="pageWrapper">
@@ -91,7 +98,9 @@ const fetchListingsData = async () => {
   
     <div className="flex">
         <div className={filterClass}>
-          <TabFilters 
+          <TabFilters
+            onClick={(e) => { handleFilterChange(e)}}
+
             viewAll={false}
           />
           
@@ -103,8 +112,6 @@ const fetchListingsData = async () => {
             label="View Map" />
         </div>
       </div>
-
-
 
       <div className="flex">
           <div className={cardClass}>
@@ -123,39 +130,35 @@ const fetchListingsData = async () => {
       )}
 
           {listings.length  > 0 && (
-
             <div className={gridClass}>
               
-
-            {listings.filter((_, i) => i < limit).map((item) => (
-        
-        <div className=""
-                    key={item.listing_id}
-                    onMouseEnter={() => setCurrentHoverID((_) => item.listing_id)}
-                    onMouseLeave={() => setCurrentHoverID((_) => -1)}
-                  >
-        <StayCard key={item.listing_id} data={item} />
-    
-        </div>
-          ))}
-
-
-
+              {listings.filter((_, i) => i < limit).map((item) => (    
+                <div className=""
+                      key={item.listing_id}
+                      onMouseEnter={() => setCurrentHoverID((_) => item.listing_id)}
+                      onMouseLeave={() => setCurrentHoverID((_) => -1)}
+                    >
+                  <StayCard key={item.listing_id} data={item} />
+                </div>
+              ))}
             </div> )}
           </div>
           <div className={mapClass}>
 
 
 				{/* MAPPPPP */}
+
+        {listings.length  > 0 && (
 				<div className="xl:static xl:block xl:flex-1 fixed inset-0 z-50">
 					<div className="fixed left-0 top-0 h-full w-full overflow-hidden rounded-md xl:sticky xl:top-[88px] xl:h-[calc(100vh-88px)]">
 						<MapContainer
 							currentHoverID={currentHoverID}
-							DEMO_DATA={DEMO_STAYS}
+							DEMO_DATA={mapData}
 							listingType="stay"
 						/>
 					</div>
 				</div>
+      )}
 
 
 

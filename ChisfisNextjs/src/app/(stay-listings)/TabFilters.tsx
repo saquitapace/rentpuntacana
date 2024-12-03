@@ -4,7 +4,6 @@ import { FC, Fragment, useState } from 'react';
 import PriceRangeInput from "../../components/PriceRangeInput";
 import PropertyTypeSelect from "../../components/PropertyTypeSelect";
 import BedBathSelect from "../../components/BedBathSelect";
-import ToggleSwitch from '@/shared/ToggleSwitch';
 import options from '@/utils/options';
 import {
 	Dialog,
@@ -32,13 +31,18 @@ import translations2 from '@/utils/translation2';
 export interface TabFiltersProps {
 	viewAll?: boolean;
 	viewMap?: boolean;
+	onClick?: () => void;
+
 }
 
 const TabFilters: FC<TabFiltersProps> = ({
 	viewAll = "",
-	viewMap = ""
-	}) => {
+	viewMap = "",
+	onClick = (e) => {},
 
+	}) => {
+	
+	const[propertyType,setPropertyType ] = useState([]);
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
 	const x = translations2.get();
 	const[t,setT] = useState(x);
@@ -516,7 +520,6 @@ const TabFilters: FC<TabFiltersProps> = ({
 			</div>
 		)
 	}
-
 	const renderViewAllButton = () => {
 		return(
 			<div className="hidden sm:block flex-shrink-0">
@@ -530,11 +533,19 @@ const TabFilters: FC<TabFiltersProps> = ({
 		)
 	}
 
+	const propertyTypeSelected = (e) => {
+		const selectedPropertyTypes = e.filter((f) => f.checked);
+		setPropertyType(selectedPropertyTypes);
+		console.log(selectedPropertyTypes);
+	}
+
 	return (
 		<form className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
 			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
 				<div className="hidden space-x-2 lg:flex">
-					<PropertyTypeSelect />
+					<PropertyTypeSelect
+						onChange={(e) => { propertyTypeSelected(e)}}
+					/>
 					<PriceRangeInput />
 					<BedBathSelect />
 					<MoreFiltersSelect />
