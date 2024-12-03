@@ -3,13 +3,15 @@ import signUpReducer from './slices/signUpSlice';
 import authReducer from './slices/authSlice';
 import userProfileReducer from './slices/userProfileSlice';
 import forgotPasswordReducer from './slices/forgotPasswordSlice';
+import translationsReducer from './slices/translationsSlice';
 
 export const store = configureStore({
   reducer: {
     signUp: signUpReducer,
     auth: authReducer,
     userProfile: userProfileReducer,
-    forgotPassword: forgotPasswordReducer, 
+    forgotPassword: forgotPasswordReducer,
+    translations: translationsReducer,
   },
 });
 

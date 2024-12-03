@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { formatDateJoined } from "@/utils/helpers";
 import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 const ListingStayDetailPage = ({
 	params,
@@ -81,6 +82,10 @@ const ListingStayDetailPage = ({
 	
 	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
 	
+	const { translations, isLoading, error } = useSelector(
+		(state) => state.translations
+	 );
+
 	const renderAmenities = async (amenities) => {
 		
 		setAmenitiesArray(true);
@@ -154,6 +159,7 @@ const ListingStayDetailPage = ({
 		return (
 			
 			<div className="listingSection__wrap !space-y-6">
+      <pre>{JSON.stringify(translations, null, 2)}</pre>
 				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
@@ -161,9 +167,9 @@ const ListingStayDetailPage = ({
 					<div className="flow-root ">
 						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
 							<ShareBtn
-								text={t.share}
+								text={translations.share}
 								url={shareUrl}
-								title={t.checkoutThisListing}
+								title={translations.checkoutThisListing}
 							/>
 							<div className="flex items-center">
 
@@ -171,7 +177,7 @@ const ListingStayDetailPage = ({
         						<BtnLikeIcon isLiked={listingDetail.likes} id={listingId} className="" colorClass="text-gray-700"      
 							/>)}
 							<span>
-								{t.save}
+								{translations.save}
 							</span>
 
 							</div>
@@ -212,13 +218,13 @@ const ListingStayDetailPage = ({
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bedrooms} <span className="hidden sm:inline-block">{t.bedrooms}</span>
+							{listingDetail.bedrooms} <span className="hidden sm:inline-block">{translations.bedrooms}</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-						{listingDetail.bathrooms} <span className="hidden sm:inline-block">{t.bathrooms}</span>
+						{listingDetail.bathrooms} <span className="hidden sm:inline-block">{translations.bathrooms}</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
@@ -231,13 +237,13 @@ const ListingStayDetailPage = ({
 					<div className="flex items-center space-x-3">
 						<i className="las la-wifi text-lg"></i>
 						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{t.wifi}
+						{translations.wifi}
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-smoking-ban text-lg"></i>
 						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{t.noSmoking}
+						{translations.noSmoking}
 						</span>
           			</div>
 				</div>
@@ -248,8 +254,8 @@ const ListingStayDetailPage = ({
 	const renderSection2 = () => {
 		return (
 			<div className="listingSection__wrap">
-				<h2 className="text-xl font-semibold items-end">{t.listingDescription} 
-					<div className="flex p-0 m-0 text-xs font-normal"><i>{t.someInfoAutomaticallyTranslated}</i> <Link className="pl-3 underline" href="#">{t.showOriginal}</Link>
+				<h2 className="text-xl font-semibold items-end">{translations.listingDescription} 
+					<div className="flex p-0 m-0 text-xs font-normal"><i>{translations.someInfoAutomaticallyTranslated}</i> <Link className="pl-3 underline" href="#">{translations.showOriginal}</Link>
 					<LanguageIcon className="pl-1 h-6 w-6" />
 					</div>
 				</h2>
@@ -268,7 +274,7 @@ const ListingStayDetailPage = ({
 		return (
 			<div className="listingSection__wrap">
 				<div>
-					<h2 className="text-xl font-semibold">{t.amenities} ({arr.length})</h2>
+					<h2 className="text-xl font-semibold">{translations.amenities} ({arr.length})</h2>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
@@ -418,7 +424,7 @@ const ListingStayDetailPage = ({
 		return (
 			<div className="listingSection__wrap">
 				{/* HEADING */}
-				<h2 className="text-xl font-semibold">{t.listingAgent}</h2>
+				<h2 className="text-xl font-semibold">{translations.listingAgent}</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
 				{/* host */}
@@ -466,7 +472,7 @@ const ListingStayDetailPage = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>{t.joinedIn} {t.space}{listingDetail.authorCreatedAt}</span>
+						<span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -483,7 +489,7 @@ const ListingStayDetailPage = ({
 								d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
 							/>
 						</svg>
-						<span>{t.responseRate}</span>
+						<span>{translations.responseRate}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -501,14 +507,14 @@ const ListingStayDetailPage = ({
 							/>
 						</svg>
 
-						<span>{t.fastResponse}</span>
+						<span>{translations.fastResponse}</span>
 					</div>
 				</div>
 
 				<div>
 					<ButtonSecondary
 						href={`/publicProfile?uid=${listingDetail.authorId}` as Route<string>}
-					>{t.seeAgentProfile}</ButtonSecondary>
+					>{translations.seeAgentProfile}</ButtonSecondary>
 				</div>
 			</div>
 		)
@@ -519,7 +525,7 @@ const ListingStayDetailPage = ({
 			<div className="listingSection__wrap">
 				{/* HEADING */}
 				<div>
-					<h2 className="text-xl font-semibold">{t.location}</h2>
+					<h2 className="text-xl font-semibold">{translations.location}</h2>
 					<span className="mt-2 block text-neutral-500 dark:text-neutral-400">
 						{listingDetail.address}
 					</span>
@@ -618,7 +624,7 @@ const print =() => {
 					{listingDetail.price && (
 						<div>${listingDetail.price}
 						<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-							/{t.month}
+							/{translations.month}
 						</span></div>
 					)}
 				</span>
@@ -654,7 +660,7 @@ const print =() => {
             <div className="flex pt-5 justify-center">
 				<ButtonSecondary className="border-0" onClick={print}>
 					<PrinterIcon className="h-6 w-6" />
-					<div className="pl-5">{t.print} {t.space} {t.listing}</div>
+					<div className="pl-5">{translations.print} {translations.space} {translations.listing}</div>
 				</ButtonSecondary>
             </div>
 			</>
@@ -710,7 +716,7 @@ const print =() => {
 					>
 						<Squares2X2Icon className="h-5 w-5" />
 						<span className="ml-2 text-sm font-medium text-neutral-800">
-							{t.showAllPhotos}
+							{translations.showAllPhotos}
 						</span>
 					</button>
 				</div>
