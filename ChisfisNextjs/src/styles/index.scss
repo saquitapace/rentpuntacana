@@ -5,7 +5,6 @@
 @import "./_dates_picker";
 //
 @import "./header";
-@import "./toggleSwitch";
 @import "./phone_input";
 @import "./loading_in_header";
 
@@ -27,8 +26,14 @@
 
 .debug {
   background-color: pink;
+  // max-height: 100px;
 }
 
+.debug2 {
+  width: 100%;
+  background-color: red;
+  // max-height: 100px;
+}
 .filter-field-focused {
   color: rgb(79, 70, 229);
   background-color: #ffffff;
@@ -87,3 +92,5 @@
     color: #25d366;
     border-color: #25d366;
   }
+
+  

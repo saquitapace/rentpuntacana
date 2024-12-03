@@ -100,7 +100,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
   return (
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
-        <h2 className="my-3 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
+        <h2 className="my-10 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
           Sign In
         </h2>
         <div className="max-w-md mx-auto space-y-6">
@@ -142,13 +142,13 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
-                Email address
+                Email
               </span>
               <Input
                 type="email"
                 name="email"
                 placeholder="example@example.com"
-                className="mt-1"
+                className="mt-3 mb-4"
                 onChange={handleChange}
                 required
               />
@@ -163,7 +163,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               <Input
                 type="password"
                 name="password"
-                className="mt-1"
+                className="mt-2 wht"
                 onChange={handleChange}
                 required
               />

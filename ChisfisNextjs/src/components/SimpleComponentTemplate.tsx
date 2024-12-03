@@ -5,7 +5,7 @@ interface Props {
 }
 
 const SimpleComponentTemplate: FC<Props> = ({ 
-  className = "/listing-stay-map" 
+  className = "" 
 }) => {
   return (
     <div className={className}>

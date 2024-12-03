@@ -530,30 +530,6 @@ const TabFilters: FC<TabFiltersProps> = ({
 		)
 	}
 
-	const handleMapToggle = () => {
-
-	}
-
-	const renderMapViewToggle = () => {
-		return(
-			<><Link href="/listing-stay-map">
-				
-			<div className="text-neutral-300 dark:text-neutral-400">
-              {/*<HomeIcon className="w-5 h-5 lg:w-7 lg:h-7" /> */}
-            </div>
-            <div className="flex-1"><ToggleSwitch label="" />
-			<span className="block xl:text-sm font-semibold truncate">
-			<span className="line-clamp-1 mr-10">
-
-                </span>
-              </span>
-            </div>
-			
-			</Link>
-			 </> 
-		)
-	}
-
 	return (
 		<form className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
 			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
@@ -566,16 +542,14 @@ const TabFilters: FC<TabFiltersProps> = ({
 					<DateRangeInput />
 
 					{/*spacer */}
-					<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
-					</div>
-
+					{viewAll && (	
+						<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
+						</div>
+					)}
 					{viewAll && (	
 						renderViewAllButton()
 					)}
 					
-					{viewMap && (	
-						renderMapViewToggle()
-					)}
 				</div>
 				{renderTabMoreFilterMobile()}
 			</div>

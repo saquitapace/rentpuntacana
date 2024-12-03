@@ -52,8 +52,8 @@ const PageForgotPassword: FC<PageForgotPasswordProps> = ({}) => {
 	return (
 		<div className={`nc-PageForgotPassword`}>
 			<div className="container mb-24 lg:mb-32">
-				<h2 className="my-5 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-					Forgot Password
+			<h2 className="my-10 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
+			Forgot Password
 				</h2>
 				<div className="max-w-md mx-auto space-y-6">
 					{/* FORM */}
@@ -61,7 +61,7 @@ const PageForgotPassword: FC<PageForgotPasswordProps> = ({}) => {
 					className="grid grid-cols-1 gap-6" method="post">
 						<label className="block">
 						<span className="text-neutral-800 dark:text-neutral-200">
-							Email address
+							Email
 						</span>
 						<Input
 							type="email"
