@@ -11,7 +11,9 @@ import ToggleSwitch from '@/shared/ToggleSwitch';
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";
 
-export interface SectionGridHasMapProps {}
+export interface SectionGridHasMapProps {
+
+}
 
 const SectionGridHasMap: FC<SectionGridHasMapProps> = () => {
 const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
@@ -31,15 +33,14 @@ const loadListingsData = async () => {
  const data = await fetchListingsData();
  if (data) {
 
-    (data).map((d) => {
+    (data).map((d: { map: string; }) => {
       if(d.map !== null){
         d.map = JSON.parse(d.map); 
       }
     });
   
-  const DEMO_DATA2: StayDataType[] = data.filter((d) => d.map !==null);
+  const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
   
-  console.log(DEMO_DATA2)
   setMapData(DEMO_DATA2);
 	setListings(data);
   setLoading(false);
@@ -70,7 +71,14 @@ const fetchListingsData = async () => {
   let [cardClass, setCardClass] = useState("min-h-screen w-full max-w-[1184px] flex-shrink-0 xl:w-[60%] xl:px-8 2xl:w-[60%]");
   let [viewClassName, setViewClassName] = useState(fullClass);
   let [gridClass, setGridClass] = useState("grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-x-6");   
-  let [filterClass, setFilterClass] = useState("w-full max-w-[1184px] flex-shrink-0 xl:w-[60%] xl:px-8 2xl:w-[60%]");   
+  let [filterClass, setFilterClass] = useState("w-full max-w-[1184px] flex-shrink-0 xl:w-[60%] xl:px-8 2xl:w-[60%]");
+  
+  // const [password, setPassword] = useState("");
+  // const onChangePassword=(value: React.SetStateAction<string>)=>{
+  //   alert("onChangePassword")
+  //   setPassword(value);
+  // }
+
   const toggleView = () =>{
     if(viewClassName==fullClass){
       setViewClassName(halfClass);
@@ -87,9 +95,12 @@ const fetchListingsData = async () => {
     }
   }
 
-  const handleFilterChange = (e) =>{
-    alert(1)
-  }
+
+  const tabFilterTypeChanged = (e: any) =>{
+		//alert("tabFilterTypeChanged")
+    console.log(e);
+	}
+  //onChangePassword={(e) => onChangePassword()}
 
   return (
 
@@ -98,9 +109,14 @@ const fetchListingsData = async () => {
   
     <div className="flex">
         <div className={filterClass}>
-          <TabFilters
-            onClick={(e) => { handleFilterChange(e)}}
-
+            <TabFilters
+            	onChange={(e) => { tabFilterTypeChanged(e)}}
+            //handler={ _handler }
+          //	onChange={(e) => tabFilterTypeChanged}
+            // onChange={change => {
+            //   alert(0)
+            //   console.log('change', change);
+            // }}
             viewAll={false}
           />
           
@@ -108,7 +124,7 @@ const fetchListingsData = async () => {
         <div className="content-end">
           <ToggleSwitch
             checked={true}
-            onClick={(e) => { toggleView()}}
+            onClick={(e: any) => toggleView()}
             label="View Map" />
         </div>
       </div>
