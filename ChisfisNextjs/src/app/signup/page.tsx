@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { signUpUser, resetSignUpState } from '@/store/slices/signUpSlice';
 import { signInUser, resetAuthState } from '@/store/slices/authSlice';
+import { redirect } from "@/utils/helpers";
 
 export interface PageSignUpProps {}
 
@@ -89,8 +90,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
         password: formData.password,
       })).unwrap();
 
-      router.push("/");
-      router.refresh();
+      router.push( redirect( formData.accountType ) );
     } catch (error: any) {
       console.error("Signup error:", error);
       setError(error.message || "An error occurred during sign up");

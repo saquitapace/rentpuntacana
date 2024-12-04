@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { formatDateJoined } from "@/utils/helpers";
 import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const ListingStayDetailPage = ({
 	params,
@@ -80,8 +81,8 @@ const ListingStayDetailPage = ({
 	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
 	
 	const { translations, isLoading, error } = useSelector(
-		(state) => state.translations
-	 );
+		(state: RootState) => state.translations
+	);
 
 	const renderAmenities = async (amenities) => {
 		

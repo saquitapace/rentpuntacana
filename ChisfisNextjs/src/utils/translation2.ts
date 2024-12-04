@@ -50,9 +50,11 @@ const translation2 = (function() {
     // };
     
     const get = function() {
-        const x = localStorage.getItem("translations3") ?? '';
-        const y = x && JSON.parse(x);
-        return y;
+        if (typeof window !== "undefined") {
+            const x = localStorage.getItem("translations3") ?? '';
+            const y = x && JSON.parse(x);
+            return y;
+        }
     };
       
     return {
