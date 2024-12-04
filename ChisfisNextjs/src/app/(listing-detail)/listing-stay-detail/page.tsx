@@ -1,150 +1,139 @@
-'use client'
-
-import { FC, Fragment, useEffect, useState } from 'react'
-import { Checkbox, Dialog, Transition, TransitionChild } from '@headlessui/react'
-import { ArrowRightIcon, Squares2X2Icon } from '@heroicons/react/24/outline'
+//saquita
+'use client';
+import { FC, Fragment, useEffect, useState } from 'react';
+import ContactForm  from '@/components/ContactForm';
+import {Dialog, Transition, TransitionChild } from '@headlessui/react';
+import { Squares2X2Icon, PrinterIcon, LanguageIcon } from '@heroicons/react/24/outline';
 import BtnLikeIcon from '@/components/BtnLikeIcon';
 import Price from '@/components/Price';
-import CommentListing from '@/components/CommentListing'
-import FiveStartIconForRate from '@/components/FiveStartIconForRate'
-import StartRating from '@/components/StartRating'
-import Avatar from '@/shared/Avatar'
-import Badge from '@/shared/Badge'
-import ButtonCircle from '@/shared/ButtonCircle'
-import ButtonPrimary from '@/shared/ButtonPrimary'
-import ButtonSecondary from '@/shared/ButtonSecondary'
-import ButtonClose from '@/shared/ButtonClose'
-import Input from '@/shared/Input';
+import StartRating from '@/components/StartRating';
+import Avatar from '@/shared/Avatar';
+import ButtonSecondary from '@/shared/ButtonSecondary';
+import ButtonClose from '@/shared/ButtonClose';
 import Image from 'next/image';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { Amenities_demos, PHOTOS } from './constant'
-import StayDatesRangeInput from './StayDatesRangeInput'
-import GuestsInput from './GuestsInput'
-import SectionDateRange from '../SectionDateRange'
-import { Route } from 'next'
-import ShareBtn from '@/components/ShareBtn'
-import Textarea from '@/shared/Textarea'
+import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation';
+import { Amenities_demos, PHOTOS } from './constant';
+import SectionDateRange from '../SectionDateRange';
+import { Route } from 'next';
+import ShareBtn from '@/components/ShareBtn';
 import Reviews from '../../../components/Reviews';
-import Link from 'next/link'
 import axios from 'axios';
-
-import { ListingDetailType } from "@/data/types";
+//import { ListingDetailType } from "@/data/types";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
+import Link from 'next/link';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
+import { formatDateJoined } from "@/utils/helpers";
+import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
-const DEMO_DATA = DEMO_STAY_LISTINGS[1];
+const ListingStayDetailPage = ({
+	params,
+	searchParams,
+	} : {
+	params: { lid: string };
+	searchParams?: { [key: string]: string | string[] | undefined };
+	}) => {
 
-export interface ListingStayDetailPageProps {
-	className?: string;
-	data?: ListingDetailType;
-}
+	const DEMO_DATA = DEMO_STAY_LISTINGS[0];
 
-const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
-	className = "",
-	data = {},
-}) => {
-	
 	let [listingDetail, setListingDetail]= useState(
 		{
 			galleryImgs:[],
 			listingCategory:'',
-			address:'',
-			title:'',
-			bedrooms:'',
-			bathrooms:'',
-			sqft:'',
+			address: null,
+			title: '',
+			bedrooms: 0,
+			bathrooms: 0,
+			sqft: 0,
+			amenities:[],
 			href:'',
-			likes: 1,
-			saleOff:'',  
-			isAds:'',
-			price:'',
+			likes: null,
+			availability_date: null,
+			saleOff: null,  
+			isAds: null,
+			price: null,
 			reviewStart: null,
 			reviewCount: null,
 			id:'',
-			listing_id:'',
+			description: "{ Description }",
+			listing_id: null,
 			authorFirstName:'',
 			authorLastName:'',
 			authorAvatar:'',
-			authorPhoneNumber:'',
-			authorCompanyName: ''
+			authorPhoneNumber: null,
+			authorCompanyName: null,
+			authorListingsCount:null,
+			authorId: null,
+			authorAbout:null,
+			authorCreatedAt:null
 		  }
 	);
 
-	let [likes, setLikes]= useState(listingDetail.likes);
-	//let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
-
-	{/*let {
-		galleryImgs,
-		listingCategory,
-		address,
-		title,
-		bedrooms,
-		bathrooms,
-		sqft,
-		href,
-		likes,
-		saleOff,  
-		isAds,
-		price,
-		reviewStart,
-		reviewCount,
-		id,
-		listing_id,
-		authorFirstName,
-		authorLastName,
-		authorAvatar,
-		authorPhoneNumber
-
-	  } = listingDetail; */}
-
-	const searchParams = useSearchParams();
 	const thisPathname = usePathname();
 	const router = useRouter();
-	const listingId = searchParams.get("lid");
+	const listingId = searchParams.lid;
+	const [loading, setLoading] = useState(true);
 	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
-
-	if(!listingId){alert("todo: display error message is the id isnt passed & display mock object data")}
+	const [arr,setArr] = useState([]);
+	const [amenitiesArray, setAmenitiesArray] = useState(false);
+	const x = translations2.get();
+	const[t,setT] = useState(x);
 	
 	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
 	
+	const { translations, isLoading, error } = useSelector(
+		(state) => state.translations
+	 );
+
+	const renderAmenities = async (amenities) => {
+		
+		setAmenitiesArray(true);
+
+		if(amenities === null){
+			return;
+		}
+
+		const Array = JSON.parse(amenities); 
+
+		Array.forEach(has => {
+			Amenities_demos.forEach(item => {
+				if(has == item.key){
+					arr.push({icon:item.icon,key:has })	
+				}
+			});
+		});
+	}
+
 	const loadListingDetailData = async () => {
-		const d = await fetchListingDetailData();
-		const prevData = listingDetail;
-		listingDetail = d;
-		console.log(d);
-		setListingDetail(d);
-		//setLikes(listingDetail.likes)
-		setGalleryPhotos(listingDetail['galleryImgs']);
-		setLikes(listingDetail['likes']);
-
-		//likes = 9
-		setListingDetail((listingDetail) => ({ ...listingDetail, d }));
-		console.log(d);
-
-		//setLikes((listingDetail) => ({ ...listingDetail, [likes]: 3 }));
-
-		{/*setListingDetail(prevData => ({ {}
-			
-		})); */}
-
-		// setListingDetail(prevListingDetail => ({
-		// 	...prevListingDetail, // Spread the previous car state
-		// 	listingDetail // Update the year to 2025
-		// }));
+			const d = await fetchListingDetailData();
+			const prevData = listingDetail;
+			listingDetail = d;
+			d.authorCreatedAt = formatDateJoined(d.authorCreatedAt)
+			setListingDetail(d);
+			setLoading(false);
+			setGalleryPhotos(listingDetail['galleryImgs']);
+			renderAmenities(d.amenitites);
+			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
 	}
 
 	useEffect(() => {
-		if (listingId) {
+		
+		if(listingId){
 			loadListingDetailData();
+		} else {
+			alert("todo: display error message is the id isnt passed & display mock object data");
+			//setListingDetail(DEMO_DATA); // load the test view
 		}
 	},[]);
 
 	const fetchListingDetailData = async () => {
+		
 		try {
 			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId});
 	
 			if (response) {
-				console.log(response.data)
+				//console.log(response.data)
 			return await response.data;
 			}
 		} catch (error) {
@@ -167,28 +156,29 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 	}
 
 	const renderSection1 = () => {
-
 		return (
+			
 			<div className="listingSection__wrap !space-y-6">
-				{/* 1 */}
-				<div className="flex items-center justify-between">
-					{/*<Badge name="Wooden house" /> */}
+      <pre>{JSON.stringify(translations, null, 2)}</pre>
+				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
 					</h2>
 					<div className="flow-root ">
 						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
 							<ShareBtn
-								text="Share"
+								text={translations.share}
 								url={shareUrl}
-								title="Check out this listing!"
+								title={translations.checkoutThisListing}
 							/>
 							<div className="flex items-center">
-							{listingDetail.likes}
-        					<BtnLikeIcon isLiked={likes} id={listingId} className="" colorClass="text-gray-700"      
- />
- <span>Save</span>
 
+							{!loading && (
+        						<BtnLikeIcon isLiked={listingDetail.likes} id={listingId} className="" colorClass="text-gray-700"      
+							/>)}
+							<span>
+								{translations.save}
+							</span>
 
 							</div>
 						</div>
@@ -200,50 +190,43 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 					<span>·</span>
 					<span>
 						<i className="las la-map-marker-alt"></i>
-						<span className="ml-1 text-red-700">City, State</span>
+						<span className="ml-1">{listingDetail.address}</span>
 					</span>
 				</div>
 
 				{/* 4 */}
-				<div className="flex items-center">
-					<Avatar hasChecked sizeClass="h-10 w-10" radius="rounded-full" />
+				{/* <div className="flex items-center hidden">
+					<Avatar
+						imgUrl={listingDetail.authorAvatar}
+						sizeClass="w-30 h-30 sm:w-12 sm:h-12"
+						userName={listingDetail.authorFirstName}
+					/>
+
 					<span className="ml-2.5 text-neutral-500 dark:text-neutral-400">
-						Hosted by{' '}
+						Listing by{' '}
 						<span className="font-medium text-neutral-900 dark:text-neutral-200">
 							{listingDetail.authorFirstName}{' '}{listingDetail.authorLastName}
 						</span>
 					</span>
-				</div>
+				</div> */}
 
 				{/* 5 */}
 				<div className="w-full border-b border-neutral-100 dark:border-neutral-700" />
 
 				{/* 6 */}
 				<div className="flex items-center justify-between space-x-8 text-sm text-neutral-700 dark:text-neutral-300 xl:justify-start xl:space-x-12">
-					{/* <div className="flex items-center space-x-3">
-						<i className="las la-user text-2xl"></i>
-						<span className="">
-							6 <span className="hidden sm:inline-block">guests</span>
-						</span>
-					</div> */}
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bedrooms} <span className="hidden sm:inline-block">bedrooms</span>
+							{listingDetail.bedrooms} <span className="hidden sm:inline-block">{translations.bedrooms}</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-						{listingDetail.bedrooms} <span className="hidden sm:inline-block">bathrooms</span>
+						{listingDetail.bathrooms} <span className="hidden sm:inline-block">{translations.bathrooms}</span>
 						</span>
 					</div>
-					{/* <div className="flex items-center space-x-3">
-						<i className="las la-door-open text-2xl"></i>
-						<span className=" ">
-						{bedrooms} <span className="hidden sm:inline-block">bedrooms</span>
-						</span>
-					</div> */}
 					<div className="flex items-center space-x-3">
 						<i className="las la-expand-arrows-alt text-lg"></i>
 						<span className=" ">
@@ -252,17 +235,17 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 					</div>
 
 					<div className="flex items-center space-x-3">
-            <i className="las la-wifi text-lg"></i>
-            <span className="text-sm text-neutral-500 dark:text-neutral-400">
-              Wifi
-            </span>
-          </div>
-		  <div className="flex items-center space-x-3">
-            <i className="las la-smoking-ban text-lg"></i>
-            <span className="text-sm text-neutral-500 dark:text-neutral-400">
-              No smoking
-            </span>
-          </div>
+						<i className="las la-wifi text-lg"></i>
+						<span className="text-sm text-neutral-500 dark:text-neutral-400">
+						{translations.wifi}
+						</span>
+					</div>
+					<div className="flex items-center space-x-3">
+						<i className="las la-smoking-ban text-lg"></i>
+						<span className="text-sm text-neutral-500 dark:text-neutral-400">
+						{translations.noSmoking}
+						</span>
+          			</div>
 				</div>
 			</div>
 		)
@@ -270,27 +253,18 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
 	const renderSection2 = () => {
 		return (
-			<div className="listingSection__wrap text-red-700">
-				<h2 className="text-2xl font-semibold">Stay information</h2>
+			<div className="listingSection__wrap">
+				<h2 className="text-xl font-semibold items-end">{translations.listingDescription} 
+					<div className="flex p-0 m-0 text-xs font-normal"><i>{translations.someInfoAutomaticallyTranslated}</i> <Link className="pl-3 underline" href="#">{translations.showOriginal}</Link>
+					<LanguageIcon className="pl-1 h-6 w-6" />
+					</div>
+				</h2>
+				
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				<div className="text-neutral-6000 dark:text-neutral-300 text-red-700">
-					<span>
-						Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides
-						accommodation, an outdoor swimming pool, a bar, a shared lounge, a
-						garden and barbecue facilities. Complimentary WiFi is provided.
-					</span>
-					<br />
-					<br />
-					<span>
-						There is a private bathroom with bidet in all units, along with a
-						hairdryer and free toiletries.
-					</span>
-					<br /> <br />
-					<span>
-						The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental
-						service and a car rental service are available at the accommodation,
-						while cycling can be enjoyed nearby.
-					</span>
+				<div className="text-neutral-6000 dark:text-neutral-300">
+					<div>
+						{listingDetail.description}
+					</div>
 				</div>
 			</div>
 		)
@@ -298,32 +272,34 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
 	const renderSection3 = () => {
 		return (
-			<div className="listingSection__wrap text-red-700">
+			<div className="listingSection__wrap">
 				<div>
-					<h2 className="text-2xl font-semibold">Amenities </h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
-						{` About the property's amenities and services`}
-					</span>
+					<h2 className="text-xl font-semibold">{translations.amenities} ({arr.length})</h2>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				{/* 6 */}
-				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3 text-red-700">
-					{Amenities_demos.filter((_, i) => i < 12).map((item) => (
-						<div key={item.name} className="flex items-center space-x-3">
-							<i className={`las text-3xl ${item.icon}`}></i>
-							<span className=" ">{item.name}</span>
-						</div>
-					))}
+
+				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3">
+				
+				{/* {!loading && ()} */}
+				
+					{amenitiesArray && (							
+						arr.map((item) => (
+							
+							<div key={item.name} className="flex items-center space-x-3">
+								<i className={`las text-3xl ${item.icon}`}></i>
+								<span className=" ">{item.key}</span>
+							</div>
+						))
+					)}
 				</div>
 
-				{/* ----- */}
-				<div className="w-14 border-b border-neutral-200"></div>
-				<div >
+				{/*<div className="w-14 border-b border-neutral-200"></div>
+				 <div >
 					<ButtonSecondary className="text-red-700" onClick={openModalAmenities}>
 						View more 20 amenities
 					</ButtonSecondary>
-				</div>
-				{renderMotalAmenities()}
+				</div> 
+				{renderMotalAmenities()}*/}
 			</div>
 		)
 	}
@@ -446,36 +422,37 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
 	const renderSection5 = () => {
 		return (
-			<div className="listingSection__wrap text-red-700">
+			<div className="listingSection__wrap">
 				{/* HEADING */}
-				<h2 className="text-2xl font-semibold">Host Information</h2>
+				<h2 className="text-xl font-semibold">{translations.listingAgent}</h2>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
 				{/* host */}
 				<div className="flex items-center space-x-4">
+
 					<Avatar
+						imgUrl={listingDetail.authorAvatar}
+						userName={listingDetail.authorFirstName}
 						hasChecked
 						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
-						sizeClass="h-14 w-14"
+						sizeClass="h-16 w-16"
 						radius="rounded-full"
 					/>
 					<div>
-						<a className="block text-xl font-medium" href="##">
+						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.authorId}`}>
 							{listingDetail.authorFirstName} { } {listingDetail.authorLastName}
 						</a>
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
 							<span className="mx-2">·</span>
-							<span> 12 places</span>
+							<a className="underline" href={`/publicProfile?uid=${listingDetail.authorId}`}>{listingDetail.authorListingsCount} Listings</a>
 						</div>
 					</div>
 				</div>
 
 				{/* desc */}
 				<span className="block text-neutral-6000 dark:text-neutral-300">
-					Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides
-					accommodation, an outdoor swimming pool, a bar, a shared lounge, a
-					garden and barbecue facilities...
+				{listingDetail.authorAbout}
 				</span>
 
 				{/* info */}
@@ -495,7 +472,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>Joined in March 2016</span>
+						<span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -512,7 +489,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 								d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
 							/>
 						</svg>
-						<span>Response rate - 100%</span>
+						<span>{translations.responseRate}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -530,57 +507,14 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 							/>
 						</svg>
 
-						<span>Fast response - within a few hours</span>
+						<span>{translations.fastResponse}</span>
 					</div>
 				</div>
 
-				{/* == */}
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 				<div>
-					<ButtonSecondary href="/author">See host profile</ButtonSecondary>
-				</div>
-			</div>
-		)
-	}
-
-	const renderSection6 = () => {
-		return (
-
-
-
-		
-
-
-			<div className="listingSection__wrap text-red-700 hidden">
-				<h2 className="text-2xl font-semibold">Reviews (23 reviews)</h2>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				{/* Content */}
-				<div className="space-y-5">
-					<FiveStartIconForRate iconClass="w-6 h-6" className="space-x-0.5" />
-					<div className="relative">
-						<Input
-							fontClass=""
-							sizeClass="h-16 px-4 py-3"
-							rounded="rounded-3xl"
-							placeholder="Share your thoughts ..."
-						/>
-						<ButtonCircle
-							className="absolute right-2 top-1/2 -translate-y-1/2 transform"
-							size=" w-12 h-12 "
-						>
-							<ArrowRightIcon className="h-5 w-5" />
-						</ButtonCircle>
-					</div>
-				</div>
-				{/* comment */}
-				<div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-					<CommentListing className="py-8" />
-					<CommentListing className="py-8" />
-					<CommentListing className="py-8" />
-					<CommentListing className="py-8" />
-					<div className="pt-8">
-						<ButtonSecondary>View more 20 reviews</ButtonSecondary>
-					</div>
+					<ButtonSecondary
+						href={`/publicProfile?uid=${listingDetail.authorId}` as Route<string>}
+					>{translations.seeAgentProfile}</ButtonSecondary>
 				</div>
 			</div>
 		)
@@ -588,16 +522,15 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 
 	const renderSection7 = () => {
 		return (
-			<div className="listingSection__wrap text-red-700">
+			<div className="listingSection__wrap">
 				{/* HEADING */}
 				<div>
-					<h2 className="text-2xl font-semibold">Location</h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
-						San Diego, CA, United States of America (SAN-San Diego Intl.)
+					<h2 className="text-xl font-semibold">{translations.location}</h2>
+					<span className="mt-2 block text-neutral-500 dark:text-neutral-400">
+						{listingDetail.address}
 					</span>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
 				{/* MAP */}
 				<div className="aspect-h-5 aspect-w-5 z-0 rounded-xl ring-1 ring-black/10 sm:aspect-h-3">
 					<div className="z-0 overflow-hidden rounded-xl">
@@ -607,7 +540,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
 							loading="lazy"
 							allowFullScreen
 							referrerPolicy="no-referrer-when-downgrade"
-							src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAGVJfZMAKYfZ71nzL_v5i3LjTTWnCYwTY&q=Eiffel+Tower,Paris+France"
+							src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAGVJfZMAKYfZ71nzL_v5i3LjTTWnCYwTY&q=Rosa+Hermosa"
 						></iframe>
 					</div>
 				</div>
@@ -677,68 +610,68 @@ Verified
 By choosing to contact a property, you consent to receive calls or texts at the number you provided, which may involve use of automated means and prerecorded/artificial voices, from Zillow Group and the rental manager(s) you choose to contact about any inquiries you submit through our services. You don't need to consent as a condition of renting any property or buying any other goods or services. Message/data rates may apply. You also agree to Zillow's Terms of Use and Privacy Policy.
 */
 }
-
+const print =() => {
+	window.print
+}
 	const renderSidebar = () => {
 		return (
+			<>
 			<div className="listingSectionSidebar__wrap shadow-xl">
+				<span className="text-3xl font-semibold">
+					{!!listingDetail.price || listingDetail.price == null && (
+						<Price className="text-3xl font-semibold" price={listingDetail.price} />
+					)}
+					{listingDetail.price && (
+						<div>${listingDetail.price}
+						<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
+							/{translations.month}
+						</span></div>
+					)}
+				</span>
 
-<span className="text-3xl font-semibold">
-						$119
+				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 
-						<Price price={listingDetail.price} />
-						{/* <span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-							/night
-						</span> */}
-					</span>
-<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-
-				<div className="flex">					
-					{/* <Badge name="Wooden house" /> */}
+				<div className="flex">
 					<Avatar
 						imgUrl={listingDetail.authorAvatar}
-						sizeClass="w-30 h-30 sm:w-12 sm:h-12"
-						userName={listingDetail.authorFirstName}
-					/>
+						hasChecked
+						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
+						sizeClass="h-16 w-16"
+						userName={listingDetail.authorFirstName} />
+
 					<div className="ml-3 sm:ml-4 space-y-1">
 						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-						{listingDetail.authorFirstName}{ }{listingDetail.authorLastName}
+							{listingDetail.authorFirstName}{" "}{listingDetail.authorLastName}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-						{listingDetail.authorPhoneNumber}
+							{formatPhoneNumberIntl(listingDetail.authorPhoneNumber)}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-						{listingDetail.authorCompanyName}
-						
-						</p>
-
-						<p className="text-xs text-gray-400 dark:text-gray-400">
-						<ButtonSecondary className="whatsapp">
-							<Link aria-label="Chat on WhatsApp" href={`https://wa.me/${listingDetail.authorPhoneNumber}`}> 
-								<i className="lab la-whatsapp text-3xl whatsapp"></i> Message on Whatsapp
-							</Link>
-						</ButtonSecondary>
+							{listingDetail.authorCompanyName}
 						</p>
 					</div>
 				</div>
-				<Textarea>
-					
-				</Textarea>
-
-				x checkbox for terms & conditions 
-				<ButtonPrimary>
-					Send Message
-				</ButtonPrimary>
+				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
+				{!loading && (
+					<ContactForm />
+				)}
 			</div>
+			
+            <div className="flex pt-5 justify-center">
+				<ButtonSecondary className="border-0" onClick={print}>
+					<PrinterIcon className="h-6 w-6" />
+					<div className="pl-5">{translations.print} {translations.space} {translations.listing}</div>
+				</ButtonSecondary>
+            </div>
+			</>
 		)
 	}
-
 
 	return (
 		<div className="nc-ListingStayDetailPage">
 			{/*  HEADER */}
-			<header className="rounded-md sm:rounded-xl min-h-[260px] p-4">
-				<div className="imageGalleryPlaceholder absolute justify-center items-center">Image Gallery</div>
-				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2">
+			<header className="rounded-md sm:rounded-xl p-4">
+				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2 min-h-[280px]">
 					<div
 						className="relative col-span-2 row-span-3 cursor-pointer overflow-hidden rounded-md sm:row-span-2 sm:rounded-xl"
 						onClick={handleOpenModalImageGallery}
@@ -746,7 +679,7 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 						<Image
 							fill
 							className="rounded-md object-cover sm:rounded-xl"
-							src={galleryPhotos[0]}
+							src={galleryPhotos[0].toString() || ''}
 							alt=""
 							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
 						/>
@@ -758,12 +691,12 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 							className={`relative overflow-hidden rounded-md sm:rounded-xl ${
 								index >= 3 ? 'hidden sm:block' : ''
 							}`}
-						>
+						> 
 							<div className="aspect-h-3 aspect-w-4 sm:aspect-h-5 sm:aspect-w-6">
 								<Image
 									fill
 									className="rounded-md object-cover sm:rounded-xl"
-									src={item || ''}
+									src={item.toString() || ''}
 									alt=""
 									sizes="400px"
 								/>
@@ -783,7 +716,7 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 					>
 						<Squares2X2Icon className="h-5 w-5" />
 						<span className="ml-2 text-sm font-medium text-neutral-800">
-							Show all photos
+							{translations.showAllPhotos}
 						</span>
 					</button>
 				</div>
@@ -793,16 +726,25 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 			<main className="relative z-10 mt-0 flex flex-col lg:flex-row">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-3/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
+
 					{renderSection1()}
 					{renderSection2()}
 					{renderSection3()}
-					{/* {renderSection4()} */}
-					<Reviews />
-					<SectionDateRange />
+					
+					<Reviews
+						className=""
+						id={listingId}
+						type="listing"
+					/>
+					{!loading && (
+					<SectionDateRange
+						sDate={listingDetail.availability_date}
+						eDate={listingDetail.availability_date}
+					/>)}
 					{renderSection5()}
 					{/* {renderSection6()} */}
 					{renderSection7()}
-					{renderSection8()}
+					{/* {renderSection8()} */}
 				</div>
 
 				{/* SIDEBAR */}
@@ -814,4 +756,4 @@ By choosing to contact a property, you consent to receive calls or texts at the 
 	)
 }
 
-export default ListingStayDetailPage
+export default ListingStayDetailPage;

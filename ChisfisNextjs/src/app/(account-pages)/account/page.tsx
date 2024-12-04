@@ -9,6 +9,8 @@ import Textarea from "@/shared/Textarea";
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
+import PhoneNumberInput from "@/components/PhoneNumberInput";
+
 import { 
   setUserProfile, 
   setAvatar, 
@@ -40,7 +42,7 @@ const AccountPage = () => {
   const { data: session, update: updateSession } = useSession();
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
-  console.log(userProfile)
+  console.log(userProfile);
 
   const {
     register,
@@ -188,7 +190,6 @@ const AccountPage = () => {
         </div>
       )}
 
-      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <div className="flex flex-col md:flex-row">
         <div className="flex-shrink-0 flex items-start">
           <div className="relative rounded-full overflow-hidden flex">
@@ -237,8 +238,9 @@ const AccountPage = () => {
             />
           </div>
 
-          {/* First Name */}
-          <div>
+
+          <div className="grid grid-flow-col grid-rows-1 gap-4">
+            <div className="">
             <Label>First Name</Label>
             <Input 
               className="mt-1.5"
@@ -246,10 +248,10 @@ const AccountPage = () => {
               {...register("firstName", { required: "First Name is required" })}
             />
             {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName.message}</div>}
-          </div>
 
-          {/* Last Name */}
-          <div>
+
+            </div>
+            <div className="">
             <Label>Last Name</Label>
             <Input 
               className="mt-1.5"
@@ -257,38 +259,86 @@ const AccountPage = () => {
               {...register("lastName", { required: "Last Name is required" })}
             />
             {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
+
+            </div>
           </div>
 
-          {/* Email - Read Only */}
-          <div>
+
+          <div className="grid grid-flow-col grid-rows-1 gap-4">
+            <div className="">
+
             <Label>Email</Label>
-            <Input 
-              className="mt-1.5 bg-neutral-100 dark:bg-neutral-800"
-              value={userProfile.email}
-              disabled
-              readOnly
+
+            <div className="mt-1.5 flex">
+                  <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                    <i className="text-2xl las la-envelope"></i>
+                  </span>
+                  <Input
+                    className="!rounded-l-none"
+                    placeholder="example@email.com"
+                    value={userProfile.email}
+                    disabled
+                    readOnly
+                        />
+                </div>
+
+            </div>
+            <div className="">
+
+            <Label>Phone Number</Label>
+            <PhoneNumberInput
+              className="mt-1.5"
+              phoneNumber={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
+
+
+
+            </div>
+          </div>
+          
+
+          {/* About */}
+          <div>
+            <Label>Bio</Label>
+            <Textarea 
+              className="mt-1.5"
+              defaultValue={userProfile.about}
+              {...register("about")}
             />
           </div>
 
+          {/* User Name */}
+          {/* <div>
+            <Label>Username</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
+            />
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
+          </div> */}
+
           {/* Phone Number */}
-          <div>
+          {/* <div>
             <Label>Phone Number</Label>
             <Input 
               className="mt-1.5"
               defaultValue={userProfile.phoneNumber}
               {...register("phoneNumber")}
             />
-          </div>
+          </div> */}
+
 
           {/* Address */}
-          <div>
+          {/* <div>
             <Label>Address</Label>
             <Input 
               className="mt-1.5"
               defaultValue={userProfile.address}
               {...register("address")}
             />
-          </div>
+          </div> */}
 
           {/* Languages */}
           <div>
@@ -327,15 +377,68 @@ const AccountPage = () => {
             </div>
           </div>
 
-          {/* About */}
-          <div>
-            <Label>About</Label>
-            <Textarea 
-              className="mt-1.5"
-              defaultValue={userProfile.about}
-              {...register("about")}
-            />
-          </div>
+
+
+          <div className="">
+                <Label>Website</Label>
+                <div className="mt-1.5 flex">
+                  <span className="inline-flex items-center px-3 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                    https://
+                  </span>
+                  <Input
+                    className="!rounded-l-none"
+                    placeholder="yourwebsite.com"
+                  />
+                </div>
+              </div>
+              {/* ---- */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div>
+                  <Label>Facebook</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-facebook-f"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourfacebook"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Twitter</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-twitter"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourtwitter"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Instagram</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-instagram"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourinstagram"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
 
           {/* Submit Button */}
           <div className="pt-2">

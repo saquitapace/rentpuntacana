@@ -16,3 +16,22 @@ export interface PropertyType {
 export interface ClassOfProperties extends PropertyType {}
 
 export type DateRage = [Date | null, Date | null];
+
+export interface BedBath {
+  name: string;
+  abbreviation: string;
+  defaultValue : number;
+}
+
+export interface ClassOfBedBath extends BedBath {}
+
+export interface OptionsType {
+  field: string
+  name: string
+  en: string
+  sp: string
+  category: string
+  checked?: boolean
+}
+
+export interface ClassOfOptions extends OptionsType {}

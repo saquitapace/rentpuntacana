@@ -1,11 +1,12 @@
 "use client";
-import React, { Fragment, FC } from "react";
+import React, { Fragment, FC, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
 import { ClassOfProperties } from "../components/type";
 import { HomeIcon } from "@heroicons/react/24/outline";
+import translations2 from '@/utils/translation2';
 
-const defaultPropertyType: ClassOfProperties[] = [
+const defaultPropertyType: ClassOfProperties[] = [ //todo: move to db for translation saquita 
   {
     name: "Apartment",
     abbreviation:"Apt",
@@ -44,6 +45,9 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   const [typeOfProperty, setTypeOfProperty] =
     React.useState<ClassOfProperties[]>(defaultPropertyType);
 
+  const x = translations2.get();
+  const[t,setT] = useState(x);
+  
   let typeOfPropertyText = "";
   if (typeOfProperty && typeOfProperty.length > 0) {
     typeOfPropertyText = typeOfProperty
@@ -69,11 +73,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             <div className="flex-1">
               <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
-                  {typeOfPropertyText || `Select`}
+                  {typeOfPropertyText || `${t.select}`}
                 </span>
               </span>
               <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-                Property type
+                {t.propertyType}
               </span>
             </div>
           </Popover.Button>

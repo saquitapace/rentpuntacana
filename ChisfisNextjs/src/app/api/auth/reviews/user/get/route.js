@@ -1,18 +1,18 @@
 //getReviews service
 import { NextResponse } from 'next/server';
-import { pool } from '../../../../../lib/db';
+import { pool } from '../../../../../../lib/db';
 
 export async function POST(request) {
-  const { reviewId } = await request.json();
+  const { id } = await request.json();
   
   const response = await pool.query(`
     SELECT
-      agentReviews.id,
-      agentReviews.userId,
-      agentReviews.reviewerId,
-      agentReviews.review,
-      agentReviews.rating,
-      agentReviews.timestamp AS time,
+      user_reviews.id,
+      user_reviews.userId,
+      user_reviews.reviewerId,
+      user_reviews.review,
+      user_reviews.rating,
+      user_reviews.timestamp AS time,
       users.avatar,
       users.firstName,
       users.lastName,
@@ -25,10 +25,10 @@ export async function POST(request) {
           )
       ) AS name
     FROM
-        agentReviews 
-    LEFT JOIN users ON users.userId = agentReviews.reviewerId
+        user_reviews 
+    LEFT JOIN users ON users.userId = user_reviews.reviewerId
     WHERE
-       agentReviews.userId = ?`, [userId]);
-      
+       user_reviews.userId = ?`, [id]);
+
   return NextResponse.json(response);
 } 

@@ -3,7 +3,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { PathName } from "@/routers/types";
 import Link from "next/link";
-import Header from "./Header";
+//import Header from "./Header";
 import { usePathname } from "next/navigation";
 
 export type SiteHeaders = "Header 1" | "Header 2";
@@ -20,9 +20,9 @@ let OPTIONS = {
 };
 let OBSERVER: IntersectionObserver | null = null;
 const PAGES_HIDE_HEADER_BORDER: PathName[] = [
-  "/listing-car-detail",
-  "/listing-experiences-detail",
-  "/listing-stay-detail",
+  // "/listing-car-detail",
+  // "/listing-experiences-detail",
+  // "/listing-stay-detail",
 ];
 
 const SiteHeader = () => {
@@ -123,15 +123,15 @@ const SiteHeader = () => {
     }
     switch (headerSelected) {
       case "Header 1":
-        return <Header className={headerClassName} navType="MainNav1" />;
+        //return <Header className={headerClassName} navType="MainNav1" />;
       case "Header 2":
-        return <Header className={headerClassName} navType="MainNav2" />;
+        //return <Header className={headerClassName} navType="MainNav2" />;
     }
   };
 
   return (
     <>
-      {renderHeader()}
+      {/*{renderHeader() */}
       <div ref={anchorRef} className="h-1 absolute invisible"></div>
     </>
   );

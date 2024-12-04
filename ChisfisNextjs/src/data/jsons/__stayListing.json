@@ -5,7 +5,7 @@
     "date": "May 20, 2021",
     "href": "/listing-stay-detail?lid=95",
     "listingCategoryId": 17,
-    "title": "Listing Title",
+    "title": null,
     "featuredImage": "https://images.pexels.com/photos/5191371/pexels-photo-5191371.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     "galleryImgs": [
       "https://images.pexels.com/photos/1268871/pexels-photo-1268871.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -16,7 +16,7 @@
     "commentCount": 70,
     "viewCount": 602,
     "likes": false,
-    "address": "1 Anzinger Court",
+    "address": "Punta Cana, Dominican Republic",
     "reviewStart": 4.8,
     "reviewCount": 28,
     "price": "26",
@@ -25,15 +25,23 @@
     "bathrooms": 3,
     "saleOff": "-10% today",
     "isAds": null,
-    "map": { "lat": 55.2094559, "lng": 61.5594641 }
+    "map": { "lat": 55.2094559, "lng": 61.5594641 },
+    "authorFirstName":"",
+    "authorLastName":"",
+    "authorAvatar":"",
+    "authorPhoneNumber": null,
+    "authorCompanyName": null,
+    "authorListingsCount":null,
+    "authorAbout":null,
+    "authorCreatedAt":null
   },
-  {
+  { 
     "id": "01",
     "authorId": 1,
     "date": "May 20, 2021",
     "href": "/listing-stay-detail",
     "listingCategoryId": 9,
-    "title": "Bell by Greene King Inns ",
+    "title": "{Listing Title}",
     "featuredImage": "https://images.pexels.com/photos/5191371/pexels-photo-5191371.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     "galleryImgs": [
       "https://images.pexels.com/photos/6434634/pexels-photo-6434634.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",

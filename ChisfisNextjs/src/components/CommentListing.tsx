@@ -60,14 +60,14 @@ const CommentListing: FC<CommentListingProps> = ({
           <div className="flex flex-col">
             <div className="text-sm font-semibold">
               <span>{name}</span>
-              {hasListingTitle && (
+              {/* {hasListingTitle && (
                 <>
                   <span className="text-neutral-500 dark:text-neutral-400 font-normal">
                     {` review in `}
                   </span>
                   <a href="/">The Lounge & Bar</a>
                 </>
-              )}
+              )} */}
             </div>
             <span className="text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
               {date}

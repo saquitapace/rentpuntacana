@@ -115,18 +115,7 @@ const renderMap= () => {
 				)}
 
 				{/* MAPPPPP */}
-				<div
-					className={`xl:static xl:block xl:flex-1 ${
-						showFullMapFixed ? 'fixed inset-0 z-50' : 'hidden'
-					}`}
-				>
-					{showFullMapFixed && (
-						<ButtonClose
-							onClick={() => setShowFullMapFixed(false)}
-							className="absolute left-3 top-3 z-50 h-10 w-10 rounded-xl bg-white shadow-lg"
-						/>
-					)}
-
+				<div className="xl:static xl:block xl:flex-1 fixed inset-0 z-50">
 					<div className="fixed left-0 top-0 h-full w-full overflow-hidden rounded-md xl:sticky xl:top-[88px] xl:h-[calc(100vh-88px)]">
 						<MapContainer
 							currentHoverID={currentHoverID}

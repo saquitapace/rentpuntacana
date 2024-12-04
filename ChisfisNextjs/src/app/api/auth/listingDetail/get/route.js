@@ -11,12 +11,14 @@ export async function POST(request) {
     SELECT DISTINCT
 (listings.listing_id),
     listings.title,
+    listings.availability_date,
     listings.bedrooms,
     listings.bathrooms,
     listings.description,
     listings.address,
     listings.map,
-    listings.userId AS author_id,
+    listings.amenitites,
+    listings.userId AS authorId,
     listings.status,
     listings.sqft,
 	listings.href,
@@ -77,6 +79,8 @@ FROM listings
 const [response2] = await pool.query(`
 SELECT
 users.firstName AS authorFirstName,
+users.about AS authorAbout,
+users.createdAt AS authorCreatedAt,
 users.lastName AS authorLastName,
 users.avatar AS authorAvatar,
 users.phoneNumber AS authorPhoneNumber,
@@ -90,9 +94,7 @@ users.companyName AS authorCompanyName,
 	) AS authorListingsCount
 FROM 
 users
-WHERE users.userId = (SELECT userId from listings where listing_id = ?)
-
-`,[id, id]);
+WHERE users.userId = (SELECT userId from listings where listing_id = ?)`,[id, id]);
 
 const mergedJSON = Object.assign({}, response1[0], response2[0]);
 

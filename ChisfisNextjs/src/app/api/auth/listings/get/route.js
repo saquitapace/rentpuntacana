@@ -13,7 +13,7 @@ export async function GET(request) {
     listings.description,
     listings.address,
     listings.map,
-    listings.userId AS author_id,
+    listings.userId AS authorId,
     listings.status,
     listings.sqft,
 	listings.href,

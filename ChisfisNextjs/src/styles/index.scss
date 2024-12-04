@@ -1,11 +1,13 @@
+//saquita - index.css
+
 @import "./_theme_colors";
 @import "./_theme_custom";
 @import "./_dates_picker";
 //
 @import "./header";
-@import "./toggleSwitch";
+@import "./phone_input";
+@import "./loading_in_header";
 
-//custom changes - saquita - I will clean up the temorary css
 
 .notfound{
   opacity: .5;
@@ -13,10 +15,25 @@
   height: 100%
 }
 
-.debug {
-  background-color: pink;
+.w-14.border-b, .w-full.border-b {
+  margin-top: 10px !important;
+  //border-color: red;
 }
 
+.count {
+  padding-left: 6px;
+}
+
+.debug {
+  background-color: pink;
+  // max-height: 100px;
+}
+
+.debug2 {
+  width: 100%;
+  background-color: red;
+  // max-height: 100px;
+}
 .filter-field-focused {
   color: rgb(79, 70, 229);
   background-color: #ffffff;
@@ -71,8 +88,9 @@
   }
 
   .whatsapp {
+    padding: 1px;
     color: #25d366;
-    font-weight:normal;
     border-color: #25d366;
-    border-radius: 10px;
   }
+
+  
