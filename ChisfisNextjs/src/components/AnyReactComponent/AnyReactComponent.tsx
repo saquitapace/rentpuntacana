@@ -3,14 +3,14 @@
 import { Transition } from '@headlessui/react'
 import ExperiencesCard from '@/components/ExperiencesCard'
 import StayCard from '@/components/StayCard'
-import { ExperiencesDataType, StayDataType } from '@/data/types'
+import { StayDataType } from '@/data/types'
 import React, { FC, Fragment } from 'react'
 import { useState } from 'react'
 
 export interface AnyReactComponentProps {
 	className?: string
 	listing?: StayDataType
-	experiences?: ExperiencesDataType
+	experiences?: {}
 	isSelected?: boolean
 	lat: number
 	lng: number
@@ -37,7 +37,7 @@ const AnyReactComponent: FC<AnyReactComponentProps> = ({
 						: 'bg-white hover:bg-neutral-900 hover:text-white dark:bg-neutral-900 dark:hover:bg-white dark:hover:text-neutral-900'
 				}`}
 			>
-				{listing?.price || experiences?.price}
+				{listing?.price}
 			</span>
 			<Transition
 				show={isOpen}

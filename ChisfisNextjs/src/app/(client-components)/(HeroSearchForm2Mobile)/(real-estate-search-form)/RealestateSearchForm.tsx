@@ -17,22 +17,26 @@ const RealestateSearchForm = () => {
   const [rangePrices, setRangePrices] = useState([100000, 4000000]);
   const [typeOfProperty, setTypeOfProperty] = useState<ClassOfProperties[]>([
     {
+      abbreviation:"",
       name: "Duplex House",
       description: "Have a place to yourself",
       checked: true,
     },
     {
+      abbreviation:"",
       name: "Ferme House",
       description: "Have your own room and share some common spaces",
       checked: true,
     },
     {
       name: "Chalet House",
+      abbreviation:"",
       description:
         "Have a private or shared room in a boutique hotel, hostel, and more",
       checked: true,
     },
     {
+      abbreviation:"",
       name: "Maison House",
       description: "Stay in a shared space, like a common room",
       checked: false,

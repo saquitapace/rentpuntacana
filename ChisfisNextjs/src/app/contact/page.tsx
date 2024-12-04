@@ -62,7 +62,7 @@ const PageContact: FC<PageContactProps> = ({}) => {
                   />
                 </label>
                 <label className="block">
-                  <Label>Email address</Label>
+                  <Label>Email</Label>
 
                   <Input
                     type="email"

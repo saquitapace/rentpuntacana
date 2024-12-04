@@ -1,17 +1,53 @@
+//saquita - index.css
+
 @import "./_theme_colors";
 @import "./_theme_custom";
 @import "./_dates_picker";
 //
 @import "./header";
-@import "./toggleSwitch";
+@import "./phone_input";
+@import "./loading_in_header";
 
-//custom changes - saquita
-.nc-SectionHero2 {
-    max-height: 400px;
+
+.notfound{
+  opacity: .5;
+  padding-top:50px;
+  height: 100%
 }
 
-.notification div {
-    max-width: 248px;
+.w-14.border-b, .w-full.border-b {
+  margin-top: 10px !important;
+  //border-color: red;
+}
+
+.count {
+  padding-left: 6px;
+}
+
+.debug {
+  background-color: pink;
+  // max-height: 100px;
+}
+
+.debug2 {
+  width: 100%;
+  background-color: red;
+  // max-height: 100px;
+}
+.filter-field-focused {
+  color: rgb(79, 70, 229);
+  background-color: #ffffff;
+  svg, i{
+    color: #4F46E5;
+    opacity: .5;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #4F46E5;
+  opacity: .1;
 }
 
 .notification p{
@@ -37,14 +73,24 @@
     color: red;
   }
 
+  .notification:hover {
+    :hover {
+      cursor:pointer;
+    }
+  }
+
   .notification.deleteable:hover .overlay {
     width:14%;
     left: 86%;
+    :hover {
+      cursor:pointer;
+    }
   }
 
   .whatsapp {
+    padding: 1px;
     color: #25d366;
-    font-weight:normal;
     border-color: #25d366;
-    border-radius: 10px;
   }
+
+  

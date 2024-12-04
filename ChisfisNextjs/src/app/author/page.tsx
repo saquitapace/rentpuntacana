@@ -11,9 +11,11 @@ import SocialsList from "@/shared/SocialsList";
 import { ExclamationTriangleIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import ExperiencesCard from "@/components/ExperiencesCard";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
+import Reviews from '@/components/Reviews';
+
 import { 
   fetchUserProfile,
   getUserFullName,
@@ -21,8 +23,11 @@ import {
   getUserLanguages,
   getUserAbout,
   getUserLoading,
-  getUserCreatedAt
+  getUserCreatedAt,
+  clearUserProfile,
+  getUserId
 } from '@/store/slices/userProfileSlice';
+import { formatDateJoined } from "@/utils/helpers";
 
 export interface AuthorPageProps {}
 
@@ -34,15 +39,33 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   // Get user data from Redux store
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const fullName = useSelector(getUserFullName);
+  const userId = useSelector(getUserId);
+
   const avatar = useSelector(getUserAvatar);
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
   const isLoading = useSelector(getUserLoading);
-  const dateJoined = useSelector(getUserCreatedAt);
+  const dateJoined = formatDateJoined( useSelector(getUserCreatedAt) );
 
   // Debug logs
-  console.log("Session:", session);
-  console.log("UserProfile:", userProfile);
+  // console.log("Session:", session);
+  // console.log("UserProfile:", userProfile);
+
+  const handleSignOut = () => {
+    dispatch(clearUserProfile());
+    signOut({ callbackUrl: '/' });
+  };
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      
+    }
+    else
+    {
+      handleSignOut()
+    }    
+  }, [dispatch, session?.user?.email ]);
+
 
   // Show loading state
   if (isLoading) {
@@ -53,12 +76,13 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     );
   }
 
+  ///TODO: move to helpers
   // Format date properly
-  const formattedDate = dateJoined ? new Date(dateJoined).toLocaleDateString('en-US', {
+  /* const formattedDate = dateJoined ? new Date(dateJoined).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long'
   }) : '';
-
+ */
   // Format languages properly
   const formattedLanguages = Array.isArray(languages) ? languages.join(', ') : '';
 
@@ -161,7 +185,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
-              Joined in {formattedDate}
+              Joined in {dateJoined}
             </span>
           </div>
         </div>
@@ -174,11 +198,11 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
       <div className="listingSection__wrap">
         <div>
           <h2 className="text-2xl">{fullName}&apos;s Listings</h2>
-          <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
+          {/* <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
             {fullName}&apos;s
             {` listings is very rich, 5 star reviews help him to be
             more branded.`}
-          </span>
+          </span> */}
         </div>
         
         <div>
@@ -226,17 +250,6 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
             </Tab.Panels>
           </Tab.Group>
         </div>
-  
-
-
-
-
-
-
-
-
-
-
           
       </div>
     );
@@ -244,22 +257,12 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
   const renderSection2 = () => {
     return (
-      <div className="listingSection__wrap">
-        {/* HEADING */}
-        <h2 className="text-2xl font-semibold">Reviews (23 reviews)</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
-        {/* comment */}
-        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-          <CommentListing hasListingTitle className="pb-8" />
-          <CommentListing hasListingTitle className="py-8" />
-          <CommentListing hasListingTitle className="py-8" />
-          <CommentListing hasListingTitle className="py-8" />
-          <div className="pt-8">
-            <ButtonSecondary>View more 20 reviews</ButtonSecondary>
-          </div>
-        </div>
-      </div>
+      <Reviews
+      className=""
+      id={userId}
+      type="user"
+    />
     );
   };
 

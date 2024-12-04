@@ -4,6 +4,7 @@ import { NextResponse } from "next/server"
 // These are the only routes that require authentication
 export const config = { 
   matcher: [
+    "/author",
     "/account/:path*",
     "/add-listing/:path*",
     "/favorites/:path*"
@@ -19,4 +20,4 @@ export default withAuth(
       authorized: ({ token }) => !!token
     },
   }
-) 
+)

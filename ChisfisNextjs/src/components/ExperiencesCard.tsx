@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import GallerySlider from "@/components/GallerySlider";
-import { DEMO_EXPERIENCES_LISTINGS } from "@/data/listings";
-import { ExperiencesDataType } from "@/data/types";
+import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import StartRating from "@/components/StartRating";
 import BtnLikeIcon from "@/components/BtnLikeIcon";
 import SaleOffBadge from "@/components/SaleOffBadge";
@@ -12,11 +11,11 @@ import { MapPinIcon } from "@heroicons/react/24/outline";
 export interface ExperiencesCardProps {
   className?: string;
   ratioClass?: string;
-  data?: ExperiencesDataType;
+  data?: {};
   size?: "default" | "small";
 }
 
-const DEMO_DATA: ExperiencesDataType = DEMO_EXPERIENCES_LISTINGS[0];
+const DEMO_DATA =  DEMO_STAY_LISTINGS[0];
 
 const ExperiencesCard: FC<ExperiencesCardProps> = ({
   size = "default",

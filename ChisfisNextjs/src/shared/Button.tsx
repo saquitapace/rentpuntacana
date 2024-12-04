@@ -22,8 +22,8 @@ export interface ButtonProps {
 const Button: FC<ButtonProps> = ({
   className = "text-neutral-700 dark:text-neutral-200",
   translate = "",
-  sizeClass = "px-4 py-3 sm:px-6",
-  fontSize = "text-sm sm:text-base font-medium",
+  sizeClass = "px-4 py-2 sm:px-6",
+  fontSize = "text-sm sm:text-base font-normal",
   disabled = false,
   href,
   children,

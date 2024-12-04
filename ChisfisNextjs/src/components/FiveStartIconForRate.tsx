@@ -1,8 +1,8 @@
 "use client";
 
 import { StarIcon } from "@heroicons/react/24/solid";
-import React, { FC, useEffect } from "react";
-import { useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import translations2 from '@/utils/translation2';
 
 export interface FiveStartIconForRateProps {
   className?: string;
@@ -17,6 +17,8 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
 }) => {
   const [point, setPoint] = useState(defaultPoint);
   const [currentHover, setCurrentHover] = useState(0);
+  const x = translations2.get();
+	const[t,setT] = useState(x);
 
   useEffect(() => {
     setPoint(defaultPoint);

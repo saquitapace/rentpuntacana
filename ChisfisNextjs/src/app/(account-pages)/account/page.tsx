@@ -6,11 +6,34 @@ import StayCard from "@/components/StayCard2";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import React, { Fragment, FC, useEffect } from "react";
 import Avatar from "@/shared/Avatar";
+<<<<<<< HEAD
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
 import { ExclamationTriangleIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
 import ExperiencesCard from "@/components/ExperiencesCard";
+=======
+import ButtonPrimary from "@/shared/ButtonPrimary";
+import Input from "@/shared/Input";
+import Textarea from "@/shared/Textarea";
+import { useForm, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import PhoneNumberInput from "@/components/PhoneNumberInput";
+
+import { 
+  setUserProfile, 
+  setAvatar, 
+  updateUserProfile,
+  getUserId,
+  getUserFullName,
+  getUserLoading,
+  getUserAbout,
+  getUserCreatedAt,
+  getUserAvatar,
+  fetchUserProfile
+} from '@/store/slices/userProfileSlice';
+>>>>>>> shadcn-chat
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
@@ -33,12 +56,50 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
   // Get user data from Redux store
   const userProfile = useSelector((state: RootState) => state.userProfile);
+<<<<<<< HEAD
   const fullName = useSelector(getUserFullName);
   const avatar = useSelector(getUserAvatar);
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
   const isLoading = useSelector(getUserLoading);
   const dateJoined = useSelector(getUserCreatedAt);
+=======
+
+  console.log(userProfile);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<AccountFormInputs>({
+    defaultValues: {
+      firstName: userProfile.firstName || '',
+      lastName: userProfile.lastName || '',
+      email: userProfile.email || '',
+      phoneNumber: userProfile.phoneNumber || '',
+      about: userProfile.about || '',
+      languages: userProfile.languages || ['English'],
+      companyName: userProfile.companyName || '',
+      address: userProfile.address || '',
+    }
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const languageOptions = [
+    { name: 'English', defaultChecked: true },
+    { name: 'Spanish', defaultChecked: false },
+    { name: 'French', defaultChecked: false },
+  ];
+>>>>>>> shadcn-chat
 
   // Set initial form values when userProfile changes
   useEffect(() => {
@@ -153,14 +214,52 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
         </div>
       )}
 
+<<<<<<< HEAD
         {/* Social Links */}
         <SocialsList
           className="!space-x-3"
           itemClass="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xl"
         />
+=======
+      <div className="flex flex-col md:flex-row">
+        <div className="flex-shrink-0 flex items-start">
+          <div className="relative rounded-full overflow-hidden flex">
+            <Avatar 
+              imgUrl={userProfile.avatar} 
+              sizeClass="w-32 h-32"
+              userName={`${userProfile.firstName} ${userProfile.lastName}`}
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.5 5H7.5C6.83696 5 6.20107 5.26339 5.73223 5.73223C5.26339 6.20107 5 6.83696 5 7.5V20M5 20V22.5C5 23.163 5.26339 23.7989 5.73223 24.2678C6.20107 24.7366 6.83696 25 7.5 25H22.5C23.163 25 23.7989 24.7366 24.2678 24.2678C24.7366 23.7989 25 23.163 25 22.5V17.5M5 20L10.7325 14.2675C11.2013 13.7988 11.8371 13.5355 12.5 13.5355C13.1629 13.5355 13.7987 13.7988 14.2675 14.2675L17.5 17.5M25 12.5V17.5M25 17.5L23.0175 15.5175C22.5487 15.0488 21.9129 14.7855 21.25 14.7855C20.5871 14.7855 19.9513 15.0488 19.4825 15.5175L17.5 17.5M17.5 17.5L20 20M22.5 5H27.5M25 2.5V7.5M17.5 10H17.5125"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="mt-1 text-xs">Change Image</span>
+            </div>
+            <input
+              type="file"
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={handleFileChange}
+              accept="image/*"
+            />
+          </div>
+        </div>
+>>>>>>> shadcn-chat
 
         <div className="border-b border-neutral-200 dark:border-neutral-700 w-14"></div>
 
+<<<<<<< HEAD
         {/* User Details */}
         <div className="space-y-4 w-full">
           {/* Location */}
@@ -183,6 +282,109 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               Punta Cana, Dominican Republic
             </span>
           </div>
+=======
+
+          <div className="grid grid-flow-col grid-rows-1 gap-4">
+            <div className="">
+            <Label>First Name</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.firstName}
+              {...register("firstName", { required: "First Name is required" })}
+            />
+            {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName.message}</div>}
+
+
+            </div>
+            <div className="">
+            <Label>Last Name</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
+            />
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
+
+            </div>
+          </div>
+
+
+          <div className="grid grid-flow-col grid-rows-1 gap-4">
+            <div className="">
+
+            <Label>Email</Label>
+
+            <div className="mt-1.5 flex">
+                  <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                    <i className="text-2xl las la-envelope"></i>
+                  </span>
+                  <Input
+                    className="!rounded-l-none"
+                    placeholder="example@email.com"
+                    value={userProfile.email}
+                    disabled
+                    readOnly
+                        />
+                </div>
+
+            </div>
+            <div className="">
+
+            <Label>Phone Number</Label>
+            <PhoneNumberInput
+              className="mt-1.5"
+              phoneNumber={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
+
+
+
+            </div>
+          </div>
+          
+
+          {/* About */}
+          <div>
+            <Label>Bio</Label>
+            <Textarea 
+              className="mt-1.5"
+              defaultValue={userProfile.about}
+              {...register("about")}
+            />
+          </div>
+
+          {/* User Name */}
+          {/* <div>
+            <Label>Username</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.lastName}
+              {...register("lastName", { required: "Last Name is required" })}
+            />
+            {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName.message}</div>}
+          </div> */}
+
+          {/* Phone Number */}
+          {/* <div>
+            <Label>Phone Number</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.phoneNumber}
+              {...register("phoneNumber")}
+            />
+          </div> */}
+
+
+          {/* Address */}
+          {/* <div>
+            <Label>Address</Label>
+            <Input 
+              className="mt-1.5"
+              defaultValue={userProfile.address}
+              {...register("address")}
+            />
+          </div> */}
+>>>>>>> shadcn-chat
 
           {/* Languages */}
           <div className="flex items-center space-x-4">
@@ -335,12 +537,87 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               <div className="pl-5">Preview Public Profile</div>
             </div>
           </div>
+<<<<<<< HEAD
         </div>
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pl-10 flex-shrink-0">
           {renderSection1()}
           {renderSection2()}
         </div>
       </main>
+=======
+
+
+
+          <div className="">
+                <Label>Website</Label>
+                <div className="mt-1.5 flex">
+                  <span className="inline-flex items-center px-3 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                    https://
+                  </span>
+                  <Input
+                    className="!rounded-l-none"
+                    placeholder="yourwebsite.com"
+                  />
+                </div>
+              </div>
+              {/* ---- */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div>
+                  <Label>Facebook</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-facebook-f"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourfacebook"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Twitter</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-twitter"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourtwitter"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label>Instagram</Label>
+                  <div className="mt-1.5 flex">
+                    <span className="inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm">
+                      <i className="text-2xl lab la-instagram"></i>
+                    </span>
+                    <Input
+                      className="!rounded-l-none"
+                      placeholder="yourinstagram"
+                      sizeClass="h-11 px-4 pl-2 pr-3"
+                    />
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
+
+          {/* Submit Button */}
+          <div className="pt-2">
+            <ButtonPrimary type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update info"}
+            </ButtonPrimary>
+          </div>
+        </form>
+      </div>
+>>>>>>> shadcn-chat
     </div>
   );
 };

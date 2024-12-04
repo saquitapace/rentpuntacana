@@ -3,7 +3,7 @@ import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
 import { pool } from '../../../../../lib/db';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../[...nextauth]/route';
+import { authOptions } from '../../../../../utils/authOptions';
 
 export async function POST(request: Request) {
   try {

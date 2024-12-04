@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
-import { getUserByEmail, pool } from '@/lib/db'
-import bcrypt from 'bcryptjs'
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../utils/authOptions';
+import { pool } from '@/lib/db';
+//import bcrypt from 'bcryptjs';
+import { getUserByEmail } from '@/lib/db-functions';
 
 // GET: Fetch user data
 export async function GET(req: NextRequest) {
@@ -37,7 +38,9 @@ export async function GET(req: NextRequest) {
       avatar: user.avatar || '',
       languages: user.languages ? JSON.parse(user.languages) : [],
       createdAt: user.createdAt,
-      phoneNumber: user.phoneNumber || ''
+      phoneNumber: user.phoneNumber || '',
+      jwt: user.jwt || null,
+      jwtExpiresAt: user.jwtExpiresAt || null
     };
 
     return NextResponse.json(userData);

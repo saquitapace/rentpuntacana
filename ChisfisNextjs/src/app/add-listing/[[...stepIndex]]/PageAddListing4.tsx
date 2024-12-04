@@ -61,10 +61,10 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
     <>
       <div>
         <h2 className="text-2xl font-semibold">Amenities</h2>
-        <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
+        {/* <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
           Many customers have searched for accommodations based on amenities
           criteria
-        </span>
+        </span> */}
       </div>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       {/* FORM */}
