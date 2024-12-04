@@ -10,7 +10,7 @@ import Badge from "@/shared/Badge";
 import Link from "next/link";
 import GallerySlider from "./GallerySlider";
 import { Route } from "next";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 const DEMO_DATA = DEMO_STAY_LISTINGS[0];
 
@@ -44,8 +44,10 @@ const StayCard: FC<StayCardProps> = ({
     id,
     listing_id
   } = data;
-  const x = translations2.get();
-  const[t,setT] = useState(x);
+
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
   const renderSliderGallery = () => {
   
@@ -72,10 +74,10 @@ const StayCard: FC<StayCardProps> = ({
             <i className="las la-bed text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {bedrooms} {t.space}
-            {bedrooms <1 && (t.beds) }
-            {bedrooms >1 && (t.beds) }
-            {bedrooms == 1 && (t.bed) }
+            {bedrooms} {translations.space}
+            {bedrooms <1 && (translations.beds) }
+            {bedrooms >1 && (translations.beds) }
+            {bedrooms == 1 && (translations.bed) }
 
           </span>
         </div>
@@ -86,10 +88,10 @@ const StayCard: FC<StayCardProps> = ({
             <i className="las la-bath text-lg"></i>
           </span>
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-          {bathrooms} {t.space}
-          {bathrooms <1 && (t.baths) }
-          {bathrooms >1 && (t.baths) }
-          {bathrooms == 1 && (t.bath) }
+          {bathrooms} {translations.space}
+          {bathrooms <1 && (translations.baths) }
+          {bathrooms >1 && (translations.baths) }
+          {bathrooms == 1 && (translations.bath) }
           </span>
         </div>
 
@@ -104,7 +106,7 @@ const StayCard: FC<StayCardProps> = ({
           (<span>{sqft}  m<sup>2</sup></span>)}
 
           {!sqft && 
-          (<span className="text-red-700"> {t.notSet}</span>)}
+          (<span className="text-red-700"> {translations.notSet}</span>)}
            
           </span>
         </div>

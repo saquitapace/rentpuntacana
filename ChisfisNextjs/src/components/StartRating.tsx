@@ -1,9 +1,8 @@
 "use client";
 import { StarIcon as SolidStarIcon} from "@heroicons/react/24/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
-
 import React, { FC, useState } from "react";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface StartRatingProps {
   className?: string;
@@ -16,8 +15,10 @@ const StartRating: FC<StartRatingProps> = ({
   point = null,
   reviewCount = null,
 }) => {
-  const x = translations2.get();
-	const[t,setT] = useState(x);
+
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
   return (
     <div
@@ -41,7 +42,7 @@ const StartRating: FC<StartRatingProps> = ({
         )}
 
         {!reviewCount && (
-          <span>{t.noReviews}</span>
+          <span>{translations.noReviews}</span>
         )}
 
       </span>

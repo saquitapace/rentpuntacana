@@ -3,11 +3,11 @@ import React, { Fragment, FC, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ClassOfBedBath } from "./type";
 import NcInputNumber from '@/components/NcInputNumber';
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 const defaultBedBath: ClassOfBedBath[] = [ //todo: get from options to enable translation saquita
   {
-    name: "Beddrooms",
+    name: "Bedrooms",
     abbreviation: "Beds",
     defaultValue : 0
   },
@@ -29,9 +29,10 @@ const BedBathSelect: FC<BedBathSelectProps> = ({
 }) => {
   const [selection, setSelection] = React.useState<ClassOfBedBath[]>(defaultBedBath);
   const [total, setTotal] = useState(selection.filter((item) => item.defaultValue >0).length);
-  const x = translations2.get();
-	const[t,setT] = useState(x);
 
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
   let selectionText = "";
   let count = 0;
   if (selection && selection.length > 0) {
@@ -60,11 +61,11 @@ const BedBathSelect: FC<BedBathSelectProps> = ({
             <div className="flex-1">
             <span className="block xl:text-sm font-semibold overflow-hidden flex">
                 <span className="line-clamp-1">
-                {selectionText || `${t.select}`}
+                {selectionText || `${translations.select}`}
                 </span>
               </span>
               <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-                {t.bedbath}
+                {translations.bedbath}
               </span>
               </div>
               <div className="hidden totalCount block xl:text-sm font-semibold overflow-hidden flex-end">{selection.filter((item) => item.defaultValue >0).length}</div>

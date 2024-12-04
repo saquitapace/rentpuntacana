@@ -23,7 +23,6 @@ import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import Link from 'next/link';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { formatDateJoined } from "@/utils/helpers";
-import translations2 from '@/utils/translation2';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
@@ -78,8 +77,6 @@ const ListingStayDetailPage = ({
 	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
 	const [arr,setArr] = useState([]);
 	const [amenitiesArray, setAmenitiesArray] = useState(false);
-	const x = translations2.get();
-	const[t,setT] = useState(x);
 	
 	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
 	
@@ -160,7 +157,7 @@ const ListingStayDetailPage = ({
 		return (
 			
 			<div className="listingSection__wrap !space-y-6">
-      <pre>{JSON.stringify(translations, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(translations, null, 2)}</pre> */}
 				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
@@ -446,7 +443,7 @@ const ListingStayDetailPage = ({
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
 							<span className="mx-2">·</span>
-							<a className="underline" href={`/publicProfile?uid=${listingDetail.authorId}`}>{listingDetail.authorListingsCount} Listings</a>
+							<a className="underline" href={`/publicProfile?uid=${listingDetail.authorId}`}>{listingDetail.authorListingsCount} {translations.listings}</a>
 						</div>
 					</div>
 				</div>
@@ -603,14 +600,6 @@ const ListingStayDetailPage = ({
 		)
 	}
 		
-	{/*
-Leasing Agent
-Property Results, LLC
-Leasing consultant
-Verified
-By choosing to contact a property, you consent to receive calls or texts at the number you provided, which may involve use of automated means and prerecorded/artificial voices, from Zillow Group and the rental manager(s) you choose to contact about any inquiries you submit through our services. You don't need to consent as a condition of renting any property or buying any other goods or services. Message/data rates may apply. You also agree to Zillow's Terms of Use and Privacy Policy.
-*/
-}
 const print =() => {
 	window.print
 }
@@ -654,7 +643,9 @@ const print =() => {
 				</div>
 				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 				{!loading && (
-					<ContactForm />
+					<ContactForm
+					data={listingId}
+					/>
 				)}
 			</div>
 			

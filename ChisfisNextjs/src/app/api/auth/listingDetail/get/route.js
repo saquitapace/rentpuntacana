@@ -19,7 +19,9 @@ export async function POST(request) {
     listings.map,
     listings.amenitites,
     listings.userId AS authorId,
-    listings.status,
+    listings.shortTermPrice AS price,
+    listings.longTermPrice,
+    listings.PurchasePrice,
     listings.sqft,
 	listings.href,
     (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listing_id = listings.listing_id)  As galleryImgs,
@@ -30,14 +32,6 @@ export async function POST(request) {
     WHERE
         listing_images.category = 'feature' and listing_images.listing_id = listings.listing_id
 	) AS featuredImage,
-    
-    (SELECT
-        price
-    FROM
-        listing_prices
-    WHERE
-        listing_prices.category = '1_month' and listing_prices.listing_id = listings.listing_id
-	) AS price,
     
     (SELECT
         COUNT(*)

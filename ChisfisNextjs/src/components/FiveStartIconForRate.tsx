@@ -2,7 +2,7 @@
 
 import { StarIcon } from "@heroicons/react/24/solid";
 import React, { FC, useEffect, useState } from "react";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface FiveStartIconForRateProps {
   className?: string;
@@ -17,8 +17,10 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
 }) => {
   const [point, setPoint] = useState(defaultPoint);
   const [currentHover, setCurrentHover] = useState(0);
-  const x = translations2.get();
-	const[t,setT] = useState(x);
+  
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
   useEffect(() => {
     setPoint(defaultPoint);

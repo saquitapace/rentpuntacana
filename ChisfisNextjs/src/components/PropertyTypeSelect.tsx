@@ -4,7 +4,7 @@ import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
 import { ClassOfProperties } from "../components/type";
 import { HomeIcon } from "@heroicons/react/24/outline";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 const defaultPropertyType: ClassOfProperties[] = [ //todo: move to db for translation saquita 
   {
@@ -45,8 +45,9 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   const [typeOfProperty, setTypeOfProperty] =
     React.useState<ClassOfProperties[]>(defaultPropertyType);
 
-  const x = translations2.get();
-  const[t,setT] = useState(x);
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
   
   let typeOfPropertyText = "";
   if (typeOfProperty && typeOfProperty.length > 0) {
@@ -73,11 +74,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             <div className="flex-1">
               <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
-                  {typeOfPropertyText || `${t.select}`}
+                  {typeOfPropertyText || `${translations.select}`}
                 </span>
               </span>
               <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-                {t.propertyType}
+                {translations.propertyType}
               </span>
             </div>
           </Popover.Button>

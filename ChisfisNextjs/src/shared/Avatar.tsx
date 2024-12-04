@@ -2,7 +2,7 @@
 
 import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface AvatarProps {
   containerClassName?: string;
@@ -26,13 +26,15 @@ const Avatar: FC<AvatarProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | StaticImageData | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
-	const x = translations2.get();
-	const[t,setT] = useState(x);
+  const [imgLoading, setImgLoading] = useState(false);
+
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
   useEffect(() => {
     if (imgUrl) {
-      setIsLoading(true);
+      setImgLoading(true);
       const urlString = typeof imgUrl === 'string' ? imgUrl : imgUrl.src;
       
       if (urlString.startsWith('/images/avatars/')) {
@@ -69,7 +71,7 @@ const Avatar: FC<AvatarProps> = ({
   };
 
   const handleImageLoad = () => {
-    setIsLoading(false);
+    setImgLoading(false);
   };
 
   return (
@@ -93,7 +95,7 @@ const Avatar: FC<AvatarProps> = ({
           />
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center text-sm">
-              <span className="animate-pulse">{t.loading}...</span>
+              <span className="animate-pulse">{translations.loading}...</span>
             </div>
           )}
         </>

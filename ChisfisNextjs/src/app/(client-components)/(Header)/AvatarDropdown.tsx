@@ -7,8 +7,6 @@ import Avatar from "@/shared/Avatar";
 import Link from "next/link";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/store';
-import { clearUserProfile, setUserProfile } from '@/store/slices/userProfileSlice';
-import { useRouter } from "next/navigation";
 import { 
   Cog6ToothIcon,
   EnvelopeIcon,
@@ -18,7 +16,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { updateJWT } from "@/store/slices/authSlice";
 import SwitchDarkMode2 from '@/shared/SwitchDarkMode2'
-import translations2 from '@/utils/translation2';
 
 interface Props {
   className?: string;
@@ -29,10 +26,10 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
   const { data: session } = useSession();
   const user = session?.user;
   const dispatch = useDispatch<AppDispatch>();
-	const x = translations2.get();
-	const[t,setT] = useState(x);
-
   
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
  /*  useEffect(() => {
     if (!session?.user?.email) {
@@ -82,7 +79,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
                         <UserCircleIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium">{t.profile}</p>
+                        <p className="text-sm font-medium">{translations.profile}</p>
                       </div>
                     </Link>
 
@@ -95,7 +92,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
                         <Cog6ToothIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium">{t.settings}</p>
+                        <p className="text-sm font-medium">{translations.settings}</p>
                       </div>
                     </Link>
 
@@ -109,7 +106,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
                         <EnvelopeIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium">{t.messages}</p>
+                        <p className="text-sm font-medium">{translations.messages}</p>
                       </div>
                     </Link>
 
@@ -123,7 +120,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
                         <HeartIcon className="h-6 w-6" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium">{t.favorites}</p>
+                        <p className="text-sm font-medium">{translations.favorites}</p>
                       </div>
                     </Link>
 
@@ -161,7 +158,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
 													</svg>
 												</div>
 												<div className="ml-4">
-													<p className="text-sm font-medium">{t.darkTheme}</p>
+													<p className="text-sm font-medium">{translations.darkTheme}</p>
 												</div>
 											</div>
 											<SwitchDarkMode2 />
@@ -181,7 +178,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
                         <ArrowLeftStartOnRectangleIcon className="h-6 w-6"/>
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium">{t.logout}</p>
+                        <p className="text-sm font-medium">{translations.logout}</p>
                       </div>
                     </button>
                   </div>

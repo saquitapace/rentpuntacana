@@ -4,7 +4,7 @@ import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
 import { ClassOfOptions } from "./type";
 import options from '@/utils/options';
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 const defaultPropertyType: ClassOfOptions[] = (options.getGeneralAmenities().concat(options.getOtherAmenities().concat(options.getSafeAmenities().concat(options.getHouseRulesAmenities()))));
 //console.log(defaultPropertyType);
@@ -20,8 +20,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 }) => {
   const [typeOfProperty, setTypeOfProperty] =
     React.useState<ClassOfOptions[]>(defaultPropertyType);
-    const x = translations2.get();
-    const[t,setT] = useState(x);  
+  
+    const { translations, isLoading, error } = useSelector(
+      (state) => state.translations
+    );
+
     const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
     const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
     const langPref = localStorage.getItem("langPref"); //todo: saquita move to useEffect to  error from terminal.
@@ -55,11 +58,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             <div className="flex-1">
               <span className="block xl:text-sm font-semibold overflow-hidden">
                 <span className="line-clamp-1">
-                  {typeOfPropertyText || `${t.select}`}
+                  {typeOfPropertyText || `${translations.select}`}
                 </span>
               </span>
               <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-                {t.moreFilters}
+                {translations.moreFilters}
               </span>
             </div>
           </Popover.Button>
@@ -81,7 +84,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 										<div className="divide-y divide-neutral-200 px-10 dark:divide-neutral-800">
 											<div className="py-7">
 
-												<h3 className="text-l font-medium">{t.general} {t.space} {t.amenities}</h3>
+												<h3 className="text-l font-medium">{translations.general} {translations.space} {translations.amenities}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
 
@@ -113,7 +116,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												</div>
 											</div>
 											<div className="py-7">
-												<h3 className="text-l font-medium">{t.other} {t.space} {t.amenities}</h3>
+												<h3 className="text-l font-medium">{translations.other} {translations.space} {translations.amenities}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
 													{/* {renderMoreFilterItem(moreFilter2)} */}
@@ -143,7 +146,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												</div>
 											</div>
 											<div className="py-7">
-												<h3 className="text-l font-medium">{t.safe} {t.space} {t.amenities}</h3>
+												<h3 className="text-l font-medium">{translations.safe} {translations.space} {translations.amenities}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
 
@@ -174,7 +177,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												</div>
 											</div>
 											<div className="py-7">
-												<h3 className="text-l font-medium">{t.rules}</h3>
+												<h3 className="text-l font-medium">{translations.rules}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
 
