@@ -12,7 +12,7 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import DatePickerCustomHeaderTwoMonth from "@/components/DatePickerCustomHeaderTwoMonth";
 import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import ClearDataButton from "../components/ClearDataButton";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface DateRangeInputProps {
   className?: string;
@@ -54,8 +54,9 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
     setEndDate(end);
   };
 
-  const x = translations2.get();
-  const[t,setT] = useState(x);
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
 
   const renderInput = () => {
     return (
@@ -69,7 +70,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
             {startDate?.toLocaleDateString("en-US", {
               month: "short",
               day: "2-digit",
-            }) || t.addDates }
+            }) || translations.addDates }
             {selectsRange && endDate
               ? " - " +
                 endDate?.toLocaleDateString("en-US", {
@@ -79,7 +80,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
               : ""}
           </span>
           <span className="block mt-1 text-sm text-neutral-400 leading-none font-light">
-            {selectsRange ? "" : `${t.availabilityDate}`}
+            {selectsRange ? "" : `${translations.availabilityDate}`}
           </span>
         </div>
       </>

@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useState } from "react";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface PriceProps {
   className?: string;
@@ -13,8 +13,10 @@ const Price: FC<PriceProps> = ({
   currency = "RD",
   price = 0,
 }) => {
-  const x = translations2.get();
-	const[t,setT] = useState(x);
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
+
   const currencySymbol ="$";
 
   return (
@@ -30,7 +32,7 @@ const Price: FC<PriceProps> = ({
       )}
 
       {!price && (
-          <span>{t.noPriceSet}</span>
+          <span>{translations.noPriceSet}</span>
       )}
 
     </span>

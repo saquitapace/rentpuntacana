@@ -26,7 +26,7 @@ import Slider from 'rc-slider';
 import Link from 'next/link';
 import convertNumbThousand from '@/utils/convertNumbThousand';
 import MoreFiltersSelect from "../../components/MoreFiltersSelect";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 export interface TabFiltersProps  {
 	onChange?: () => void;
@@ -46,9 +46,11 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const[date,setDate] = useState([]);
 
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
-	const x = translations2.get();
-	const[t,setT] = useState(x);
-	const moreFilter1 = options.getGeneralAmenities();
+
+	const { translations, isLoading, error } = useSelector(
+		(state) => state.translations
+	  );
+		const moreFilter1 = options.getGeneralAmenities();
 	const moreFilter2 = options.getOtherAmenities();
 	const moreFilter3 = options.getSafeAmenities();
 	const moreFilter4 = options.getHouseRulesAmenities();
@@ -546,7 +548,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 			<div className="hidden sm:block flex-shrink-0">
 				<ButtonSecondary href="/listing-stay-map" className="!leading-none mr-3">
 					<div className="flex items-center justify-center self-end">
-					<span>{t.viewAll}</span>
+					<span>{translations.viewAll}</span>
 					<ArrowRightIcon className="w-5 h-5 ml-3" />
 					</div>
 				</ButtonSecondary>
@@ -593,7 +595,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 			//alert()
 			//console.log(formData)
 			//handleChange(e)
-			onChange(formData)
+			//onChange(formData)
 			//console.log(propertyType)
 
 		}} className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"

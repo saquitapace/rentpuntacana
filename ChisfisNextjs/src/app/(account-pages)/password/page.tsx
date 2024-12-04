@@ -9,7 +9,6 @@ import Input from "@/shared/Input";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getUserEmail } from "@/store/slices/userProfileSlice";
-import { MailSlurp } from 'mailslurp-client';
 
 interface PasswordUpdateFormInputs {
   currentPassword: string;

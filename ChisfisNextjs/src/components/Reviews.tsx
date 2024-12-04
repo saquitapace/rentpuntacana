@@ -9,7 +9,7 @@ import ButtonSecondary from "@/shared/ButtonSecondary";
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import useFetchReviews from "@/hooks/useFetchReviews";
 import LoadingInHeader from "./LoadingInHeader";
-import translations2 from '@/utils/translation2';
+import { useSelector } from 'react-redux';
 
 interface Props {
   className?: string;
@@ -23,9 +23,10 @@ const Reviews: FC<Props> = ({
   id = null
 }) => {
 
-const x = translations2.get();
-const[t,setT] = useState(x);
-
+//todo: couldnt use error from translations here bc it is used in usefetchreviews
+const { translations, isLoading } = useSelector(
+  (state) => state.translations
+);
 
 const [formEnabled, setFormEnabled] = useState(false);
 const params = {type: type, id: id}; //parameters to pass to service
@@ -44,7 +45,7 @@ const {
         }
 
         <h2 className="text-xl font-semibold flex">
-            {t.reviews}
+            {translations.reviews}
             {loading && 
               <LoadingInHeader />}
 
