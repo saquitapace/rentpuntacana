@@ -4,7 +4,7 @@ import {
   UserData,
   userData,
   Users,
-} from "@/app/data";
+} from "@/app/userChatData";
 import create from "zustand";
 
 export interface Example {

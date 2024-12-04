@@ -11,7 +11,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { Message } from "@/app/data";
+import { Message } from "@/app/userChatData";
 
 interface SidebarProps {
   isCollapsed: boolean;
