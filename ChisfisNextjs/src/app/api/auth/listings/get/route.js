@@ -4,61 +4,38 @@ import { pool } from '../../../../../lib/db';
 
 export async function GET(request) {
   const response = await pool.query(
-`
-    SELECT DISTINCT
-(listings.listing_id),
-    listings.title,
-    listings.bedrooms,
-    listings.bathrooms,
-    listings.description,
-    listings.address,
-    listings.map,
-    listings.userId AS authorId,
-    listings.shortTermPrice as price,
-    listings.longTermPrice,
-    listings.PurchasePrice,
-    listings.sqft,
-	listings.href,
-    (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listing_id = listings.listing_id)  As galleryImgs,
-    (SELECT
-        url
-    FROM
-        listing_images
-    WHERE
-        listing_images.category = 'feature' and listing_images.listing_id = listings.listing_id
-	) AS featuredImage,
-    (SELECT
-        COUNT(*)
-    FROM
-        listing_views
-    WHERE
-        listing_views.listing_id = listings.listing_id
-	) AS viewCount,
-    
-    (SELECT
-        COUNT(*)
-    FROM
-        listing_reviews
-    WHERE
-        listing_reviews.review is not null and listing_reviews.listing_id = listings.listing_id
-	) AS reviewCount,
-    
-    (SELECT
-       ROUND(AVG(rating),1)
-    FROM
-        listing_reviews
-    WHERE
-        listing_reviews.rating is not null and listing_reviews.listing_id = listings.listing_id
-	) AS reviewStart,
-    
-(SELECT
-        COUNT(*)
-    FROM
-        saved_properties
-    WHERE
-        saved_properties.property_id =  listings.listing_id and saved_properties.userId = 'M29SZDR4QDJBB6'
-	) AS likes
-FROM listings  
+`SELECT 
+    l.listing_id,
+    l.title,
+    l.bedrooms,
+    l.bathrooms,
+    l.description,
+    l.address,
+    l.map,
+    l.userId AS authorId,
+    l.shortTermPrice AS price,
+    l.longTermPrice,
+    l.PurchasePrice,
+    l.sqft,
+    l.href,
+    JSON_ARRAYAGG(CASE WHEN li.category = 'gallery' THEN li.url END) AS galleryImgs,
+    MAX(CASE WHEN li.category = 'feature' THEN li.url END) AS featuredImage,
+    COUNT(DISTINCT lv.id) AS viewCount,
+    COUNT(DISTINCT lr.id) AS reviewCount,
+    ROUND(AVG(lr.rating), 1) AS reviewStart,
+    SUM(CASE WHEN sp.userId = 'M29SZDR4QDJBB6' THEN 1 ELSE 0 END) AS likes
+FROM 
+    listings l
+LEFT JOIN 
+    listing_images li ON l.listing_id = li.listing_id
+LEFT JOIN 
+    listing_views lv ON l.listing_id = lv.listing_id
+LEFT JOIN 
+    listing_reviews lr ON l.listing_id = lr.listing_id AND lr.review IS NOT NULL
+LEFT JOIN 
+    saved_properties sp ON l.listing_id = sp.property_id
+GROUP BY 
+    l.listing_id 
 `
 
 
