@@ -16,6 +16,7 @@ import { EmojiPicker } from "../emoji-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ChatInput } from "../ui/chat/chat-input";
 import useChatStore from "@/hooks/useChatStore";
+import { signOut, useSession } from "next-auth/react";
 
 interface ChatBottombarProps {
   isMobile: boolean;
@@ -27,9 +28,9 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const setMessages = useChatStore((state) => state.setMessages);
-  const hasInitialResponse = useChatStore((state) => state.hasInitialResponse);
+  const hasInitialResponse = useChatStore((state) => state.hasInitialResponse); //saquita chat
   const setHasInitialResponse = useChatStore(
-    (state) => state.setHasInitialResponse,
+    (state) => state.setHasInitialResponse,   //saquita chat
   );
   const [isLoading, setisLoading] = useState(false);
 
@@ -43,7 +44,9 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     }));
   };
 
-  const handleThumbsUp = () => {
+
+
+  const handleThumbsUp = () => { alert("12a3")
     const newMessage: Message = {
       id: message.length + 1,
       name: loggedInUserData.name,
@@ -54,7 +57,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     setMessage("");
   };
 
-  const handleSend = () => {
+  const handleSend = () => { alert("456a")
     if (message.trim()) {
       const newMessage: Message = {
         id: message.length + 1,
@@ -77,7 +80,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     hour12: true,
   });
 
-  useEffect(() => {
+  useEffect(() => { alert("789a")
     if (inputRef.current) {
       inputRef.current.focus();
     }
