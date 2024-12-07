@@ -7,7 +7,7 @@ import BedBathSelect from "../../components/BedBathSelect";
 import options from '@/utils/options';
 import {
 	Dialog,
-	DialogTitle,
+	//DialogTitle,
 	Popover,
 	PopoverButton,
 	PopoverPanel,
@@ -23,7 +23,7 @@ import ButtonClose from '@/shared/ButtonClose';
 import Checkbox from '@/shared/Checkbox';
 import DateRangeInput from "../../components/DateRangeInput";
 import Slider from 'rc-slider';
-import Link from 'next/link';
+//import Link from 'next/link';
 import convertNumbThousand from '@/utils/convertNumbThousand';
 import MoreFiltersSelect from "../../components/MoreFiltersSelect";
 import { useSelector } from 'react-redux';

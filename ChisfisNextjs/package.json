@@ -3,9 +3,9 @@
   "version": "0.2.4",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_NO_WARNINGS=1 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_NO_WARNINGS=1 next start",
     "lint": "next lint"
   },
   "prettier": "@epic-web/config/prettier",

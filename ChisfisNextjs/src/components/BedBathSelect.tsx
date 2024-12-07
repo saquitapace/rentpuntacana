@@ -5,24 +5,11 @@ import { ClassOfBedBath } from "./type";
 import NcInputNumber from '@/components/NcInputNumber';
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
-import ButtonThird from "@/shared/ButtonThird";
-import ButtonPrimary from "@/shared/ButtonPrimary";
+//import ButtonThird from "@/shared/ButtonThird";
+//import ButtonPrimary from "@/shared/ButtonPrimary";
 
 
 const defaultBedBath: ClassOfBedBath[] = options.getBedBaths();
-console.log(defaultBedBath)
-// [ //todo: get from options to enable translation saquita
-//   {
-//     name: "Bedrooms",
-//     abbreviation: "Beds",
-//     defaultValue : 0
-//   },
-//   {
-//     name: "Bathrooms",
-//     abbreviation: "Baths",
-//     defaultValue : 0
-//   }
-// ];
 
 export interface BedBathSelectProps {
   onChange?: (data: any) => void;
