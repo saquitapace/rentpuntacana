@@ -5,33 +5,10 @@ import Checkbox from "@/shared/Checkbox";
 import { ClassOfProperties } from "../components/type";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
+import options from '@/utils/options';
 
-const defaultPropertyType: ClassOfProperties[] = [ //todo: move to db for translation saquita 
-  {
-    name: "Apartment",
-    abbreviation:"Apt",
-    description: "",
-    checked: false,
-  },
-  {
-    name: "House",
-    abbreviation:"House",
-    description: "",
-    checked: false,
-  },
-  {
-    name: "Hotel",
-    abbreviation:"Hotel",
-    description:"",
-    checked: false,
-  },
-  {
-    name: "Other",
-    abbreviation:"Other",
-    description: "",
-    checked: false,
-  },
-];
+const defaultPropertyType = options.getListingTypes();
+const langPref = localStorage.getItem("langPref"); //todo: saquita move to useEffect to  error from terminal.
 
 export interface PropertyTypeSelectProps {
   onChange?: (data: any) => void;
@@ -42,8 +19,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
-  const [typeOfProperty, setTypeOfProperty] =
-    React.useState<ClassOfProperties[]>(defaultPropertyType);
+  const [typeOfProperty, setTypeOfProperty] = useState(defaultPropertyType);
 
   const { translations, isLoading, error } = useSelector(
     (state) => state.translations
@@ -54,7 +30,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     typeOfPropertyText = typeOfProperty
       .filter((item) => item.checked)
       .map((item) => {
-        return item.abbreviation;
+        return item[langPref];
       })
       .join(", ");
   }
@@ -64,7 +40,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
         <>
             <Popover.Button
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-              open ? "filter-field-focused" : ""
+              open ? "text-primary-6000" : ""
             }`}
             onClickCapture={() => document.querySelector("html")?.click()}
           >
@@ -101,11 +77,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
               <div className="">
                 <div className="relative flex flex-col space-y-5">
                   {typeOfProperty.map((item, index) => (
-                    <div key={item.name} className="">
+                    <div key={item.field} className="">
                       <Checkbox
-                        name={item.name}
-                        label={item.name}
-                        subLabel={item.description}
+                        name={item.field}
+                        label={item[langPref]}
+                        subLabel=""
                         defaultChecked={typeOfProperty[index].checked}
                         onChange={(e) => {
                           const newState = typeOfProperty.map((item, i) => {

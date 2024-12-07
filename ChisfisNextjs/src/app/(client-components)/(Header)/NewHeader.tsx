@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
+import LangDropdown from "./LangDropdown";
 
 export interface NewHeaderProps {
   className?: string;
@@ -29,6 +30,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
   const user = session?.user;
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -93,6 +95,10 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
           
           <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
            
+          {(pathname != "/login" && pathname !== "/signup")  && 
+            <LangDropdown />
+          }
+
            {(pathname != "/login" && pathname !== "/signup")  && 
               <LangDropdownSingle />
             }

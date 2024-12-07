@@ -22,6 +22,7 @@ const [limit, setLimit] = useState(7); // initials state of listings
 const [loading, setLoading] = useState(true);
 const [responseError, setReponseError] = useState(false);
 const [mapData, setMapData] = useState([]);
+const [formData, setFormData] = useState();
 
 useEffect(() => {
   if (listings) {
@@ -46,6 +47,22 @@ const loadListingsData = async () => {
   setLoading(false);
   } 
 };
+
+const renderFilteredListingsData = async (data) => {
+  //const data = await fetchListingsData();
+  if (data) {
+     (data).map((d: { map: string; }) => {
+       if(d.map !== null){
+         d.map = JSON.parse(d.map); 
+       }
+     });
+   
+    const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
+      setMapData(DEMO_DATA2);
+      setListings(data);
+      setLoading(false);
+   } 
+ };
 
 const fetchListingsData = async () => {
   try {
@@ -72,12 +89,6 @@ const fetchListingsData = async () => {
   let [viewClassName, setViewClassName] = useState(fullClass);
   let [gridClass, setGridClass] = useState("grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-x-6");   
   let [filterClass, setFilterClass] = useState("w-full max-w-[1184px] flex-shrink-0 xl:w-[60%] xl:px-8 2xl:w-[60%]");
-  
-  // const [password, setPassword] = useState("");
-  // const onChangePassword=(value: React.SetStateAction<string>)=>{
-  //   alert("onChangePassword")
-  //   setPassword(value);
-  // }
 
   const toggleView = () =>{
     if(viewClassName==fullClass){
@@ -95,13 +106,91 @@ const fetchListingsData = async () => {
     }
   }
 
-
   const tabFilterTypeChanged = (e: any) =>{
-		//alert("tabFilterTypeChanged")
+		console.log("tabFilterTypeChanged")
     console.log(e);
-	}
-  //onChangePassword={(e) => onChangePassword()}
+    let formData = e;
+    setFormData(e); //setFormData is not working
+    
+    const more = (formData.more1).concat(formData.more2).concat(formData.more3).concat(formData.more4)
+ 
+    // if legnth >0 // concatenate with the || operator at the second index
+  
+   let a = 0;
+   let moreQry = ''; 
+   let moreOr = " OR amenitites LIKE";
 
+   (more).forEach(item => {
+    moreQry += " '%"+item.field +"%' ";
+      a++
+      (a > 0 && a < (more).length) ? moreQry += moreOr : ''
+    });
+
+    const whereMore = " amenitites LIKE";
+    let moreQuery = (whereMore).concat(moreQry);
+
+    if(!moreQry){
+      moreQuery ='';
+    }
+
+    let i = 0;
+    // type
+    let qry = '';
+    const typeOr = "OR type =";
+
+    (formData.type).forEach(item => {
+      qry += " '"+item.field +"' ";
+      i++
+      (i > 0 && i < (formData.type).length) ? qry += typeOr : ''
+    });
+
+    const whereType = " type =";
+    let typeQuery = (whereType).concat(qry);
+
+    if(!qry){
+      typeQuery ='';
+    }
+    
+    const and = " AND ";
+    let joinedQry;
+    
+    if(typeQuery && moreQuery) {
+      joinedQry = typeQuery.concat(and).concat(moreQuery);
+    } else {
+      joinedQry = typeQuery.concat(moreQuery);
+    }
+
+    let finalqry = "";
+
+    if(joinedQry) {
+      const where = " WHERE";
+      finalqry = where.concat(joinedQry);
+    }
+
+    console.log(finalqry);
+    
+    
+    queryListingsData(finalqry);
+	}
+
+  const queryListingsData = async (query) => {
+    const type = query;
+    try {
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/query`, {query:query});
+      
+			if (response) {
+			console.log(response.data)
+      renderFilteredListingsData(response.data)
+			//return await response.data;
+			}
+		} catch (error) {
+			console.error('Error fetching listing detail data:', error);
+			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
+		} finally {
+		} 
+
+  };
+  
   return (
 
 <div className="pageWrapper">
@@ -111,13 +200,7 @@ const fetchListingsData = async () => {
         <div className={filterClass}>
             <TabFilters
             	onChange={(e) => { tabFilterTypeChanged(e)}}
-            //handler={ _handler }
-          //	onChange={(e) => tabFilterTypeChanged}
-            // onChange={change => {
-            //   alert(0)
-            //   console.log('change', change);
-            // }}
-            viewAll={false}
+              viewAll={false}
           />
           
         </div>

@@ -29,20 +29,22 @@ import MoreFiltersSelect from "../../components/MoreFiltersSelect";
 import { useSelector } from 'react-redux';
 
 export interface TabFiltersProps  {
-	onChange?: () => void;
+	onChange: (e: any) => void; 
 	viewAll?:boolean;
 }
 const TabFilters: FC<TabFiltersProps> = ({
-	onChange,
+	onChange = (e) => { return formData},
 	viewAll
 	}) => {
-	
 		
 	// input fields
 	const[type,setType] = useState([]);
 	const[price,setPrice] = useState([]);
 	const[bedBath,setBedBath] = useState([]);
-	const[more,setMore] = useState([]);
+	const[more1,setMore1] = useState([]);
+	const[more2,setMore2] = useState([]);
+	const[more3,setMore3] = useState([]);
+	const[more4,setMore4] = useState([]);
 	const[date,setDate] = useState([]);
 
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
@@ -50,7 +52,8 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const { translations, isLoading, error } = useSelector(
 		(state) => state.translations
 	  );
-		const moreFilter1 = options.getGeneralAmenities();
+	
+	const moreFilter1 = options.getGeneralAmenities();
 	const moreFilter2 = options.getOtherAmenities();
 	const moreFilter3 = options.getSafeAmenities();
 	const moreFilter4 = options.getHouseRulesAmenities();
@@ -62,23 +65,15 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true);
 	
 	const [formData, setFormData] = useState({
-        type: {type},
-        price: {price},
-        bedBath: {bedBath},
-        more: {more},
-        date: {date}
+        type: [],
+        price: {},
+        bedBath: [],
+        more1: [],
+		more2: [],
+		more3: [],
+		more4: [],
+        date: ""
     });
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log("handlChange")
-		//console.log(e)
-		setFormData({
-			...formData,
-			[e.target.name]: e.target.value,
-		});
-
-		//console.log(formData);
-	};
 
 	const renderXClear = () => {
 		return (
@@ -266,8 +261,8 @@ const TabFilters: FC<TabFiltersProps> = ({
 					<>
 						<Popover.Button
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-				open ? "filter-field-focused" : ""
-			  }`}
+				open ? "text-primary-6000" : ""
+			}`}
 						  >
 
 <div className="text-neutral-300 dark:text-neutral-400">
@@ -560,21 +555,58 @@ const TabFilters: FC<TabFiltersProps> = ({
 		const selectedPropertyTypes = e.filter((f) => f.checked);
 		setType(selectedPropertyTypes);
 		formData.type = selectedPropertyTypes;
-		// setFormData({
-		// ...formData,
-		// 	['type']: selectedPropertyTypes,
-		//});	
+		setFormData({
+		...formData,
+			['type']: selectedPropertyTypes,
+		});
+		
 	}
 	const moreChanged = (e) =>{
-		const selectedMore = e.filter((f) => f.checked);
-		setMore(selectedMore);
-		formData.more = selectedMore;
+		
+		const amenities1 = e.filter((f) => f.category == "general_amenities").filter((f) => f.checked);
+			setMore1(amenities1);
+			formData.more1 = amenities1;
+			setFormData({
+			...formData,
+				['more1']: amenities1
+			});
+
+		const amenities2 = e.filter((f) => f.category == "other_amenities").filter((f) => f.checked);
+			setMore2(amenities2);
+			formData.more2 = amenities2;
+			setFormData({
+			...formData,
+				['more2']: amenities2
+			});
+
+		const amenities3 = e.filter((f) => f.category == "safe_amenities").filter((f) => f.checked);
+			setMore3(amenities3);
+			formData.more3 = amenities3;
+			setFormData({
+			...formData,
+				['more3']: amenities3
+			});
+
+		const amenities4 = e.filter((f) => f.category == "house_options").filter((f) => f.checked);
+			setMore4(amenities4);
+			formData.more4 = amenities4;
+			setFormData({
+			...formData,
+				['more4']: amenities4
+			});
 	}
 
 	const bedBathChanged = (e) =>{
-		const selectedBedBath = e.filter((f) => f.checked);
+		const selectedBedBath = e;
+		console.log(e);
 		setBedBath(selectedBedBath);
-		formData.bedBath = selectedBedBath;
+			formData.bedBath = e;
+			setFormData({
+			...formData,
+				['bedBath']: e
+			});
+
+		onChange(formData);	// trigger event to filters
 	}
 
 	const dateChanged = (e) =>{
@@ -583,31 +615,30 @@ const TabFilters: FC<TabFiltersProps> = ({
 	}
 
 	const priceRangeInputChanged = (e) =>{
-		alert()
+		alert("range change")
 		console.log(e)
-		//const selected = e.filter((f) => f.checked);
-		//setType(selectedPropertyTypes);
-		//formData.price= selectedPropertyTypes;	
+	}
+	
+	const sendFormData = (e) =>{
+
+		console.log(formData)
+		onChange(formData);	
 	}
 
 	return (
-		<form onChange={(e) => {
-			//alert()
-			//console.log(formData)
-			//handleChange(e)
-			//onChange(formData)
-			//console.log(propertyType)
-
-		}} className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"
-		
+		<form 
+			onChange={sendFormData}
+	className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"
 		>
-			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
-				<div className="hidden space-x-2 lg:flex">
+			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"
+			>
+				<div className="hidden space-x-2 lg:flex"
+				>
 					<PropertyTypeSelect
 						onChange={(e) => { propertyTypeChanged(e)}}
 					/>
 					<PriceRangeInput 
-						onChange={(e) => { priceRangeInputChanged(e)}}
+						//onChange={(e) => { priceRangeInputChanged(e)}}
 					/>
 					<BedBathSelect
 						onChange={(e) => { bedBathChanged(e)}}
@@ -617,7 +648,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 					/>
 					{/* {renderTabMoreFilter()} */}
 					<DateRangeInput
-						onChange={(e) => { dateChanged(e)}}
+						//onChange={(e) => { dateChanged(e)}}
 					/>
 
 					{/*spacer */}
