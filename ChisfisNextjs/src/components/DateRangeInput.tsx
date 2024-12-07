@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { FC } from "react";
 import DatePicker , {registerLocale} from "react-datepicker";
 import en from 'date-fns/locale/en-US';
@@ -25,14 +25,18 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
   className = "",
   fieldClassName = "[ nc-hero-field-padding ]",
   hasButtonSubmit = true,
-  selectsRange = false,
+  selectsRange = false
 }) => {
-  //console.log(localStorage.getItem("langPref")); todo: saquita get tranlation
-  let loc = localStorage.getItem("langPref");
-  if(loc =="sp"){
-    loc = "es"
-  }
-  const [locale, setLocale] = useState(loc);
+
+  const [langPref,setLangPref] = useState('');
+  const [locale, setLocale] = useState(langPref); // es || sp
+
+  useEffect(() => {
+    //@Ezra
+    setLangPref(localStorage.getItem("langPref"));
+  },[]);
+
+ 
   // localStorage.getItem("langPref")   https://codesandbox.io/p/sandbox/7j8z7kvy06?file=%2Fsrc%2Findex.js%3A11%2C3-11%2C21
   // https://date-fns.org/
   // https://stackoverflow.com/questions/76017714/date-fns-how-to-format-dates-for-multiple-languages
@@ -43,10 +47,9 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
     default:
       registerLocale("en",en);
   }
-  const [startDate, setStartDate] = useState<Date | null>(
-    new Date()
-  );
-  const [endDate, setEndDate] = useState<Date | null>(new Date("2023/05/16"));
+  
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   const onChangeRangeDate = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;

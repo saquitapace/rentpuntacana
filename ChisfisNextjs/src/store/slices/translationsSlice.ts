@@ -8,8 +8,10 @@ interface TranslationsState {
   error: string | null;
 }
 
+const defaultTranslations = JSON.parse(localStorage.getItem("translations3")); //@ezra
+
 const initialState: TranslationsState = {
-  translations: {},
+  translations: defaultTranslations,
   isLoading: false,
   error: null,
 };
@@ -41,8 +43,9 @@ export const fetchTranslations = createAsyncThunk<
         return rejectWithValue("No translations found");
       }
     } catch (error: any) {
-      console.error("Error fetching translations:", error);
+      console.error("Error fetching translations:", error); 
       return rejectWithValue(error.message);
+      //return defaultTranslations;   //@ezra
     }
   }
 );

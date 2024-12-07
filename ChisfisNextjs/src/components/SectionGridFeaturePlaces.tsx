@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, FC, ReactNode } from "react";
-import ButtonSecondary from "@/shared/ButtonSecondary";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+//import ButtonSecondary from "@/shared/ButtonSecondary";
+//import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StayCard from "./StayCard";
 import TabFilters from "../app/(stay-listings)/TabFilters";
 import axios from "axios";
@@ -64,7 +64,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">
 
-      <TabFilters viewAll={ listings.length>0 } viewMap={false} />
+      <TabFilters viewAll={ listings.length>0 } viewAll={false} />
 
       <div className="divider divide-y divide-dashed hover:divide-solid"> </div>
 
@@ -84,7 +84,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
       <div className={`grid gap-6 py-5 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${gridClass}`}
       >
           {listings.filter((_, i) => i < limit).map((stay) => (
-              <StayCard key={stay.id} data={stay} />
+              <StayCard key={stay.listing_id} data={stay} />
           ))}
 
         </div>

@@ -126,16 +126,14 @@ const LangDropdown: FC<LangDropdownProps> = ({
 
       // currency starts here
       const storedCurrPref = localStorage.getItem("currPref");
-      console.log(storedCurrPref);
       if (!storedCurrPref) 
       {
           localStorage.setItem("currPref","USD");
           updateActiveCurrency("USD");
       } else {
-        console.log(2)
-        setCurrPref(storedCurrPref);
-        dispatch(fetchCurrencies(storedCurrPref));
-        updateActiveCurrency(storedCurrPref);
+          setCurrPref(storedCurrPref);
+          dispatch(fetchCurrencies(storedCurrPref));
+          updateActiveCurrency(storedCurrPref);
       }
     }
   }, [dispatch]);

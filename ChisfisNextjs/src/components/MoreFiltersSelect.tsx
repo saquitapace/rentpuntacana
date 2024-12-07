@@ -1,6 +1,6 @@
 "use client";
-import React, { Fragment, FC, useState } from "react";
-import { Popover, Transition } from "@headlessui/react";
+import React, { Fragment, FC, useState, useEffect } from "react";
+import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
 import { ClassOfOptions } from "./type";
 import options from "@/utils/options";
@@ -20,22 +20,23 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   const [typeOfProperty2, setTypeOfProperty2] = React.useState<ClassOfOptions[]>(options.getOtherAmenities());
   const [typeOfProperty3, setTypeOfProperty3] = React.useState<ClassOfOptions[]>(options.getSafeAmenities());
   const [typeOfProperty4, setTypeOfProperty4] = React.useState<ClassOfOptions[]>(options.getHouseRulesAmenities());
-
+  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
+  const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
+  //const closeModalMoreFilter = () => setisOpenMoreFilter(false); //todo: move modal code here when doing modal. saquita
+  //const openModalMoreFilter = () => setisOpenMoreFilter(true);
+  const [langPref, setLangPref] = useState('');
+  const display = langPref+"_abbreviation";
   const { translations, isLoading, error } = useSelector(
       (state) => state.translations
     );
 
-    const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
-    const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
-    const langPref = localStorage.getItem("langPref"); //todo: saquita move to useEffect to error from terminal.
-    // const closeModalMoreFilter = () => setisOpenMoreFilter(false); //todo: move modal code here when doing modal. saquita
-    // const openModalMoreFilter = () => setisOpenMoreFilter(true);
-
-
+  useEffect(() => {
+    //@Ezra
+    setLangPref(localStorage.getItem("langPref")); 
+  },[]);
+  
   let typeOfPropertyText = "";
     
-  const display = langPref+"_abbreviation";
-
   if (typeOfProperty1 && typeOfProperty1.length > 0) {
     typeOfPropertyText += typeOfProperty1
       .filter((item) => item.checked)
@@ -76,7 +77,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     <Popover className="flex relative flex-1">
       {({ open, close }) => (
         <>
-            <Popover.Button
+            <PopoverButton
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
               open ? "text-primary-6000" : ""
             }`}
@@ -95,7 +96,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
                 {translations.moreFilters}
               </span>
             </div>
-          </Popover.Button>
+          </PopoverButton>
 
           <Transition
             as={Fragment}
@@ -107,7 +108,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             leaveTo="opacity-0 translate-y-1"
           >
 
-            <Popover.Panel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
+            <PopoverPanel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
 								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900
 								">
 								<div className="flex-grow overflow-y-auto">
@@ -234,7 +235,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 										</div>
 									</div>
 								</div>
-							</Popover.Panel>
+							</PopoverPanel>
 
           </Transition>
         </>

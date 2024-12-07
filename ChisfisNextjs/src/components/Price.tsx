@@ -118,7 +118,7 @@ const Price: FC<PriceProps> = ({
     <span className={`flex items-center justify-center px-2.5 py-1.5 border-2 border-primary-6000 rounded-lg leading-none font-medium text-primary-6000 ${className}`} >
     
       {price >0 && (
-          formatPrice(price)
+        currencySymbol + price
       )}
 
       {!price && (

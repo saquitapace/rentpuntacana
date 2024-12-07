@@ -39,8 +39,8 @@ export const fetchCurrencies = createAsyncThunk<
         return rejectWithValue("No currency found");
       }
     } catch (error: any) {
-      //console.error("Error fetching currencies:", error);
-      //return rejectWithValue(error.message);
+      console.error("Error fetching currencies:", error);
+      return rejectWithValue(error.message);
     }
   }
 );

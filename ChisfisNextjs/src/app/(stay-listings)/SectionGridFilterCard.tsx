@@ -11,11 +11,9 @@ import ToggleSwitch from '@/shared/ToggleSwitch';
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";
 
-export interface SectionGridHasMapProps {
+export interface SectionGridFilterCardProps {}
 
-}
-
-const SectionGridHasMap: FC<SectionGridHasMapProps> = () => {
+const SectionGridFilterCard: FC<SectionGridFilterCardProps> = () => {
 const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
 const [listings, setListings] = useState([]); // initials state of listings
 const [limit, setLimit] = useState(7); // initials state of listings
@@ -33,18 +31,18 @@ useEffect(() => {
 const loadListingsData = async () => {
  const data = await fetchListingsData();
  if (data) {
-
     (data).map((d: { map: string; }) => {
       if(d.map !== null){
         d.map = JSON.parse(d.map); 
       }
+      data.key=data.listing_id;
     });
   
   const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
-  
-  setMapData(DEMO_DATA2);
-	setListings(data);
-  setLoading(false);
+    console.log(DEMO_DATA2)
+    setMapData(DEMO_DATA2);
+    setListings(data);
+    setLoading(false);
   } 
 };
 
@@ -251,18 +249,14 @@ const fetchListingsData = async () => {
 				<div className="xl:static xl:block xl:flex-1 fixed inset-0 z-50">
 					<div className="fixed left-0 top-0 h-full w-full overflow-hidden rounded-md xl:sticky xl:top-[88px] xl:h-[calc(100vh-88px)]">
 						<MapContainer
+              key="mapKey"
 							currentHoverID={currentHoverID}
 							DEMO_DATA={mapData}
 							listingType="stay"
 						/>
 					</div>
 				</div>
-      )}
-
-
-
-
-            
+      )}    
           </div>
         </div>
     
@@ -270,17 +264,7 @@ const fetchListingsData = async () => {
           <Pagination />
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-      
     </div>
   );  
 };
-export default SectionGridHasMap;
+export default SectionGridFilterCard;

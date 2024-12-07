@@ -1,14 +1,13 @@
 "use client";
-import React, { Fragment, FC, useState } from "react";
+import React, { Fragment, FC, useState, useEffect} from "react";
 import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfProperties } from "../components/type";
+//import { ClassOfProperties } from "../components/type";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
-import options from '@/utils/options';
+import options from "@/utils/options";
 
 const defaultPropertyType = options.getListingTypes();
-const langPref = localStorage.getItem("langPref"); //todo: saquita move to useEffect to  error from terminal.
 
 export interface PropertyTypeSelectProps {
   onChange?: (data: any) => void;
@@ -19,11 +18,19 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
+  
+  const [langPref,setLangPref] = useState('');
   const [typeOfProperty, setTypeOfProperty] = useState(defaultPropertyType);
-
   const { translations, isLoading, error } = useSelector(
     (state) => state.translations
   );
+
+  useEffect(() => {
+    //@Ezra
+    setLangPref(localStorage.getItem("langPref")); 
+    // note: all localstorage checks have to be in useEffect to eliminate terminal errors;
+    // need app defaults to be accesible in redux (options, translations, langpref, currencpref for now)
+  },[]);
   
   let typeOfPropertyText = "";
   if (typeOfProperty && typeOfProperty.length > 0) {
@@ -58,11 +65,6 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
               </span>
             </div>
           </Popover.Button>
-
-{/*}
-          {open && (
-            <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -inset-x-0.5 bg-white dark:bg-neutral-800"></div>
-          )} */}
 
           <Transition
             as={Fragment}

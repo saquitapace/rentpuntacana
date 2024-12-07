@@ -4,7 +4,6 @@ import imagePng from "@/images/hero-right-3.png";
 import HeroRealEstateSearchForm from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/HeroRealEstateSearchForm";
 
 import Image from "next/image";
-import ButtonPrimary from "@/shared/ButtonPrimary";
 
 export interface SectionHeroProps {
   className?: string;
@@ -23,9 +22,6 @@ const SectionHero: FC<SectionHeroProps> = ({ className = "" }) => {
           <span className="text-base md:text-lg text-neutral-500 dark:text-neutral-400">
             Rated #1 in short-term or long-term stays in Punta Cana 
           </span>
-          {/* <ButtonPrimary href="/listing-stay-map" sizeClass="px-5 py-4 sm:px-7">
-            Start your search
-          </ButtonPrimary> */}
         </div>
         <div className="flex-grow">
           <Image className="w-full" src={imagePng} alt="hero" priority />

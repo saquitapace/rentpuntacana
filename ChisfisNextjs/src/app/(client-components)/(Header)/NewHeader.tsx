@@ -16,24 +16,26 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdownSingle from "./LangDropdownSingle";
 import { AppDispatch } from "@/store/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
-import LangDropdown from "./LangDropdown";
+//import LangDropdown from "./LangDropdown";
+import SearchDropdown from "./SearchDropdown";
 
 export interface NewHeaderProps {
   className?: string;
 }
 
-const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
+const NewHeader: FC<NewHeaderProps> = (
+  { className = 1 }
+) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
   const user = session?.user;
-
   const pathname = usePathname();
   const router = useRouter();
-
+  
   const handleSignOut = async () => {
     await dispatch(updateJWT({ ...session, jti: null, exp: null }));
 
@@ -41,8 +43,14 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
     signOut({ callbackUrl: '/' });
   };
 
+  const { translations, isLoading, error } = useSelector(
+    (state) => state.translations
+  );
+
   // Fetch user profile data when component mounts or session changes
   useEffect(() => {
+    //console.log(translations)
+
     const fetchData = async () => {
       if (session?.user?.email) {
         try {
@@ -77,7 +85,6 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
     fetchData();
   }, [dispatch, session?.user?.email]);
 
-
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
       <div className={`relative z-10 ${className}`}>
@@ -85,7 +92,6 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
           
           <div className="hidden md:flex justify-start flex-1 space-x-4 sm:space-x-10">
             <Logo className="w-24 self-center" />
-            
             <Navigation />
           </div>
 
@@ -96,7 +102,8 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
           <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
            
           {(pathname != "/login" && pathname !== "/signup")  && 
-            <LangDropdown />
+            // <LangDropdown />
+            <SearchDropdown />
           }
 
            {(pathname != "/login" && pathname !== "/signup")  && 
@@ -113,19 +120,19 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
                     href={"/howitworks" as Route<string>}
                     className="self-center text-opacity-90 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                   >
-                    + Add Listing
+                    + {translations.addListing}
                   </Link>
                     <Button 
                       className="self-center block" 
                       href="/login"
                       >
-                      Sign In
-                    </Button>
+                      {translations.signIn}
+                      </Button>
                     <ButtonPrimary 
                       className="self-center" 
                       href="/signup"
                     >
-                      Sign Up
+                      {translations.signUp}
                     </ButtonPrimary>
                   </>
                 ) : null}
@@ -137,7 +144,7 @@ const NewHeader: FC<NewHeaderProps> = ({ className = "" }) => {
                     href={"/add-listing" as Route<string>}
                     className="self-center text-opacity-90 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                   >
-                    + Add Listing
+                    + {translations.addListing}
                   </Link>
                 )}
                 <NotifyDropdown />
