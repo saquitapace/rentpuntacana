@@ -5,6 +5,7 @@ import { ClassOfBedBath } from "./type";
 import NcInputNumber from '@/components/NcInputNumber';
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
+import { RootState } from "@/store/store";
 //import ButtonThird from "@/shared/ButtonThird";
 //import ButtonPrimary from "@/shared/ButtonPrimary";
 

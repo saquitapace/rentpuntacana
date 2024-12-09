@@ -3,6 +3,7 @@ import { StarIcon as SolidStarIcon} from "@heroicons/react/24/solid";
 import { StarIcon as OutlineStarIcon } from "@heroicons/react/24/outline";
 import React, { FC, useState } from "react";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 export interface StartRatingProps {
   className?: string;

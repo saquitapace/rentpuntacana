@@ -7,6 +7,7 @@ import convertNumbThousand from "@/utils/convertNumbThousand";
 //import ButtonSubmit from "../ButtonSubmit";
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 export interface PriceRangeInputProps {
   onChange?: (data: any) => void;

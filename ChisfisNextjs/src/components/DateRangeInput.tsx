@@ -13,6 +13,7 @@ import DatePickerCustomHeaderTwoMonth from "@/components/DatePickerCustomHeaderT
 import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import ClearDataButton from "../components/ClearDataButton";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 export interface DateRangeInputProps {
   className?: string;

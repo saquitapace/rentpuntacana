@@ -6,6 +6,7 @@ import Checkbox from "@/shared/Checkbox";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
+import { RootState } from "@/store/store";
 
 const defaultPropertyType = options.getListingTypes();
 

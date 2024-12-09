@@ -1,4 +1,5 @@
 'use client';
+import { RootState } from "@/store/store";
 import React, { FC, useState } from "react";
 import { useSelector } from 'react-redux';
 

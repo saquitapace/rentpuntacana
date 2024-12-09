@@ -11,6 +11,7 @@ import Link from "next/link";
 import GallerySlider from "./GallerySlider";
 import { Route } from "next";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 const DEMO_DATA = DEMO_STAY_LISTINGS[0];
 

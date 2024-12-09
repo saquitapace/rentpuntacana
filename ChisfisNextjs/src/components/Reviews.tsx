@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import useFetchReviews from "@/hooks/useFetchReviews";
 import LoadingInHeader from "./LoadingInHeader";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 interface Props {
   className?: string;

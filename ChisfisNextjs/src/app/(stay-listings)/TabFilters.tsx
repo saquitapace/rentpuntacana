@@ -27,6 +27,7 @@ import Slider from 'rc-slider';
 import convertNumbThousand from '@/utils/convertNumbThousand';
 import MoreFiltersSelect from "../../components/MoreFiltersSelect";
 import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 export interface TabFiltersProps  {
 	onChange: (e: any) => void; 

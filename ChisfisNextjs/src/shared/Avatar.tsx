@@ -3,6 +3,7 @@
 import React, { FC, useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import { useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
 
 export interface AvatarProps {
   containerClassName?: string;

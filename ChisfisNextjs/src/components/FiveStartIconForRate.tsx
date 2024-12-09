@@ -1,5 +1,6 @@
 "use client";
 
+import { RootState } from "@/store/store";
 import { StarIcon } from "@heroicons/react/24/solid";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
