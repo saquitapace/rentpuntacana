@@ -214,14 +214,14 @@ export const ChatBotMessages: Message[] = [
 
 export type UserData = (typeof userData)[number];
 
-export const loggedInUserData = {
-  id: 5,
-  avatar:
-    "/images/avatars/Image-9.png",
-  name: "Sarah C",
-};
+// export const loggedInUserData = {
+//   id: "M29S4QCR52115P",
+//   avatar:
+//     "/images/avatars/Image-9.png",
+//   name: "Sarah C",
+// };
 
-export type LoggedInUserData = typeof loggedInUserData;
+// export type LoggedInUserData = typeof loggedInUserData;
 
 export interface Message {
   id: number;

@@ -11,12 +11,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Message, loggedInUserData } from "@/app/userChatData";
+import { Message } from "@/app/userChatData";
 import { EmojiPicker } from "../emoji-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ChatInput } from "../ui/chat/chat-input";
 import useChatStore from "@/hooks/useChatStore";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface ChatBottombarProps {
   isMobile: boolean;
@@ -25,9 +25,20 @@ interface ChatBottombarProps {
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
 export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
+
+  const { data: session } = useSession();
+  const userSessionInfo = session?.user;
+
+  const [user, setUser] = useState(userSessionInfo);
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+
+
   const setMessages = useChatStore((state) => state.setMessages);
+
+
+
   const hasInitialResponse = useChatStore((state) => state.hasInitialResponse); //saquita chat
   const setHasInitialResponse = useChatStore(
     (state) => state.setHasInitialResponse,   //saquita chat
@@ -38,7 +49,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     setMessage(event.target.value);
   };
 
-  const sendMessage = (newMessage: Message) => {
+  const sendMessage = (newMessage: Message) => { //saquita
     useChatStore.setState((state) => ({
       messages: [...state.messages, newMessage],
     }));
@@ -49,20 +60,20 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
   const handleThumbsUp = () => { alert("12a3")
     const newMessage: Message = {
       id: message.length + 1,
-      name: loggedInUserData.name,
-      avatar: loggedInUserData.avatar,
+      name: user.firstName,
+      avatar: user.avatar,
       message: "👍",
     };
     sendMessage(newMessage);
     setMessage("");
   };
 
-  const handleSend = () => { alert("456a")
+  const handleSend = () => { alert("456a"); // insert hook goes here
     if (message.trim()) {
       const newMessage: Message = {
         id: message.length + 1,
-        name: loggedInUserData.name,
-        avatar: loggedInUserData.avatar,
+        name: user.firstName,
+        avatar: user.avatar,
         message: message.trim(),
       };
       sendMessage(newMessage);
@@ -80,7 +91,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     hour12: true,
   });
 
-  useEffect(() => { alert("chat bottom Bar")
+  useEffect(() => { //alert("chat bottom Bar") //saquita
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -90,14 +101,14 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
       setTimeout(() => {
         setMessages((messages) => [
           ...messages.slice(0, messages.length - 1),
-          {
-            id: messages.length + 1,
-            avatar:
-              "/images/avatars/Image-1.png",
-            name: "Toni S",
-            message: "Awesome! I am just chilling outside.",
-            timestamp: formattedTime,
-          },
+          // {
+          //   id: messages.length + 1,
+          //   avatar:
+          //     "/images/avatars/Image-1.png",
+          //   name: "Toni S",
+          //   message: "Awesome! I am just chilling outside.",
+          //   timestamp: formattedTime,
+          // },
         ]);
         setisLoading(false);
         setHasInitialResponse(true);

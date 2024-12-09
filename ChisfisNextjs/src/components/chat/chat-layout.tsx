@@ -1,6 +1,7 @@
 "use client";
-
 import { userData } from "@/app/userChatData";
+
+
 import React, { useEffect, useState } from "react";
 import {
   ResizableHandle,
@@ -10,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
 import { Chat } from "./chat";
+import useFetchMessages from "@/hooks/useFetchMessages";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
@@ -26,7 +28,28 @@ export function ChatLayout({
   const [selectedUser, setSelectedUser] = React.useState(userData[0]);
   const [isMobile, setIsMobile] = useState(false);
 
+
+  const {
+    data,
+    loading,
+    error,
+  } = useFetchMessages();
+
+console.log("got messages back");
+console.log(data)
+
   useEffect(() => {
+
+  //get to get messages
+
+
+
+
+
+
+
+
+
     const checkScreenWidth = () => {
       setIsMobile(window.innerWidth <= 768);
     };
