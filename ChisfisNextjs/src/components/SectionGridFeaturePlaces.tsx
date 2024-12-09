@@ -64,7 +64,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">
 
-      <TabFilters viewAll={ listings.length>0 } viewAll={false} />
+      <TabFilters viewAll={ listings.length>0 } viewAll={true} />
 
       <div className="divider divide-y divide-dashed hover:divide-solid"> </div>
 

@@ -80,7 +80,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     hour12: true,
   });
 
-  useEffect(() => { alert("789a")
+  useEffect(() => { alert("chat bottom Bar")
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -93,8 +93,8 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
           {
             id: messages.length + 1,
             avatar:
-              "https://images.freeimages.com/images/large-previews/971/basic-shape-avatar-1632968.jpg?fmt=webp&h=350",
-            name: "Jane Doe",
+              "/images/avatars/Image-1.png",
+            name: "Toni S",
             message: "Awesome! I am just chilling outside.",
             timestamp: formattedTime,
           },
