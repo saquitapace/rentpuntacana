@@ -48,7 +48,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
 
 	const { translations, isLoading, error } = useSelector(
-		(state) => state.translations
+		(state: RootState) => state.translations
 	  );
 		const moreFilter1 = options.getGeneralAmenities();
 	const moreFilter2 = options.getOtherAmenities();

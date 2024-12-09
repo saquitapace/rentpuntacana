@@ -19,7 +19,7 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
   const [currentHover, setCurrentHover] = useState(0);
   
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   useEffect(() => {

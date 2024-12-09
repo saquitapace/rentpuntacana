@@ -29,7 +29,7 @@ const Avatar: FC<AvatarProps> = ({
   const [imgLoading, setImgLoading] = useState(false);
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   useEffect(() => {

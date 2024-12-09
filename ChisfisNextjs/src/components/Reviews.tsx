@@ -25,7 +25,7 @@ const Reviews: FC<Props> = ({
 
 //todo: couldnt use error from translations here bc it is used in usefetchreviews
 const { translations, isLoading } = useSelector(
-  (state) => state.translations
+  (state: RootState) => state.translations
 );
 
 const [formEnabled, setFormEnabled] = useState(false);

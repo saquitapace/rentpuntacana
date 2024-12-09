@@ -28,7 +28,7 @@ export default function AvatarDropdown({ className = "", handleSignOut }: Props)
   const dispatch = useDispatch<AppDispatch>();
   
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
  /*  useEffect(() => {

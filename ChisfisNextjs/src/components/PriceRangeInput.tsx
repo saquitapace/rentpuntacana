@@ -20,7 +20,7 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
   const [rangePrices, setRangePrices] = useState([100000, 4000000]);
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
   
   return (

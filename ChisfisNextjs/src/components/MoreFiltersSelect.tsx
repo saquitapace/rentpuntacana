@@ -22,7 +22,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     React.useState<ClassOfOptions[]>(defaultPropertyType);
   
     const { translations, isLoading, error } = useSelector(
-      (state) => state.translations
+      (state: RootState) => state.translations
     );
 
     const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);

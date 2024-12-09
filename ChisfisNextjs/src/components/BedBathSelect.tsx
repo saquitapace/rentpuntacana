@@ -31,7 +31,7 @@ const BedBathSelect: FC<BedBathSelectProps> = ({
   const [total, setTotal] = useState(selection.filter((item) => item.defaultValue >0).length);
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
   let selectionText = "";
   let count = 0;

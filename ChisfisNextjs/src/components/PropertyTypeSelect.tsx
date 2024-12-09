@@ -46,7 +46,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     React.useState<ClassOfProperties[]>(defaultPropertyType);
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
   
   let typeOfPropertyText = "";

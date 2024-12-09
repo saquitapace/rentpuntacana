@@ -17,7 +17,7 @@ const StartRating: FC<StartRatingProps> = ({
 }) => {
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   return (

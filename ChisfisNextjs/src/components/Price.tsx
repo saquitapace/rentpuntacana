@@ -14,7 +14,7 @@ const Price: FC<PriceProps> = ({
   price = 0,
 }) => {
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   const currencySymbol ="$";

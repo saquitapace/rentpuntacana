@@ -1,4 +1,4 @@
-import React, { FC,useState } from "react";
+import React, { FC,useEffect,useState } from "react";
 import Textarea from '@/shared/Textarea';
 import Input from '@/shared/Input';
 import ButtonPrimary from '@/shared/ButtonPrimary';
@@ -20,14 +20,26 @@ const ContactForm: FC<ContactFormProps> = ({
 }) => {
 
   const { translations, isLoading, error } = useSelector(
-		(state) => state.translations
+    (state: RootState) => state.translations
 	);
   const _Data = data;
+  
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const [contactName , setContactName]= useState(userProfile.firstName+" "+ userProfile.lastName );
-  const [contactEmail , setContactEmail]= useState(userProfile.email);
-  const [contactPhone , setContactPhone]= useState(userProfile.phoneNumber);
-  const [listingRE, setListingRE] = useState(translations.regardingListing +_Data); //todo: enter in listing # once redux is fixed.
+  const [contactName , setContactName]= useState("");
+  const [contactEmail , setContactEmail]= useState("");
+  const [contactPhone , setContactPhone]= useState("");
+  const [listingRE, setListingRE] = useState(""); //todo: enter in listing # once redux is fixed.
+
+  useEffect(() => {
+    if (userProfile) {
+      setContactName(`${userProfile.firstName} ${userProfile.lastName}`);
+      setContactEmail(userProfile.email || "");
+      setContactPhone(userProfile.phoneNumber || "");
+      setListingRE(`${translations.regardingListing || ""} ${_Data}`);
+    }
+  }, [userProfile, translations, _Data]);
+
+  if ( contactEmail == '' ) return 'Loading';
 
   return (
     <div className="w-full flex flex-col space-y-6 xl:space-y-7">

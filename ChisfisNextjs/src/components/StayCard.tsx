@@ -46,7 +46,7 @@ const StayCard: FC<StayCardProps> = ({
   } = data;
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   const renderSliderGallery = () => {
