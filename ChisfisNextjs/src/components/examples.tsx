@@ -33,7 +33,7 @@ export default function Examples() {
   };
 
   return (
-    <div>
+    <div> saquita chat
       <Select onValueChange={handleChange} defaultValue={pathname}>
         <SelectTrigger>
           <SelectValue>{selectedExample.name}</SelectValue>

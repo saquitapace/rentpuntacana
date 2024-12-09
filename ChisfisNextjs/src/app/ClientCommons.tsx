@@ -29,11 +29,12 @@ const ClientCommons = () => {
 
 		let newBodyClass = ''
 
-		if (pathname === '/home-3') {
-			newBodyClass = 'theme-purple-blueGrey'
+		if (pathname === '/home-1') {
+			newBodyClass = 'theme-fuchsia-blueGrey'
+			//newBodyClass = 'theme-purple-blueGrey'
 		}
 		if (pathname === '/home-2') {
-			newBodyClass = 'theme-cyan-blueGrey'
+			newBodyClass = 'theme-teal-blueGrey'
 		}
 
 		newBodyClass && $body.classList.add(newBodyClass)

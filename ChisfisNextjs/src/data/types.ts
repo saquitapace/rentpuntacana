@@ -8,19 +8,6 @@ export interface CustomLink {
   targetBlank?: boolean;
 }
 
-//  ##########  PostDataType ######## //
-export interface TaxonomyType {
-  id: string | number;
-  name: string;
-  href: Route<string>;
-  count?: number;
-  thumbnail?: string;
-  desc?: string;
-  color?: TwMainColor | string;
-  taxonomy: "category" | "tag";
-  listingType?: "stay" | "experiences" | "car";
-}
-
 export interface AuthorType {
   id: string | number;
   firstName: string;
@@ -34,21 +21,6 @@ export interface AuthorType {
   jobName: string;
   href: Route<string>;
   starRating?: number;
-}
-
-export interface PostDataType {
-  id: string | number;
-  author: AuthorType;
-  date: string;
-  href: Route<string>;
-  categories: TaxonomyType[];
-  title: string;
-  featuredImage: StaticImageData | string;
-  desc?: string;
-  commentCount: number;
-  viewdCount: number;
-  readingTime: number;
-  postType?: "standard" | "video" | "gallery" | "audio";
 }
 
 export type TwMainColor =
@@ -77,36 +49,6 @@ export interface StayDataType {
   likes: boolean;
   galleryImgs: (StaticImageData | string)[];
   price: string;
-  //listingCategory: TaxonomyType;
-  maxGuests: number;
-  bedrooms: number;
-  bathrooms: number;
-  saleOff?: string | null;
-  isAds: boolean | null;
-  map: {
-    lat: number;
-    lng: number;
-  };
-}
-
-export interface StayDataType {
-  listing_id:string;
-  id: string | number;
-  author: AuthorType;
-  date: string;
-  href: Route<string>;
-  title: string;
-  featuredImage: StaticImageData | string;
-  commentCount: number;
-  viewCount: number;
-  address: string;
-  reviewStart: number;
-  reviewCount: number;
-  likes: boolean;
-  galleryImgs: (StaticImageData | string)[];
-  price: string;
-  sqft:string;
-  //listingCategory: TaxonomyType;
   maxGuests: number;
   bedrooms: number;
   bathrooms: number;
@@ -133,7 +75,6 @@ export interface ExperienceDataType {
   likes: boolean;
   galleryImgs: (StaticImageData | string)[];
   price: string;
-  //listingCategory: TaxonomyType;
   maxGuests: number;
   bedrooms: number;
   bathrooms: number;
@@ -143,6 +84,4 @@ export interface ExperienceDataType {
     lat: number;
     lng: number;
   };
-
-  
 }

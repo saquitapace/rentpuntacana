@@ -63,11 +63,11 @@ const options = (function() {
         return options?.filter(li => li.category === "house_options") || [];
     };
 
-    const getAllAmenities = function() {
+    const getBedBaths = function() {
         const options = safeGetOptions();
-        return options;
+        return options?.filter(li => li.category === "bed_bath") || [];
     };
-      
+
     return {
         getListingTypes,
         getRentalLength,
@@ -75,7 +75,7 @@ const options = (function() {
         getOtherAmenities,
         getSafeAmenities,
         getHouseRulesAmenities,
-        getAllAmenities
+        getBedBaths,
     };
 })();
 

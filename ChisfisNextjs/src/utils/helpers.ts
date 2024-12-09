@@ -13,7 +13,7 @@ export const formatDateJoined = (dateString: string | null): string => {
 export const redirect = (accountType: 'renter' | 'property' | 'default') => {
   switch (accountType) {
     case 'renter':
-      return '/listing-stay';
+      return '/listing-search';
     case 'property':
       return '/author';
     default:

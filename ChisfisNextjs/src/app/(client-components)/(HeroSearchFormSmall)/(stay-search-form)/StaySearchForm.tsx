@@ -24,7 +24,7 @@ const StaySearchForm: FC<StaySearchFormProps> = ({ defaultFieldFocus }) => {
         <GuestsInput
           className="flex-1"
           autoFocus={defaultFieldFocus === "guests"}
-          submitLink="/listing-stay"
+          submitLink="/listing-search"
         />
       </form>
     );

@@ -1,37 +1,13 @@
 "use client";
-import React, { Fragment, FC, useState } from "react";
+import React, { Fragment, FC, useState, useEffect} from "react";
 import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfProperties } from "../components/type";
+//import { ClassOfProperties } from "../components/type";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
+import options from "@/utils/options";
 
-const defaultPropertyType: ClassOfProperties[] = [ //todo: move to db for translation saquita 
-  {
-    name: "Apartment",
-    abbreviation:"Apt",
-    description: "",
-    checked: false,
-  },
-  {
-    name: "House",
-    abbreviation:"House",
-    description: "",
-    checked: false,
-  },
-  {
-    name: "Hotel",
-    abbreviation:"Hotel",
-    description:"",
-    checked: false,
-  },
-  {
-    name: "Other",
-    abbreviation:"Other",
-    description: "",
-    checked: false,
-  },
-];
+const defaultPropertyType = options.getListingTypes();
 
 export interface PropertyTypeSelectProps {
   onChange?: (data: any) => void;
@@ -42,19 +18,26 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
-  const [typeOfProperty, setTypeOfProperty] =
-    React.useState<ClassOfProperties[]>(defaultPropertyType);
-
+  
+  const [langPref,setLangPref] = useState('');
+  const [typeOfProperty, setTypeOfProperty] = useState(defaultPropertyType);
   const { translations, isLoading, error } = useSelector(
     (state: RootState) => state.translations
   );
+
+  useEffect(() => {
+    //@Ezra
+    setLangPref(localStorage.getItem("langPref")); 
+    // note: all localstorage checks have to be in useEffect to eliminate terminal errors;
+    // need app defaults to be accesible in redux (options, translations, langpref, currencpref for now)
+  },[]);
   
   let typeOfPropertyText = "";
   if (typeOfProperty && typeOfProperty.length > 0) {
     typeOfPropertyText = typeOfProperty
       .filter((item) => item.checked)
       .map((item) => {
-        return item.abbreviation;
+        return item[langPref];
       })
       .join(", ");
   }
@@ -64,7 +47,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
         <>
             <Popover.Button
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-              open ? "filter-field-focused" : ""
+              open ? "text-primary-6000" : ""
             }`}
             onClickCapture={() => document.querySelector("html")?.click()}
           >
@@ -83,11 +66,6 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             </div>
           </Popover.Button>
 
-{/*}
-          {open && (
-            <div className="h-8 absolute self-center top-1/2 -translate-y-1/2 z-0 -inset-x-0.5 bg-white dark:bg-neutral-800"></div>
-          )} */}
-
           <Transition
             as={Fragment}
             enter="transition ease-out duration-200"
@@ -101,11 +79,11 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
               <div className="">
                 <div className="relative flex flex-col space-y-5">
                   {typeOfProperty.map((item, index) => (
-                    <div key={item.name} className="">
+                    <div key={item.field} className="">
                       <Checkbox
-                        name={item.name}
-                        label={item.name}
-                        subLabel={item.description}
+                        name={item.field}
+                        label={item[langPref]}
+                        subLabel=""
                         defaultChecked={typeOfProperty[index].checked}
                         onChange={(e) => {
                           const newState = typeOfProperty.map((item, i) => {

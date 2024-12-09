@@ -30,7 +30,7 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
           
             <Popover.Button
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-              open ? "filter-field-focused" : ""
+              open ? "text-primary-6000" : ""
             }`}
                 
               onClickCapture={() => document.querySelector("html")?.click()}

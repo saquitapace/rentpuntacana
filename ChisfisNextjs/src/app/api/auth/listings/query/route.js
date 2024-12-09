@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server';
 import { pool } from '../../../../../lib/db';
 
 export async function POST(request) {
-    const { listing_id , userId} = await request.json();
-    const id = parseInt(listing_id);
+    const { query } = await request.json();
+   // const id = parseInt(listingId);
 
    // const listingDetail = [];
-    const [response1] = await pool.query(`
+    const [response] = await pool.query(`
     SELECT DISTINCT
 (listings.listing_id),
     listings.title,
@@ -62,35 +62,15 @@ export async function POST(request) {
     FROM
         saved_properties
     WHERE
-        saved_properties.property_id = listings.listing_id and userId = ?
+        saved_properties.property_id = listings.listing_id and userId = "M29SZDR4QDJBB6"
 	) AS likes
     
 FROM listings
     WHERE
-    listings.listing_id = ?`,[userId,id]);
+    listings.listing_id in
+    
+   (SELECT listing_id from listings ` +query+` )`);
 
-
-const [response2] = await pool.query(`
-SELECT
-users.firstName AS authorFirstName,
-users.about AS authorAbout,
-users.createdAt AS authorCreatedAt,
-users.lastName AS authorLastName,
-users.avatar AS authorAvatar,
-users.phoneNumber AS authorPhoneNumber,
-users.companyName AS authorCompanyName,
- (SELECT
-        COUNT(*)
-    FROM
-        listings
-    WHERE
-        listings.userId = (SELECT userId from listings where listing_id = ?)
-	) AS authorListingsCount
-FROM 
-users
-WHERE users.userId = (SELECT userId from listings where listing_id = ?)`,[id, id]);
-
-const mergedJSON = Object.assign({}, response1[0], response2[0]);
-
-  return NextResponse.json(mergedJSON);
+   console.log(query)
+  return NextResponse.json(response);
 }

@@ -115,7 +115,7 @@ export default function ChatSupport() {
                     <ChatBubbleAvatar
                       src={
                         message.sender === "user"
-                          ? "https://avatars.githubusercontent.com/u/114422072?s=400&u=8a176a310ca29c1578a70b1c33bdeea42bf000b4&v=4"
+                          ? "/images/avatars/Image-9.png"
                           : ""
                       }
                       fallback={message.sender === "user" ? "US" : "🤖"}

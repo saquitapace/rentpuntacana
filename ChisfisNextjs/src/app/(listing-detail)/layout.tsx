@@ -5,13 +5,13 @@ import ListingImageGallery from '@/components/listing-image-gallery/ListingImage
 import { usePathname } from 'next/navigation'
 import { ReactNode, Suspense } from 'react'
 import MobileFooterSticky from './(components)/MobileFooterSticky'
-import { imageGallery as listingStayImageGallery } from './listing-stay-detail/constant'
+import { imageGallery as listingStayImageGallery } from './constant'
 
 const DetailtLayout = ({ children }: { children: ReactNode }) => {
 	const thisPathname = usePathname()
 
 	const getImageGalleryListing = () => {
-		if (thisPathname?.includes('/listing-stay-detail')) {
+		if (thisPathname?.includes('/listing-detail')) {
 			return listingStayImageGallery
 		}
 

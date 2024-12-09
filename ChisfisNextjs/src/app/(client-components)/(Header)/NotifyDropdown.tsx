@@ -8,8 +8,8 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from "moment";
-import { useSelector, UseSelector } from "react-redux";
-import { getUserId } from "@/store/slices/userProfileSlice";
+//import { useSelector, UseSelector } from "react-redux";
+//import { getUserId } from "@/store/slices/userProfileSlice";
 
 interface Props {
   className?: string;

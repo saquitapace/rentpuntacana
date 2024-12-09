@@ -3,12 +3,6 @@ import axios from "axios";
 export const translation = (key) => {
     console.log(key)
     
-    const changeTranslation = async () => {
-        
-        alert("translation change");
-
-    };
-
     const init = async () => {
         try {
             const language = 'sp';

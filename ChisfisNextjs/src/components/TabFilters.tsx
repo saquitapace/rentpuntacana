@@ -1,9 +1,9 @@
 'use client'
 //saquita -tabfilters
 import { FC, Fragment, useState } from 'react';
-import PriceRangeInput from "../../components/PriceRangeInput";
-import PropertyTypeSelect from "../../components/PropertyTypeSelect";
-import BedBathSelect from "../../components/BedBathSelect";
+import PriceRangeInput from "@/components/PriceRangeInput";
+import PropertyTypeSelect from "@/components/PropertyTypeSelect";
+import BedBathSelect from "@/components/BedBathSelect";
 import options from '@/utils/options';
 import {
 	Dialog,
@@ -21,11 +21,10 @@ import ButtonThird from '@/shared/ButtonThird';
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import ButtonClose from '@/shared/ButtonClose';
 import Checkbox from '@/shared/Checkbox';
-import DateRangeInput from "../../components/DateRangeInput";
+import DateRangeInput from "@/components/DateRangeInput";
 import Slider from 'rc-slider';
-//import Link from 'next/link';
 import convertNumbThousand from '@/utils/convertNumbThousand';
-import MoreFiltersSelect from "../../components/MoreFiltersSelect";
+import MoreFiltersSelect from "@/components/MoreFiltersSelect";
 import { useSelector } from 'react-redux';
 
 export interface TabFiltersProps  {
@@ -50,7 +49,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
 
 	const { translations, isLoading, error } = useSelector(
-		(state: RootState) => state.translations
+		(state) => state.translations
 	  );
 	
 	const moreFilter1 = options.getGeneralAmenities();

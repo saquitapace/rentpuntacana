@@ -12,7 +12,7 @@ import ButtonSecondary from '@/shared/ButtonSecondary';
 import ButtonClose from '@/shared/ButtonClose';
 import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation';
-import { Amenities_demos, PHOTOS } from './constant';
+import { Amenities_demos, PHOTOS } from '../constant';
 import SectionDateRange from '../SectionDateRange';
 import { Route } from 'next';
 import ShareBtn from '@/components/ShareBtn';
@@ -25,6 +25,7 @@ import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { formatDateJoined } from "@/utils/helpers";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { useSession } from "next-auth/react";
 
 const ListingStayDetailPage = ({
 	params,
@@ -68,6 +69,9 @@ const ListingStayDetailPage = ({
 			authorCreatedAt:null
 		  }
 	);
+
+	const { data: session } = useSession();
+	const user = session?.user;
 
 	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 	const thisPathname = usePathname();
@@ -126,9 +130,9 @@ const ListingStayDetailPage = ({
 	},[]);
 
 	const fetchListingDetailData = async () => {
-		
+
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId});
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listing_id:listingId,userId:user.id});
 	
 			if (response) {
 				//console.log(response.data)

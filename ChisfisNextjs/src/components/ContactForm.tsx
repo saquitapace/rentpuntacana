@@ -39,8 +39,6 @@ const ContactForm: FC<ContactFormProps> = ({
     }
   }, [userProfile, translations, _Data]);
 
-  if ( contactEmail == '' ) return 'Loading';
-
   return (
     <div className="w-full flex flex-col space-y-6 xl:space-y-7">
 				<Input value={contactName} placeholder={translations.yourName} onChange={(e) => setContactName(e.target.value)}
@@ -60,17 +58,16 @@ const ContactForm: FC<ContactFormProps> = ({
 				<Checkbox
 					className="termsAndConditions"
 					name=""
-					label="By choosing to contact a Listing Agent, you consent to receive calls or texts at the number you provided, from RentaPuntaCana Group and the rental manager(s) and/or Brokers. You also agree to RentaPuntaCana's Terms of Use and Privacy Policy."
+					label={translations.contactTerms}
         />
         <ButtonPrimary className="flex flex-1 stretch">{translations.sendMessage}</ButtonPrimary>
 
 				<ButtonSecondary className="whatsapp p-0">
-          <Link aria-label="Chat on WhatsApp" className="whatsapp flex justify-center" href={`https://wa.me/${contactPhone}`}>
+          <Link aria-label="Chat on WhatsApp" className="whatsapp flex justify-center" target="_blank" href={`https://wa.me/${contactPhone}?text=${translations.contactAgentPlaceholder}`}>
             <i className="lab la-whatsapp text-3xl whatsapp"></i> <div className="pt-1">{translations.space}{translations.messageOnWhatsApp}</div>
           </Link>
         </ButtonSecondary>
-							</div>
-
+			</div>
   );
 };
 

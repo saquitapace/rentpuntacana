@@ -2,13 +2,13 @@ import { FC, useState } from 'react';
 
 export interface ButtonProps {
   label?: string;
-  onClick?: () => void;
+  onClick?: (e) => void;
   checked?: boolean;
 }
 
   const ToggleSwitch: FC<ButtonProps> = ({
     label = "",
-    onClick = (e) => {},
+    onClick,
     checked = true
   }) => {
     

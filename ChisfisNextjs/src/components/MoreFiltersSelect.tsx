@@ -1,13 +1,11 @@
 "use client";
-import React, { Fragment, FC, useState } from "react";
-import { Popover, Transition } from "@headlessui/react";
+import React, { Fragment, FC, useState, useEffect } from "react";
+import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
 import { ClassOfOptions } from "./type";
-import options from '@/utils/options';
-import { useSelector } from 'react-redux';
-
-const defaultPropertyType: ClassOfOptions[] = (options.getGeneralAmenities().concat(options.getOtherAmenities().concat(options.getSafeAmenities().concat(options.getHouseRulesAmenities()))));
-//console.log(defaultPropertyType);
+import options from "@/utils/options";
+import { useSelector } from "react-redux";
+import { ClipboardSignatureIcon } from "lucide-react";
 
 export interface PropertyTypeSelectProps {
   onChange?: (data: any) => void;
@@ -18,26 +16,59 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
-  const [typeOfProperty, setTypeOfProperty] =
-    React.useState<ClassOfOptions[]>(defaultPropertyType);
-  
-    const { translations, isLoading, error } = useSelector(
-      (state: RootState) => state.translations
+  const [typeOfProperty1, setTypeOfProperty1] = React.useState<ClassOfOptions[]>(options.getGeneralAmenities());
+  const [typeOfProperty2, setTypeOfProperty2] = React.useState<ClassOfOptions[]>(options.getOtherAmenities());
+  const [typeOfProperty3, setTypeOfProperty3] = React.useState<ClassOfOptions[]>(options.getSafeAmenities());
+  const [typeOfProperty4, setTypeOfProperty4] = React.useState<ClassOfOptions[]>(options.getHouseRulesAmenities());
+  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
+  const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
+  //const closeModalMoreFilter = () => setisOpenMoreFilter(false); //todo: move modal code here when doing modal. saquita
+  //const openModalMoreFilter = () => setisOpenMoreFilter(true);
+  const [langPref, setLangPref] = useState('');
+  const display = langPref+"_abbreviation";
+  const { translations, isLoading, error } = useSelector(
+      (state) => state.translations
     );
 
-    const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
-    const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
-    const langPref = localStorage.getItem("langPref"); //todo: saquita move to useEffect to  error from terminal.
-
-    // const closeModalMoreFilter = () => setisOpenMoreFilter(false); //todo: move modal code here when doing modal. saquita
-    // const openModalMoreFilter = () => setisOpenMoreFilter(true);
-
+  useEffect(() => {
+    //@Ezra
+    setLangPref(localStorage.getItem("langPref")); 
+  },[]);
+  
   let typeOfPropertyText = "";
-  if (typeOfProperty && typeOfProperty.length > 0) {
-    typeOfPropertyText = typeOfProperty
+    
+  if (typeOfProperty1 && typeOfProperty1.length > 0) {
+    typeOfPropertyText += typeOfProperty1
       .filter((item) => item.checked)
       .map((item) => {
-        return item.en;
+        return item[langPref];
+      })
+      .join(", ");
+  }
+
+  if (typeOfProperty2 && typeOfProperty2.length > 0) {
+    typeOfPropertyText += typeOfProperty2
+      .filter((item) => item.checked)
+      .map((item) => {
+        return item[langPref];
+      })
+      .join(", ");
+  }
+
+  if (typeOfProperty3 && typeOfProperty3.length > 0) {
+    typeOfPropertyText += typeOfProperty3
+      .filter((item) => item.checked)
+      .map((item) => {
+        return item[langPref];
+      })
+      .join(", ");
+  }
+
+  if (typeOfProperty4 && typeOfProperty4.length > 0) {
+    typeOfPropertyText += typeOfProperty4
+      .filter((item) => item.checked)
+      .map((item) => {
+        return item[langPref];
       })
       .join(", ");
   }
@@ -46,14 +77,14 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
     <Popover className="flex relative flex-1">
       {({ open, close }) => (
         <>
-            <Popover.Button
+            <PopoverButton
             className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-              open ? "filter-field-focused" : ""
+              open ? "text-primary-6000" : ""
             }`}
             onClickCapture={() => document.querySelector("html")?.click()}
           >
             <div className="text-neutral-300 dark:text-neutral-400">
-            <i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
+            <ClipboardSignatureIcon />
             </div>
             <div className="flex-1">
               <span className="block xl:text-sm font-semibold overflow-hidden">
@@ -65,7 +96,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
                 {translations.moreFilters}
               </span>
             </div>
-          </Popover.Button>
+          </PopoverButton>
 
           <Transition
             as={Fragment}
@@ -77,7 +108,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
             leaveTo="opacity-0 translate-y-1"
           >
 
-            <Popover.Panel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
+            <PopoverPanel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
 								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900
 								">
 								<div className="flex-grow overflow-y-auto">
@@ -88,29 +119,28 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												<div className="relative">
                         <div className="flex flex-wrap">
 
-                          {typeOfProperty.filter((item) => item.category =="general_amenities").map((item, index) => (
+                          {typeOfProperty1.map((item, index) => (
                             <div key={item.field} className="mt-4 w-1/3">
                               <Checkbox
                                 name={item.field}
                                 label={item[langPref]}
-                                defaultChecked={typeOfProperty[index].checked}
+                                defaultChecked={typeOfProperty1[index].checked}
                                 onChange={(e) => {
-                                  const newState = typeOfProperty.map((item, i) => {
-                                    if (i === index) {
-                                      return { ...item, checked: e };
-                                    }
-                                    return item;
-                                  });
-                                  setTypeOfProperty(() => {
-                                    return newState;
-                                  });
-                                  onChange && onChange(newState);
-                                }}
+                                  const newState = typeOfProperty1.map((item, i) => {
+                                      if(i == index) {
+                                        return { ...item, checked: e };
+                                      }
+                                      return item;
+                                    });
+                                    setTypeOfProperty1(() => {
+                                      return newState;
+                                    });
+
+                                    onChange && onChange(newState);
+                                    }}
                               />
                             </div>
                           ))}
-
-
                       </div>
 
 												</div>
@@ -119,26 +149,25 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												<h3 className="text-l font-medium">{translations.other} {translations.space} {translations.amenities}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
-													{/* {renderMoreFilterItem(moreFilter2)} */}
-
-                          {typeOfProperty.filter((item) => item.category =="other_amenities").map((item, index) => (
+                          {typeOfProperty2.map((item, index) => (
                             <div key={item.field} className="mt-4 w-1/3">
                               <Checkbox
                                 name={item.field}
                                 label={item[langPref]}
-                                defaultChecked={typeOfProperty[index].checked}
+                                defaultChecked={typeOfProperty2[index].checked}
                                 onChange={(e) => {
-                                  const newState = typeOfProperty.map((item, i) => {
-                                    if (i === index) {
-                                      return { ...item, checked: e };
-                                    }
-                                    return item;
+                                   const newState= typeOfProperty2.map((item, i) => {
+                                      if(i == index) {
+                                        return { ...item, checked: e };
+                                      }
+                                      return item;
                                   });
-                                  setTypeOfProperty(() => {
+                                  setTypeOfProperty2(() => {
                                     return newState;
                                   });
+
                                   onChange && onChange(newState);
-                                }}
+                                  }}
                               />
                             </div>
                           ))}
@@ -149,66 +178,64 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 												<h3 className="text-l font-medium">{translations.safe} {translations.space} {translations.amenities}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
+                          {typeOfProperty3.map((item, index) => (
+                              <div key={item.field} className="mt-4 w-1/3">
+                                <Checkbox
+                                  name={item.field}
+                                  label={item[langPref]}
+                                  defaultChecked={typeOfProperty3[index].checked}
+                                  onChange={(e) => {
+                                    const newState= typeOfProperty3.map((item, i) => {
+                                        if(i == index) {
+                                          return { ...item, checked: e };
+                                        }
+                                        return item;
+                                    });
+                                    setTypeOfProperty3(() => {
+                                      return newState;
+                                    });
 
-                          {typeOfProperty.filter((item) => item.category =="safe_amenities").map((item, index) => (
-                            <div key={item.field} className="mt-4 w-1/3">
-                              <Checkbox
-                                name={item.field}
-                                label={item[langPref]}
-                                defaultChecked={typeOfProperty[index].checked}
-                                onChange={(e) => {
-                                  const newState = typeOfProperty.map((item, i) => {
-                                    if (i === index) {
-                                      return { ...item, checked: e };
-                                    }
-                                    return item;
-                                  });
-                                  setTypeOfProperty(() => {
-                                    return newState;
-                                  });
-                                  onChange && onChange(newState);
-                                }}
-                              />
-                            </div>
-                          ))}
-
-</div>
-
+                                    onChange && onChange(newState);
+                                    }}
+                                />
+                              </div>
+                            ))}
+                          </div>
 												</div>
 											</div>
 											<div className="py-7">
 												<h3 className="text-l font-medium">{translations.rules}</h3>
 												<div className="relative">
                         <div className="flex flex-wrap">
+                          {typeOfProperty4.map((item, index) => (
+                              <div key={item.field} className="mt-4 w-1/3">
+                                <Checkbox
+                                  name={item.field}
+                                  label={item[langPref]}
+                                  defaultChecked={typeOfProperty4[index].checked}
+                                  onChange={(e) => {
+                                    const newState= typeOfProperty4.map((item, i) => {
+                                        if(i == index) {
+                                          return { ...item, checked: e };
+                                        }
+                                        return item;
+                                    });
+                                    setTypeOfProperty4(() => {
+                                      return newState;
+                                    });
 
-                          {typeOfProperty.filter((item) => item.category =="house_options").map((item, index) => (
-                            <div key={item.field} className="mt-4 w-1/3">
-                              <Checkbox
-                                name={item.field}
-                                label={item[langPref]}
-                                defaultChecked={typeOfProperty[index].checked}
-                                onChange={(e) => {
-                                  const newState = typeOfProperty.map((item, i) => {
-                                    if (i === index) {
-                                      return { ...item, checked: e };
-                                    }
-                                    return item;
-                                  });
-                                  setTypeOfProperty(() => {
-                                    return newState;
-                                  });
-                                  onChange && onChange(newState);
-                                }}
-                              />
-                            </div>
-                          ))}
-</div>
+                                    onChange && onChange(newState);
+                                    }}
+                                />
+                              </div>
+                            ))}
+                          </div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</Popover.Panel>
+							</PopoverPanel>
 
           </Transition>
         </>

@@ -72,17 +72,17 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
           <>
 
 {/* className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-				open ? "filter-field-focused" : ""
+  open ? "text-primary-6000" : ""
 			  }`} */}
 
             <div
               className={`flex-1 z-10 flex focus:outline-none ${
-                open ? "filter-field-focused" : ""
+                open ? "text-primary-6000" : ""
               }`}
             >
               <Popover.Button
 className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-  open ? "filter-field-focused" : ""
+  open ? "text-primary-6000" : ""
   }`}              >
                 {renderInput()}
 
