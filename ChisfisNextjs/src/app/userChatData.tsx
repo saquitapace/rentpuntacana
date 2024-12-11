@@ -38,7 +38,7 @@ export const Users: User[] = [
 
 export const userData: User[] = [
   {
-    id: "M29SZDR4QDJBB6",  //userId
+    id: "M29SZDR4QDJBB6",  //TONI
     avatar: "/images/avatars/Image-1.png",
     messages: [
       {
@@ -118,7 +118,7 @@ export const userData: User[] = [
     name: "Toni S",
   },
   {
-    id: "12345678",
+    id: "12345678", 
     avatar:
       "/images/avatars/Image-3.png",
     name: "Natalie F",
