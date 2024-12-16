@@ -1,4 +1,4 @@
-import { Message, UserData} from "@/app/userChatData";
+import { Message, User} from "@/app/userChatData";
 import ChatTopbar from "./chat-topbar";
 import { ChatList } from "./chat-list";
 import React, {useState} from "react";
@@ -6,7 +6,7 @@ import useChatStore from "@/hooks/useChatStore";
 
 interface ChatProps {
   messages?: Message[];
-  selectedUser?: UserData[];
+  selectedUser?: User[];
   isMobile: boolean;
 }
 
