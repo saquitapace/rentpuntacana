@@ -1,4 +1,4 @@
-import { Message, UserData } from "@/app/userChatData";
+import { Message} from "@/app/userChatData"; //UserData
 import { cn } from "@/lib/utils";
 import React, { useRef, useEffect } from "react";
 import ChatBottombar from "./chat-bottombar";
@@ -12,12 +12,12 @@ import {
   ChatBubbleActionWrapper,
 } from "../ui/chat/chat-bubble";
 import { ChatMessageList } from "../ui/chat/chat-message-list";
-import { DotsVerticalIcon, HeartIcon, Share1Icon } from "@radix-ui/react-icons";
-import { Forward, Heart } from "lucide-react";
+//import { DotsVerticalIcon, HeartIcon, Share1Icon } from "@radix-ui/react-icons";
+import { Heart } from "lucide-react";
 
 interface ChatListProps {
   messages: Message[];
-  selectedUser: UserData;
+  selectedUser: {};
   sendMessage: (newMessage: Message) => void;
   isMobile: boolean;
 }
@@ -32,6 +32,8 @@ export function ChatList({
   isMobile,
 }: ChatListProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  console.log("messages")
+  console.log(messages);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -41,9 +43,9 @@ export function ChatList({
   }, [messages]);
 
   const actionIcons = [
-    { icon: DotsVerticalIcon, type: "More" },
-    { icon: Forward, type: "Like" },
-    { icon: Heart, type: "Share" },
+    //{ icon: DotsVerticalIcon, type: "More" },
+    //{ icon: Forward, type: "Like" },
+   // { icon: Heart, type: "Share" },
   ];
 
   return (
@@ -73,7 +75,9 @@ export function ChatList({
                 {/* Usage of ChatBubble component */}
                 <ChatBubble variant={variant}>
                   <ChatBubbleAvatar src={message.avatar} />
-                  <ChatBubbleMessage isLoading={message.isLoading}>
+                  <ChatBubbleMessage 
+                  className="chatlist"
+                  isLoading={message.isLoading}>
                     {message.message}
                     {message.timestamp && (
                       <ChatBubbleTimestamp timestamp={message.timestamp} />
@@ -86,8 +90,8 @@ export function ChatList({
                         key={type}
                         icon={<Icon className="size-4" />}
                         onClick={() =>
-                          console.log(
-                            "Action " + type + " clicked for message " + index,
+                          alert(
+                            "saquita = Action " + type + " clicked for message " + index,
                           )
                         }
                       />
@@ -99,7 +103,7 @@ export function ChatList({
           })}
         </AnimatePresence>
       </ChatMessageList>
-      <ChatBottombar isMobile={isMobile} />
+      <ChatBottombar messages={messages} selectedUser={selectedUser} isMobile={isMobile} />
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import {
-  ChatBotMessages,
+  ChatBotMessages,  // not using
   Message,
   UserData,
   userData,
   Users,
 } from "@/app/userChatData";
-import create from "zustand";
+import { User } from "next-auth";
+import { create } from "zustand";
 
 export interface Example {
   name: string;
@@ -18,6 +19,7 @@ interface State {
   input: string;
   chatBotMessages: Message[];
   messages: Message[];
+  users: User[];
   hasInitialAIResponse: boolean;
   hasInitialResponse: boolean;
 }
@@ -38,41 +40,40 @@ interface Actions {
   setHasInitialResponse: (hasInitialResponse: boolean) => void;
 }
 
-const useChatStore = create<State & Actions>()((set) => ({
-  selectedUser: Users[4],
-
+const useChatStore = create<State & Actions>()((set) => (
+  {selectedUser: {
+    id: "",
+    avatar: "",
+    messages: [],
+    name: "",
+    fromId: "",
+    userId: ""
+  },
   selectedExample: { name: "Messenger example", url: "/" },
-
   examples: [
-    { name: "Messenger example", url: "/" },
-    { name: "Chatbot example", url: "/chatbot" },
-    { name: "Chatbot2 example", url: "/chatbot2" },
+    { name: "Messenger example", url: "/" }
   ],
-
   input: "",
-
   setSelectedExample: (selectedExample) => set({ selectedExample }),
-
   setExamples: (examples) => set({ examples }),
-
   setInput: (input) => set({ input }),
   handleInputChange: (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>,
   ) => set({ input: e.target.value }),
-
   chatBotMessages: ChatBotMessages,
   setchatBotMessages: (fn) =>
     set(({ chatBotMessages }) => ({ chatBotMessages: fn(chatBotMessages) })),
 
-  messages: userData[0].messages,
+  users:[],
+  messages:[],
+  setUsers: (fn) => set(({ users }) => ({ users: fn(users) })),
+  
   setMessages: (fn) => set(({ messages }) => ({ messages: fn(messages) })),
-
   hasInitialAIResponse: false,
   setHasInitialAIResponse: (hasInitialAIResponse) =>
     set({ hasInitialAIResponse }),
-
   hasInitialResponse: false,
   setHasInitialResponse: (hasInitialResponse) => set({ hasInitialResponse }),
 }));

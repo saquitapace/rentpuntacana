@@ -12,6 +12,40 @@
 .termsAndConditions{
     font-size:xx-small;
 }
+.selectedUser-false {
+  width: 4px;
+  height: 100%;
+  background-color: transparent;
+}
+.selectedUser-true {
+  width: 4px;
+  height: 100%;
+  background-color: rgb(79, 70, 229);
+}
+.chatlist{
+  background-color:#f2f2f2;
+  //color:red;
+}
+.items-end.group.self-end {
+  .chatlist{
+    background-color: rgb(79, 70, 229);
+    color:#ffffff;
+
+  }
+}
+
+.sidebar{
+  border: thin solid #f2f2f2;;
+}
+
+.data-panel{
+  border-left: thin solid #f2f2f2;
+} 
+
+ .heart-1 {
+  color:red;
+  opacity: 100;
+ }
 
 .notfound{
   opacity: .5;

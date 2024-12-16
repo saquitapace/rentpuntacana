@@ -1,7 +1,7 @@
 "use client";
-
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { MoreHorizontal, SquarePen } from "lucide-react";
+//import { MoreHorizontal, SquarePen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Message } from "@/app/userChatData";
+import { useSession } from "next-auth/react";
+import useChatStore from "@/hooks/useChatStore";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -25,20 +27,43 @@ interface SidebarProps {
   isMobile: boolean;
 }
 
-export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
+export function Sidebar({isCollapsed, chats, isMobile }: SidebarProps) {
+  const { data: session } = useSession();
+  const user = session?.user;
+  const params = {userId : user.userId}
+  const [selectedUser, setSelectedUser] = React.useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const users = useChatStore((state) => state.users); 
+  const [activeUserIndex, setActiveUserIndex]=useState(0);
+
+  const handleClick =(index) =>{
+    //alert(index)
+    console.log(users[index])
+    useChatStore.setState((state) => ({
+      selectedUser: users[index]
+    }));
+
+    useChatStore.setState((state) => ({
+      messages: users[index].messages
+    }));
+
+    setActiveUserIndex(index);
+  }
+  
   return (
     <div
       data-collapsed={isCollapsed}
       className="relative group flex flex-col h-full bg-muted/10 dark:bg-muted/20 gap-4 p-2 data-[collapsed=true]:p-2 "
-    > saquita chat sidebar
+    >
       {!isCollapsed && (
         <div className="flex justify-between p-2 items-center">
+
           <div className="flex gap-2 items-center text-2xl">
             <p className="font-medium">Chats</p>
             <span className="text-zinc-300">({chats.length})</span>
           </div>
 
-          <div>
+          {/* <div>
             <Link
               href="#"
               className={cn(
@@ -58,11 +83,11 @@ export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
             >
               <SquarePen size={20} />
             </Link>
-          </div>
+          </div> */}
         </div>
       )}
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-        {chats.map((chat, index) =>
+      {chats.map((chat, index) =>
           isCollapsed ? (
             <TooltipProvider key={index}>
               <Tooltip key={index} delayDuration={0}>
@@ -85,7 +110,7 @@ export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
                         className="w-10 h-10 "
                       />
                     </Avatar>{" "}
-                    <span className="sr-only">{chat.name}</span>
+                    <span className="sr-only">1{chat.name}</span>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent
@@ -97,16 +122,21 @@ export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
               </Tooltip>
             </TooltipProvider>
           ) : (
+
             <Link
               key={index}
               href="#"
+              onClick={() =>
+                handleClick(index)
+              } 
               className={cn(
                 buttonVariants({ variant: chat.variant, size: "xl" }),
                 chat.variant === "secondary" &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink",
-                "justify-start gap-4",
+                "justify-start gap-4 sidebar",
               )}
-            >
+              >
+              <div className={`selectedUser-${activeUserIndex == index ? true:false}`}> </div>
               <Avatar className="flex justify-center items-center">
                 <AvatarImage
                   src={chat.avatar}
@@ -129,7 +159,7 @@ export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
                 )}
               </div>
             </Link>
-          ),
+          )
         )}
       </nav>
     </div>

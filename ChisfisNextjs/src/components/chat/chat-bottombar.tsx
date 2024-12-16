@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ChatInput } from "../ui/chat/chat-input";
 import useChatStore from "@/hooks/useChatStore";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 interface ChatBottombarProps {
   isMobile: boolean;
@@ -28,18 +29,17 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
 
   const { data: session } = useSession();
   const userSessionInfo = session?.user;
-
   const [user, setUser] = useState(userSessionInfo);
+
+  const selectedUser = useChatStore((state) => state.selectedUser);
+  const [newMessage, setNewMessage] = useState("");
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-
-
+    
   const setMessages = useChatStore((state) => state.setMessages);
 
-
-
   const hasInitialResponse = useChatStore((state) => state.hasInitialResponse); //saquita chat
+
   const setHasInitialResponse = useChatStore(
     (state) => state.setHasInitialResponse,   //saquita chat
   );
@@ -49,32 +49,50 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     setMessage(event.target.value);
   };
 
-  const sendMessage = (newMessage: Message) => { //saquita
+  const sendMessage = (newMessage: Message) => {
     useChatStore.setState((state) => ({
-      messages: [...state.messages, newMessage],
+      messages: [...state.messages, newMessage]
     }));
+    postMessagetToDB(newMessage);
+
   };
 
+  const postMessagetToDB = async (newMessage: Message) => {
+    console.log(newMessage);
 
+    try {
+      const response =  await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messages/create`, newMessage);
 
-  const handleThumbsUp = () => { alert("12a3")
+      if (response) {
+        console.log(response)       
+      }
+    } catch (error) {
+      console.error("Error creating message:", error);
+    }
+  }
+
+  const handleThumbsUp = () => {
     const newMessage: Message = {
       id: message.length + 1,
       name: user.firstName,
       avatar: user.avatar,
       message: "👍",
+      fromId: user.userId,
+      userId : selectedUser.id
     };
     sendMessage(newMessage);
     setMessage("");
   };
 
-  const handleSend = () => { alert("456a"); // insert hook goes here
+  const handleSend = () => {
     if (message.trim()) {
       const newMessage: Message = {
         id: message.length + 1,
         name: user.firstName,
         avatar: user.avatar,
         message: message.trim(),
+        fromId: user.userId,
+        userId : selectedUser.id
       };
       sendMessage(newMessage);
       setMessage("");
@@ -91,7 +109,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
     hour12: true,
   });
 
-  useEffect(() => { //alert("chat bottom Bar") //saquita
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -130,18 +148,18 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
 
   return (
     <div className="px-2 py-4 flex justify-between w-full items-center gap-2">
-      <div className="flex">
+      <div className="flex hidden">
         <Popover>
           <PopoverTrigger asChild>
             <Link
               href="#"
-              className={cn(
+              className={ cn(
                 buttonVariants({ variant: "ghost", size: "icon" }),
                 "h-9 w-9",
                 "shrink-0",
               )}
             >
-              <PlusCircle size={22} className="text-muted-foreground" />
+              <PlusCircle size={22} className="text-muted-foreground hidden" />
             </Link>
           </PopoverTrigger>
           <PopoverContent side="top" className="w-full p-2">
@@ -186,7 +204,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
           </PopoverContent>
         </Popover>
         {!message.trim() && !isMobile && (
-          <div className="flex">
+          <div className="flex hidden">
             {BottombarIcons.map((icon, index) => (
               <Link
                 key={index}
