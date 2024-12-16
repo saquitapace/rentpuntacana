@@ -11,7 +11,11 @@ interface ChatTopbarProps {
   selectedUser: UserData;
 }
 
-export const TopbarIcons = [{ icon: Phone }, { icon: Video }, { icon: Info }];
+export const TopbarIcons = [
+  //{ icon: Phone }, 
+  //{ icon: Video }, 
+  //{ icon: Info }
+];
 
 export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {
   return (
@@ -28,7 +32,7 @@ export default function ChatTopbar({ selectedUser }: ChatTopbarProps) {
         </Avatar>
         <div className="flex flex-col">
           <span className="font-medium">{selectedUser.name}</span>
-          <span className="text-xs">Active 2 mins ago</span>
+          <span className="text-xs">Active 2 mins ago (need to update)</span>
         </div>
       </div>
 

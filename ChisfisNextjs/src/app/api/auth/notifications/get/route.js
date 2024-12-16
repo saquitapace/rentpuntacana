@@ -21,7 +21,7 @@ export async function POST(request) {
           COALESCE(users.firstName, ''),
           ' ',
           COALESCE(
-              SUBSTRING(users.firstName, 1, 1),
+              SUBSTRING(users.lastName, 1, 1),
               ''
           )
       ) AS name

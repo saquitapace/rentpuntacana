@@ -1,22 +1,24 @@
-import { Message, UserData } from "@/app/userChatData";
+import { Message, User} from "@/app/userChatData";
 import ChatTopbar from "./chat-topbar";
 import { ChatList } from "./chat-list";
-import React, { useEffect, useState } from "react";
+import React, {useState} from "react";
 import useChatStore from "@/hooks/useChatStore";
 
 interface ChatProps {
   messages?: Message[];
-  selectedUser: UserData;
+  selectedUser?: User[];
   isMobile: boolean;
 }
 
-export function Chat({ messages, selectedUser, isMobile }: ChatProps) {
-  const messagesState = useChatStore((state) => state.messages);
+export function Chat({ messages, isMobile }: ChatProps) {
 
+  const messagesState = useChatStore((state) => state.messages);
+  const selectedUser = useChatStore((state) => state.selectedUser);
+  
   const sendMessage = (newMessage: Message) => {
-    useChatStore.setState((state) => ({
-      messages: [...state.messages, newMessage],
-    }));
+     useChatStore.setState((state) => ({
+        messages: [...state.messages, newMessage],
+     }));
   };
 
   return (
