@@ -6,6 +6,8 @@ import { ClassOfOptions } from "./type";
 import options from "@/utils/options";
 import { useSelector } from "react-redux";
 import { ClipboardSignatureIcon } from "lucide-react";
+import { getLangPref } from "@/utils/helpers";
+import { RootState } from "@/store/store";
 
 export interface PropertyTypeSelectProps {
   onChange?: (data: any) => void;
@@ -27,12 +29,12 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   const [langPref, setLangPref] = useState('');
   const display = langPref+"_abbreviation";
   const { translations, isLoading, error } = useSelector(
-      (state) => state.translations
+      (state: RootState) => state.translations
     );
 
   useEffect(() => {
     //@Ezra
-    setLangPref(localStorage.getItem("langPref")); 
+    setLangPref( getLangPref() ); 
   },[]);
   
   let typeOfPropertyText = "";

@@ -7,6 +7,7 @@ import { FC, Fragment, useEffect, useState } from "react";
 import { fetchTranslations, setLanguagePreference } from "@/store/slices/translationsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
+import { getLangPref } from "@/utils/helpers";
 
 
 export const headerLanguage = [
@@ -43,7 +44,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
   // Check if localStorage is available and load the preferred language
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedLangPref = localStorage.getItem("langPref");
+      const storedLangPref = getLangPref();
 
       if (!storedLangPref) 
       {
@@ -62,6 +63,10 @@ const LangDropdown: FC<LangDropdownProps> = ({
       }
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchTranslations(getLangPref()) );
+  }, []);
 
   const updateActiveLanguage = (langCode: string) => {
     setLanguages((prevLanguages) =>

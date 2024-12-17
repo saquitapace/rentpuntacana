@@ -1,5 +1,6 @@
 'use client';
 import { RootState } from "@/store/store";
+import { getCurrencies, getCurrPref } from "@/utils/helpers";
 import React, { FC, useState } from "react";
 import { useSelector } from 'react-redux';
 
@@ -25,8 +26,8 @@ const Price: FC<PriceProps> = ({
   );
 
   // need to get this from redux @Ezra  - see currency slice
-  const localStorageCurrPref = localStorage.getItem("currPref");
-  const locStorageCurrencies = localStorage.getItem("currencies");
+  const localStorageCurrPref = getCurrPref();
+  const locStorageCurrencies = getCurrencies();
   const cur = JSON.parse(locStorageCurrencies);
 
   const [selectedCurrency,setSelectedCurrency]= useState(localStorageCurrPref); //temp

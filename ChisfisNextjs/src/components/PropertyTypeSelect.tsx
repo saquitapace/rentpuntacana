@@ -7,6 +7,7 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
 import { RootState } from "@/store/store";
+import { getLangPref } from "@/utils/helpers";
 
 const defaultPropertyType = options.getListingTypes();
 
@@ -28,7 +29,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 
   useEffect(() => {
     //@Ezra
-    setLangPref(localStorage.getItem("langPref")); 
+    setLangPref( getLangPref()); 
     // note: all localstorage checks have to be in useEffect to eliminate terminal errors;
     // need app defaults to be accesible in redux (options, translations, langpref, currencpref for now)
   },[]);

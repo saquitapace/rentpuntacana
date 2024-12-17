@@ -17,6 +17,7 @@ import {
   BanknotesIcon,
   
 } from "@heroicons/react/24/outline";
+import { getCurrPref, getLangPref } from "@/utils/helpers";
 
 export const headerLanguage = [
   {
@@ -106,7 +107,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
   // Check if localStorage is available and load the preferred language
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedLangPref = localStorage.getItem("langPref");
+      const storedLangPref = getLangPref();
 
       if (!storedLangPref) 
       {
@@ -125,7 +126,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
       }
 
       // currency starts here
-      const storedCurrPref = localStorage.getItem("currPref");
+      const storedCurrPref = getCurrPref();
       if (!storedCurrPref) 
       {
           localStorage.setItem("currPref","USD");
@@ -137,6 +138,10 @@ const LangDropdown: FC<LangDropdownProps> = ({
       }
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchTranslations(getLangPref()) );
+  }, []);
 
   const updateActiveCurrency = (currCode: string) => {
     setCurrencies((prevCurrencies) =>

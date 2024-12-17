@@ -1,3 +1,4 @@
+import { getDefaultTranslations } from "@/utils/helpers";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -8,10 +9,10 @@ interface TranslationsState {
   error: string | null;
 }
 
-const defaultTranslations = JSON.parse(localStorage.getItem("translations3")); //@ezra
+const defaultTranslations = getDefaultTranslations();//@ezra
 
 const initialState: TranslationsState = {
-  translations: defaultTranslations,
+  translations: defaultTranslations || {},
   isLoading: false,
   error: null,
 };
@@ -38,14 +39,16 @@ export const fetchTranslations = createAsyncThunk<
           },
           {}
         );
+
+        localStorage.setItem("translations3", JSON.stringify( translationsObject ));
         return translationsObject;
       } else {
         return rejectWithValue("No translations found");
       }
     } catch (error: any) {
       console.error("Error fetching translations:", error); 
-      return rejectWithValue(error.message);
-      //return defaultTranslations;   //@ezra
+      //return rejectWithValue(error.message);
+      return defaultTranslations;   //@ezra
     }
   }
 );

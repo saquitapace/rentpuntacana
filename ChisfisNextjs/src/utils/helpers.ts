@@ -31,3 +31,41 @@ export const generateUserId = () => {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
 }
+
+export const getLangPref = () => {
+  if (typeof window !== "undefined") 
+  {
+    return localStorage.getItem("langPref") || 'en';
+  }
+}
+
+export const getCurrPref = () => {
+  if (typeof window !== "undefined") 
+  {
+    return localStorage.getItem("currPref") || 'USD';
+  }
+}
+
+export const getCurrencies = () => {
+  try {
+    if (typeof window !== "undefined") 
+    {
+      return JSON.parse(localStorage.getItem("currencies") || "null");
+    }
+  } catch {
+    console.error("Invalid JSON in localStorage");
+    return null;
+  }
+}
+
+export const getDefaultTranslations = () => {
+  try {
+    if (typeof window !== "undefined") 
+    {
+      return JSON.parse(localStorage.getItem("translations3") || "null");
+    }
+  } catch {
+    console.error("Invalid JSON in localStorage");
+    return null;
+  }
+};

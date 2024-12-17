@@ -14,6 +14,7 @@ import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import ClearDataButton from "../components/ClearDataButton";
 import { useSelector } from 'react-redux';
 import { RootState } from "@/store/store";
+import { getLangPref } from "@/utils/helpers";
 
 export interface DateRangeInputProps {
   className?: string;
@@ -34,7 +35,7 @@ const DateRangeInput: FC<DateRangeInputProps> = ({
 
   useEffect(() => {
     //@Ezra
-    setLangPref(localStorage.getItem("langPref"));
+    setLangPref( getLangPref() );
   },[]);
 
  

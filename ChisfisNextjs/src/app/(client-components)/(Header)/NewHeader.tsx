@@ -15,7 +15,7 @@ import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
 import LangDropdownSingle from "./LangDropdownSingle";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
@@ -44,7 +44,7 @@ const NewHeader: FC<NewHeaderProps> = (
   };
 
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   // Fetch user profile data when component mounts or session changes

@@ -1,6 +1,7 @@
 // useInitTranslation
 import { useEffect, useState} from 'react';
 import axios from 'axios';
+import { getLangPref } from '@/utils/helpers';
 
 const useInitTranslation = () => {
 
@@ -9,7 +10,7 @@ const useInitTranslation = () => {
   const [error, setError] = useState(false);
   
   useEffect(() => {
-    const language = localStorage.getItem("langPref") ? localStorage.getItem("langPref") : "en";
+    const language = getLangPref();
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/translations/${language}/get`);
