@@ -64,8 +64,8 @@ const ListingStayDetailPage = ({
 			authorCompanyName: null,
 			authorListingsCount:null,
 			authorId: null,
-			authorAbout:null,
-			authorCreatedAt:null
+			authorAbout: null,
+			authorCreatedAt: null
 		  }
 	);
 
@@ -119,19 +119,18 @@ const ListingStayDetailPage = ({
 	}
 
 	useEffect(() => {
-		
-		if(listingId){
+		if(listingId){ 
 			loadListingDetailData();
 		} else {
-			alert("todo: display error message is the id isnt passed & display mock object data");
+			console.log("todo: display error message if the id isnt passed & display mock object data");
 			//setListingDetail(DEMO_DATA); // load the test view
 		}
 	},[]);
 
 	const fetchListingDetailData = async () => {
-
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:user.id});
+			const userId =  user ? user.userId : 'guest';
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
 	
 			if (response) {
 				//console.log(response.data)
@@ -473,7 +472,7 @@ const ListingStayDetailPage = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span>
+						{/* <span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span> */}
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg

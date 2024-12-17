@@ -56,7 +56,7 @@ const ListingStayDetailPage = ({
 			reviewStart: null,
 			reviewCount: null,
 			id:'',
-			description: "{ Description }",
+			description:'' ,
 			listingId: null,
 			authorFirstName:'',
 			authorLastName:'',
@@ -111,7 +111,7 @@ const ListingStayDetailPage = ({
 			const d = await fetchListingDetailData();
 			const prevData = listingDetail;
 			listingDetail = d;
-			d.authorCreatedAt = formatDateJoined(d.authorCreatedAt)
+		  	d.authorCreatedAt = formatDateJoined(d.authorCreatedAt)
 			setListingDetail(d);
 			setLoading(false);
 			setGalleryPhotos(listingDetail['galleryImgs']);
@@ -132,7 +132,8 @@ const ListingStayDetailPage = ({
 	const fetchListingDetailData = async () => {
 
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:user.id});
+			const userId =  user ? user.userId : 'guest';
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
 	
 			if (response) {
 				//console.log(response.data)
