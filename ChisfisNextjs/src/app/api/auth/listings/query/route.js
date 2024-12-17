@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server';
 import { pool } from '../../../../../lib/db';
 
 export async function POST(request) {
-    const { query } = await request.json();
+    const { query, userId } = await request.json();
 
     const [response] = await pool.query(`
     SELECT DISTINCT
-(listings.listingId),
+    (listings.listingId),
     listings.title,
     listings.availabilityDate,
     listings.bedrooms,
@@ -22,7 +22,7 @@ export async function POST(request) {
     listings.PurchasePrice,
     listings.sqft,
 	listings.href,
-    (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId)  As galleryImgs,
+    (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId) As galleryImgs,
     (SELECT
         url
     FROM
@@ -54,20 +54,17 @@ export async function POST(request) {
     WHERE
         listing_reviews.rating is not null and listing_reviews.listingId = listings.listingId
 	) AS reviewStart,
-    
-(SELECT
+    (SELECT
         COUNT(*)
     FROM
         saved_properties
     WHERE
-        saved_properties.property_id = listings.listingId and userId = "M29SZDR4QDJBB6"
+        saved_properties.property_id = listings.listingId and userId = ?
 	) AS likes
-    
-FROM listings
+    FROM listings
     WHERE
-    listings.listingId in
-    
-   (SELECT listingId from listings ` +query+` )`);
+    listings.listingId in 
+   (SELECT listingId from listings ` +query+` )`, [userId]);
 
   return NextResponse.json(response);
 }

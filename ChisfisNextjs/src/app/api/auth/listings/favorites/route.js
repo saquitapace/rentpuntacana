@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server';
 import { pool } from '../../../../../lib/db';
 
 export async function POST(request) {
-    const { userId } = await request.json();
+  const { userId} = await request.json();
 
-    const response = await pool.query(
+  const response = await pool.query(
 `SELECT 
     l.listingId,
     l.title,
@@ -35,10 +35,11 @@ LEFT JOIN
 LEFT JOIN 
     listing_reviews lr ON l.listingId = lr.listingId AND lr.review IS NOT NULL
 LEFT JOIN 
-    saved_properties sp ON l.listingId = sp.property_id
+    saved_properties sp ON l.listingId = sp.property_id and sp.userId = ?
 GROUP BY 
     l.listingId 
-`,[userId]
+`,[userId,userId]
   );
+  
   return NextResponse.json(response);
 }

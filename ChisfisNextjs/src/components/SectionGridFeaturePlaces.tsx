@@ -8,6 +8,7 @@ import TabFilters from "../app/(stay-listings)/TabFilters";
 import axios from "axios";
 import NoResultsFound from "../app/noResultsFound";
 import SearchResultsLoading from "../components/SearchResultsLoading";
+import { useSession } from "next-auth/react";
 
 export interface SectionGridFeaturePlacesProps {
   stayListings?: [];
@@ -31,6 +32,8 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   const [limit, setLimit] = useState(8);
   const [loading, setLoading] = useState(true);
   const [responseError, setReponseError] = useState(false);
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     if (listings) {
@@ -48,7 +51,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
 
   const fetchListingsData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:user.userId});
 
       if (response) {
        return await response.data[0];

@@ -10,6 +10,7 @@ import StayCard from '@/components/StayCard'
 import ToggleSwitch from '@/shared/ToggleSwitch';
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";
+import { useSession } from "next-auth/react";
 
 export interface SectionGridFilterCardProps {}
 
@@ -21,6 +22,8 @@ const [loading, setLoading] = useState(true);
 const [responseError, setReponseError] = useState(false);
 const [mapData, setMapData] = useState([]);
 const [formData, setFormData] = useState();
+const { data: session } = useSession();
+const user = session?.user;
 
 useEffect(() => {
   if (listings) {
@@ -39,7 +42,7 @@ const loadListingsData = async () => {
     });
   
   const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
-    console.log(DEMO_DATA2)
+    //console.log(DEMO_DATA2)
     setMapData(DEMO_DATA2);
     setListings(data);
     setLoading(false);
@@ -64,7 +67,7 @@ const renderFilteredListingsData = async (data) => {
 
 const fetchListingsData = async () => {
   try {
-	const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`);
+	const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:user.id});
 
 	if (response) {
 	 return await response.data[0];
@@ -164,9 +167,7 @@ const fetchListingsData = async () => {
       const where = " WHERE";
       finalqry = where.concat(joinedQry);
     }
-
     console.log(finalqry);
-    
     
     queryListingsData(finalqry);
 	}
@@ -174,7 +175,7 @@ const fetchListingsData = async () => {
   const queryListingsData = async (query) => {
     const type = query;
     try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/query`, {query:query});
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/query`, {query:query,userId:user.userId});
       
 			if (response) {
 			console.log(response.data)

@@ -9,7 +9,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Sidebar } from "../sidebar";
 import { Chat } from "./chat";
-//import useFetchMessages from "@/hooks/useFetchMessages";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from 'moment';
@@ -87,7 +86,7 @@ export function ChatLayout({
   };
 
   const fetchChatData = async () => {
-    let url1, url2, r1, r2, r3;
+    let url1, url2, r1, r2;
   
     try {
 

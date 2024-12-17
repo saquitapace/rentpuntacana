@@ -1,12 +1,24 @@
 "use client";
 
 import StayCard from "@/components/StayCard";
-import Heading2 from '@/shared/Heading2'
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
+import Heading2 from '@/shared/Heading2';
+//import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import React, { Fragment, useState } from "react";
 import ButtonSecondary from "@/shared/ButtonSecondary";
+import { useSession } from "next-auth/react";
+import useFetchFavorites from "@/hooks/useFetchFavorites";
 
 const Favorites = () => {
+  const { data: session } = useSession();
+	const user = session?.user;
+  const {
+    data,
+    loading,
+    error,
+  } = useFetchFavorites();
+  
+  const DEMO_STAY_LISTINGS= data;
+
   return (
     <div className={`nc-Favorites`}>
       <div className="container mt-12 mb-24 lg:mb-32">

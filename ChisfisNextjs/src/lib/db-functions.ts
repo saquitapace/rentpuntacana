@@ -107,7 +107,7 @@ export async function createUser(userData: {
       throw new Error('Email already registered');
     }
 
-    // Insert into users table with proper default values
+    // Insert into users table with proper default values //saquita
     await connection.execute(
       `INSERT INTO users (
         userId, 
