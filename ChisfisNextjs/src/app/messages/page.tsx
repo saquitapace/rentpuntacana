@@ -1,21 +1,14 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import ButtonSecondary from "@/shared/ButtonSecondary";
-import Image from "next/image";
-import Input from "@/shared/Input";
-import Label from "@/components/Label";
-import Textarea from "@/shared/Textarea";
-import avatar4 from "@/images/avatars/Image-4.png";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"; //@ezra - remove js-cookie
 import { ChatLayout } from "@/components/chat/chat-layout";
 
-export interface BlankProps {}
+export interface MessagesProps {}
 
-const Blank: FC<BlankProps> = ({}) => {
+const Messages: FC<MessagesProps> = ({}) => {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -46,4 +39,4 @@ const Blank: FC<BlankProps> = ({}) => {
   );
 };
 
-export default Blank;
+export default Messages;
