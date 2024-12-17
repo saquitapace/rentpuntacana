@@ -18,7 +18,6 @@ import { Route } from 'next';
 import ShareBtn from '@/components/ShareBtn';
 import Reviews from '../../components/Reviews';
 import axios from 'axios';
-//import { ListingDetailType } from "@/data/types";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import Link from 'next/link';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
@@ -49,14 +48,14 @@ const ListingStayDetailPage = ({
 			amenities:[],
 			href:'',
 			likes: null,
-			availability_date: null,
+			availabilityDate: null,
 			saleOff: null,  
 			isAds: null,
 			price: null,
 			reviewStart: null,
 			reviewCount: null,
 			id:'',
-			description: "{ Description }",
+			description: '',
 			listing_id: null,
 			authorFirstName:'',
 			authorLastName:'',
@@ -734,8 +733,8 @@ const print =() => {
 					/>
 					{!loading && (
 					<SectionDateRange
-						sDate={listingDetail.availability_date}
-						eDate={listingDetail.availability_date}
+						sDate={listingDetail.availabilityDate}
+						eDate={listingDetail.availabilityDate}
 					/>)}
 					{renderSection5()}
 					{/* {renderSection6()} */}

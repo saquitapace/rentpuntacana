@@ -35,17 +35,17 @@ export async function POST(request) {
     else {
       const [userInfo] = await pool.query('SELECT * FROM users WHERE userId = ?', existingUser[0].userId);
       const userInfoClean = userInfo[0];
-      
-      const [likes] = await pool.query('SELECT id, property_id FROM saved_properties WHERE userId = ?', existingUser[0].userId);
-      
+            
       userInfoClean.userId = userInfoClean.userId,
       userInfoClean.firstName = userInfoClean.firstName,
       userInfoClean.lastName = userInfoClean.lastName,
       userInfoClean.phoneNumber = userInfoClean.phoneNumber,
       userInfoClean.createdAt = userInfoClean.createdAt;
+      // displayName
+      // fullname
       userInfoClean.email = email;
-      userInfoClean.likes = [];
-      userInfoClean.likes.push(likes);
+     // userInfoClean.likes = [];
+     // userInfoClean.likes.push(likes);
 
       return NextResponse.json(userInfoClean);
     }

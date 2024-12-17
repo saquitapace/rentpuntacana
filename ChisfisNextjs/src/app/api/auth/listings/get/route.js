@@ -37,13 +37,6 @@ LEFT JOIN
 GROUP BY 
     l.listing_id 
 `
-
-
-
-
-
-
-
   );
   
   return NextResponse.json(response);

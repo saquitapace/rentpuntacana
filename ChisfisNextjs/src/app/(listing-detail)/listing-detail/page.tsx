@@ -49,7 +49,7 @@ const ListingStayDetailPage = ({
 			amenities:[],
 			href:'',
 			likes: null,
-			availability_date: null,
+			availabilityDate: null,
 			saleOff: null,  
 			isAds: null,
 			price: null,
@@ -734,8 +734,8 @@ const print =() => {
 					/>
 					{!loading && (
 					<SectionDateRange
-						sDate={listingDetail.availability_date}
-						eDate={listingDetail.availability_date}
+						sDate={listingDetail.availabilityDate}
+						eDate={listingDetail.availabilityDate}
 					/>)}
 					{renderSection5()}
 					{/* {renderSection6()} */}

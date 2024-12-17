@@ -11,7 +11,7 @@ export async function POST(request) {
     SELECT DISTINCT
 (listings.listing_id),
     listings.title,
-    listings.availability_date,
+    listings.availabilityDate,
     listings.bedrooms,
     listings.bathrooms,
     listings.description,

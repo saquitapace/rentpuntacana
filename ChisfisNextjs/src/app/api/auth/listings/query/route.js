@@ -4,14 +4,12 @@ import { pool } from '../../../../../lib/db';
 
 export async function POST(request) {
     const { query } = await request.json();
-   // const id = parseInt(listingId);
 
-   // const listingDetail = [];
     const [response] = await pool.query(`
     SELECT DISTINCT
 (listings.listing_id),
     listings.title,
-    listings.availability_date,
+    listings.availabilityDate,
     listings.bedrooms,
     listings.bathrooms,
     listings.description,
@@ -71,6 +69,5 @@ FROM listings
     
    (SELECT listing_id from listings ` +query+` )`);
 
-   console.log(query)
   return NextResponse.json(response);
 }

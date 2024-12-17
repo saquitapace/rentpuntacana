@@ -238,7 +238,6 @@ const AccountPage = () => {
             />
           </div>
 
-
           <div className="grid grid-flow-col grid-rows-1 gap-4">
             <div className="">
             <Label>First Name</Label>
@@ -248,7 +247,6 @@ const AccountPage = () => {
               {...register("firstName", { required: "First Name is required" })}
             />
             {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName.message}</div>}
-
 
             </div>
             <div className="">
@@ -262,7 +260,6 @@ const AccountPage = () => {
 
             </div>
           </div>
-
 
           <div className="grid grid-flow-col grid-rows-1 gap-4">
             <div className="">
@@ -279,25 +276,20 @@ const AccountPage = () => {
                     value={userProfile.email}
                     disabled
                     readOnly
-                        />
+                  />
                 </div>
 
             </div>
             <div className="">
-
-            <Label>Phone Number</Label>
-            <PhoneNumberInput
-              className="mt-1.5"
-              phoneNumber={userProfile.phoneNumber}
-              {...register("phoneNumber")}
-            />
-
-
-
+              <Label>Phone Number</Label>
+              <PhoneNumberInput
+                className="mt-1.5"
+                phoneNumber={userProfile.phoneNumber}
+                {...register("phoneNumber")}
+              />
             </div>
           </div>
           
-
           {/* About */}
           <div>
             <Label>Bio</Label>

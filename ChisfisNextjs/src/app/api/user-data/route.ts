@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Format the response data
+    // Format the response data  //todo: @ezra ca we remove?
     const userData = {
       userId: user.userId,
       accountType: user.accountType,
@@ -141,34 +141,34 @@ export async function PUT(req: NextRequest) {
 }
 
 // DELETE: Delete user account
-export async function DELETE(req: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions)
+// export async function DELETE(req: NextRequest) {
+//   try {
+//     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+//     if (!session?.user?.email) {
+//       return NextResponse.json(
+//         { error: 'Unauthorized' },
+//         { status: 401 }
+//       )
+//     }
 
-    const user = await getUserByEmail(session.user.email)
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
+//     const user = await getUserByEmail(session.user.email)
+//     if (!user) {
+//       return NextResponse.json(
+//         { error: 'User not found' },
+//         { status: 404 }
+//       )
+//     }
 
-    // Delete user directly using pool
-    await pool.query('DELETE FROM users WHERE userId = ?', [user.userId]);
+//     // Delete user directly using pool
+//     await pool.query('DELETE FROM users WHERE userId = ?', [user.userId]);
 
-    return NextResponse.json({ message: 'User deleted successfully' })
-  } catch (error) {
-    console.error('Error deleting user:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+//     return NextResponse.json({ message: 'User deleted successfully' })
+//   } catch (error) {
+//     console.error('Error deleting user:', error)
+//     return NextResponse.json(
+//       { error: 'Internal server error' },
+//       { status: 500 }
+//     )
+//   }
+// }
