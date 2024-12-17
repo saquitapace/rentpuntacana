@@ -7,12 +7,8 @@ export async function PUT(request) {
   const r = await pool.query('UPDATE users SET companyName=?, firstName=?, lastName=?, email=?, phoneNumber=?, languages=?, about=? WHERE userId=?', [companyName,firstName, lastName, email, phoneNumber, JSON.stringify( languages ), about, userId]);
   const r2 = await pool.query('UPDATE login_cred SET email=? WHERE userId=?', [email, userId]);
 
-  /*const [userInfo] = await pool.query('SELECT * FROM users WHERE userId = ?', userId);
-  const userInfoClean = userInfo[0];
-  userInfoClean.likes = [];
-  userInfoClean.languages = [];
-  userInfoClean.email = email; */
-
   // todo: send welcome email
+  // todo: insert into notifications a welcome message
+  // todo: send welcome message
   return NextResponse.json();
 }
