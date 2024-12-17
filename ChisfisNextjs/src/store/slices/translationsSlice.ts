@@ -8,7 +8,7 @@ interface TranslationsState {
   error: string | null;
 }
 
-const defaultTranslations = JSON.parse(localStorage.getItem("translations3")); //@ezra
+const defaultTranslations = JSON.parse(localStorage.getItem("translations")); //@ezra
 
 const initialState: TranslationsState = {
   translations: defaultTranslations,

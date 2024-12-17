@@ -9,12 +9,9 @@ const useInitTranslation = () => {
   const [error, setError] = useState(false);
   
   useEffect(() => {
-    //console.log("langPref")
-    //console.log(localStorage.getItem("langPref"))
+    const language = localStorage.getItem("langPref") ? localStorage.getItem("langPref") : "en";
     const fetchData = async () => {
       try {
-        const language = localStorage.getItem("langPref"); 
-        // localStorage.setItem("translations",""); //clearing local storage
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/translations/${language}/get`);
         
         if (response.data && response.data[0]) {
@@ -33,7 +30,7 @@ const useInitTranslation = () => {
 
               if(i=== newArray.length-1){
                 const x = JSON.stringify(obj);
-                localStorage.setItem("translations3",x);
+                localStorage.setItem("translations",x);
               }
               i++;
         });
@@ -46,7 +43,7 @@ const useInitTranslation = () => {
     };
 
     if (typeof window !== 'undefined') {
-      const translationSet = localStorage.getItem('translations3');
+      const translationSet = localStorage.getItem('translations');
 
       if (!translationSet) {
         //console.log("translation not set");
