@@ -21,7 +21,7 @@ export const translation = (key) => {
         if (typeof window === 'undefined') return null;
         
         try {
-            const translations = localStorage.getItem("translations");
+            const translations = localStorage.getItem("translations3");
             return translations ? JSON.parse(translations) : null;
         } catch (error) {
             console.error("Error parsing translations:", error);
@@ -31,7 +31,7 @@ export const translation = (key) => {
 
     // Initialize if needed
     if (typeof window !== 'undefined') {
-         const translationsSet = localStorage.getItem('translations');
+         const translationsSet = localStorage.getItem('translations3');
          if (!translationsSet) {
             init();
          }
