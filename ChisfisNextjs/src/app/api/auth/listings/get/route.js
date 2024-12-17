@@ -5,7 +5,7 @@ import { pool } from '../../../../../lib/db';
 export async function GET(request) {
   const response = await pool.query(
 `SELECT 
-    l.listing_id,
+    l.listingId,
     l.title,
     l.bedrooms,
     l.bathrooms,
@@ -27,15 +27,15 @@ export async function GET(request) {
 FROM 
     listings l
 LEFT JOIN 
-    listing_images li ON l.listing_id = li.listing_id
+    listing_images li ON l.listingId = li.listingId
 LEFT JOIN 
-    listing_views lv ON l.listing_id = lv.listing_id
+    listing_views lv ON l.listingId = lv.listingId
 LEFT JOIN 
-    listing_reviews lr ON l.listing_id = lr.listing_id AND lr.review IS NOT NULL
+    listing_reviews lr ON l.listingId = lr.listingId AND lr.review IS NOT NULL
 LEFT JOIN 
-    saved_properties sp ON l.listing_id = sp.property_id
+    saved_properties sp ON l.listingId = sp.property_id
 GROUP BY 
-    l.listing_id 
+    l.listingId 
 `
   );
   

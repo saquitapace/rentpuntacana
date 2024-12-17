@@ -26,7 +26,7 @@ export async function POST(request) {
           listing_reviews 
       LEFT JOIN users ON users.userId = listing_reviews.reviewerId
       WHERE
-         listing_reviews.listing_id = ?`, [id]);
+         listing_reviews.listingId = ?`, [id]);
 
   return NextResponse.json(response);
 } 

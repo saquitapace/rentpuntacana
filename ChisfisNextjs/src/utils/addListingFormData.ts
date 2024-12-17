@@ -5,7 +5,7 @@ const addListingFormData = (function() {
    // default list object
    const listing = {
         id : "",
-        listing_id : "",
+        listingId : "",
         userId : "",
         href : "",
         address : "",

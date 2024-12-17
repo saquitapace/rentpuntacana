@@ -35,7 +35,7 @@ const loadListingsData = async () => {
       if(d.map !== null){
         d.map = JSON.parse(d.map); 
       }
-      data.key=data.listing_id;
+      data.key=data.listingId;
     });
   
   const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
@@ -231,11 +231,11 @@ const fetchListingsData = async () => {
               
               {listings.filter((_, i) => i < limit).map((item) => (    
                 <div className=""
-                      key={item.listing_id}
-                      onMouseEnter={() => setCurrentHoverID((_) => item.listing_id)}
+                      key={item.listingId}
+                      onMouseEnter={() => setCurrentHoverID((_) => item.listingId)}
                       onMouseLeave={() => setCurrentHoverID((_) => -1)}
                     >
-                  <StayCard key={item.listing_id} data={item} />
+                  <StayCard key={item.listingId} data={item} />
                 </div>
               ))}
             </div> )}

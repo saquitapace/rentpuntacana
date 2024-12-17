@@ -43,7 +43,7 @@ const StayCard: FC<StayCardProps> = ({
     reviewStart,
     reviewCount,
     id,
-    listing_id
+    listingId
   } = data;
 
   const { translations, isLoading, error } = useSelector(
@@ -55,13 +55,13 @@ const StayCard: FC<StayCardProps> = ({
     return (
       <div className="relative w-full">
         <GallerySlider
-          uniqueID={`StayCard_${listing_id}`}
+          uniqueID={`StayCard_${listingId}`}
           ratioClass="aspect-w-4 aspect-h-3 "
           galleryImgs={galleryImgs}
           href={href as Route}
           galleryClass={size === "default" ? undefined : ""}
         />
-        <BtnLikeIcon isLiked={likes} id={listing_id} colorClass="text-white" className="absolute right-3 top-3 z-[1]" />
+        <BtnLikeIcon isLiked={likes} id={listingId} colorClass="text-white" className="absolute right-3 top-3 z-[1]" />
         {saleOff && <SaleOffBadge className="absolute left-3 top-3" />}
       </div>
     );

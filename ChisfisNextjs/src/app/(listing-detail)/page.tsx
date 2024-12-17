@@ -56,7 +56,7 @@ const ListingStayDetailPage = ({
 			reviewCount: null,
 			id:'',
 			description: '',
-			listing_id: null,
+			listingId: null,
 			authorFirstName:'',
 			authorLastName:'',
 			authorAvatar:'',
@@ -131,7 +131,7 @@ const ListingStayDetailPage = ({
 	const fetchListingDetailData = async () => {
 
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listing_id:listingId,userId:user.id});
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:user.id});
 	
 			if (response) {
 				//console.log(response.data)

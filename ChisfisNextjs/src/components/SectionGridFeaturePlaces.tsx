@@ -64,7 +64,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">
 
-      <TabFilters viewAll={ listings.length>0 } viewAll={true} />
+      <TabFilters viewAll={ listings.length>0 } />
 
       <div className="divider divide-y divide-dashed hover:divide-solid"> </div>
 
@@ -84,7 +84,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
       <div className={`grid gap-6 py-5 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${gridClass}`}
       >
           {listings.filter((_, i) => i < limit).map((stay) => (
-              <StayCard key={stay.listing_id} data={stay} />
+              <StayCard key={stay.listingId} data={stay} />
           ))}
 
         </div>
