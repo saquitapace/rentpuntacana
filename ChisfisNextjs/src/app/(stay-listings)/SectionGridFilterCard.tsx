@@ -17,7 +17,7 @@ export interface SectionGridFilterCardProps {}
 const SectionGridFilterCard: FC<SectionGridFilterCardProps> = () => {
 const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
 const [listings, setListings] = useState([]); // initials state of listings
-const [limit, setLimit] = useState(7); // initials state of listings
+const [limit, setLimit] = useState(50); // initials state of listings
 const [loading, setLoading] = useState(true);
 const [responseError, setReponseError] = useState(false);
 const [mapData, setMapData] = useState([]);
@@ -62,14 +62,16 @@ const renderFilteredListingsData = async (data) => {
       setMapData(DEMO_DATA2);
       setListings(data);
       setLoading(false);
-   } 
+   }
  };
 
 const fetchListingsData = async () => {
   try {
-	const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:user.id});
-
+  const userId =  user ? user.userId : 'guest';
+	const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:userId});
+  
 	if (response) {
+  console.log(response);
 	 return await response.data[0];
 	}
   } catch (error) {
