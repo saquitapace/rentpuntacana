@@ -138,7 +138,7 @@ const ListingStayDetailPage = ({
 			}
 		} catch (error) {
 			console.error('Error fetching listing detail data:', error);
-			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
+			// alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
 		} finally {
 		} 
 	}
@@ -159,7 +159,6 @@ const ListingStayDetailPage = ({
 		return (
 			
 			<div className="listingSection__wrap !space-y-6">
-      {/* <pre>{JSON.stringify(translations, null, 2)}</pre> */}
 				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
