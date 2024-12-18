@@ -4,7 +4,7 @@ import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import React, { Fragment, FC, useEffect } from "react";
+import React, { Fragment, FC, useEffect, useState } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
@@ -15,7 +15,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import Reviews from '@/components/Reviews';
-
+import axios from "axios";
 import { 
   fetchUserProfile,
   getUserFullName,
@@ -34,6 +34,13 @@ export interface AuthorPageProps {}
 const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
+  const user = session?.user;
+
+  const { translations, isLoading, error } = useSelector(
+		(state: RootState) => state.translations
+	);
+
+  const [listings, setListings] = useState([]);
   const [categories] = React.useState(["Published", "Drafts"]);
 
   // Get user data from Redux store
@@ -44,9 +51,9 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const avatar = useSelector(getUserAvatar);
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
-  const isLoading = useSelector(getUserLoading);
+  const getUserIsLoading = useSelector(getUserLoading);
   const dateJoined = formatDateJoined( useSelector(getUserCreatedAt) );
-
+	
   // Debug logs
   // console.log("Session:", session);
   // console.log("UserProfile:", userProfile);
@@ -58,7 +65,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
   useEffect(() => {
     if (session?.user?.email) {
-      
+      //?
+      loadListingDetailData();
     }
     else
     {
@@ -67,8 +75,31 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   }, [dispatch, session?.user?.email ]);
 
 
+    const loadListingDetailData = async () => {
+        const d = await fetchListingDetailData();
+        console.log(d);
+         setListings(d);
+        //setLoading(false);
+    }
+  
+    const fetchListingDetailData = async () => {
+      try {
+        const userId =  user ? user.userId : 'guest';
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/published`, {userId:userId});
+    
+        if (response) {
+          //console.log(response.data)
+        return await response.data[0];
+        }
+      } catch (error) {
+        console.error('Error fetching listing detail data:', error);
+        // alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
+      } finally {
+      } 
+    }
+
   // Show loading state
-  if (isLoading) {
+  if (getUserIsLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
@@ -95,7 +126,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
           hasChecked
           hasCheckedClass="w-6 h-6 -top-0.5 right-2"
           sizeClass="w-28 h-28"
-          isLoading={isLoading}
+          isLoading={getUserIsLoading}
         />
 
         {/* User Info */}
@@ -112,7 +143,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
         ) : (
           <div className="flex bg-red-200 text-red-700 px-4 py-2 rounded-lg" role="alert">
             <ExclamationTriangleIcon className="h-6 w-6 mr-2" /> 
-            <span>Complete Profile</span>
+            <span>{translations.profileIncomplete}</span>
           </div>              
         )}
 
@@ -164,7 +195,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
-              Speaks {Array.isArray(languages) ? languages.join(', ') : 'English'}
+              {translations.speaks} {Array.isArray(languages) ? languages.join(', ') : 'English'}
             </span>
           </div>
 
@@ -185,7 +216,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               />
             </svg>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
-              Joined in {dateJoined}
+              {translations.joinedIn} {translations.space} {dateJoined}
             </span>
           </div>
         </div>
@@ -197,7 +228,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl">{fullName}&apos;s Listings</h2>
+          <h2 className="text-2xl">{fullName}&apos;s {translations.listings}</h2>
           {/* <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
             {fullName}&apos;s
             {` listings is very rich, 5 star reviews help him to be
@@ -227,7 +258,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
             <Tab.Panels>
               <Tab.Panel className="mt-8">
                 <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 8).map((stay) => (
+                  {listings.filter((_, i) => i < 8).map((stay) => (
                     <StayCard key={stay.id} data={stay} />
                   ))}
                 </div>
@@ -274,7 +305,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
             {renderSidebar()}
             <div className="flex pt-5 justify-center border-solid">
               <EyeIcon className="h-6 w-6" />
-              <div className="pl-5">Preview Public Profile</div>
+              <div className="pl-5">{translations.previewPublicProfile}</div>
             </div>
           </div>
         </div>

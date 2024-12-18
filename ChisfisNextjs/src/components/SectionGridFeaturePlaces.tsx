@@ -9,7 +9,7 @@ import axios from "axios";
 import NoResultsFound from "../app/noResultsFound";
 import SearchResultsLoading from "../components/SearchResultsLoading";
 import { useSession } from "next-auth/react";
-
+//saquita home
 export interface SectionGridFeaturePlacesProps {
   stayListings?: [];
   gridClass?: string;
@@ -51,7 +51,8 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
 
   const fetchListingsData = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:user.userId});
+      const userId =  user ? user.userId : 'guest';
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:userId});
 
       if (response) {
        return await response.data[0];

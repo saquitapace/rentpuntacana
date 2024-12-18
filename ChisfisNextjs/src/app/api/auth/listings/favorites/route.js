@@ -34,7 +34,7 @@ LEFT JOIN
     listing_views lv ON l.listingId = lv.listingId
 LEFT JOIN 
     listing_reviews lr ON l.listingId = lr.listingId AND lr.review IS NOT NULL
-LEFT JOIN 
+JOIN 
     saved_properties sp ON l.listingId = sp.property_id and sp.userId = ?
 GROUP BY 
     l.listingId 
