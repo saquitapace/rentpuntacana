@@ -84,7 +84,7 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         className={`w-5 h-5 ${colorClass}`}
         viewBox="0 0 24 24"
-        fill={likedState ? "currentColor" : "none"}
+        fill={likedState >0 ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth="1.5"
       >
