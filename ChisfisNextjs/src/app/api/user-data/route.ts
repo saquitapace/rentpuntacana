@@ -5,6 +5,8 @@ import { pool } from '@/lib/db';
 //import bcrypt from 'bcryptjs';
 import { getUserByEmail } from '@/lib/db-functions';
 
+export const dynamic = 'force-dynamic';
+
 // GET: Fetch user data
 export async function GET(req: NextRequest) {
   try {

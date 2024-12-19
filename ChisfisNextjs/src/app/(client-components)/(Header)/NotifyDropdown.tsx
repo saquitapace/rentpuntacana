@@ -8,6 +8,7 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from "moment";
+import { useDragControls } from "framer-motion";
 //import { useSelector, UseSelector } from "react-redux";
 //import { getUserId } from "@/store/slices/userProfileSlice";
 
@@ -38,23 +39,6 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
         hoveredElement.classList.add("deleteable");
   }
 
-  useEffect(() => {
-    if (user) {
-      loadNotificationData();
-    }
-  }, []);
-
-  const loadNotificationData = async () => {
-   const data = await fetchNotificationsData();
-   if (data) {
-      data.map((str) => {
-        str.time = moment(new Date(str.time)).fromNow();   
-      });
-
-      setNotifications(data);
-    } 
-  };
-
   const fetchNotificationsData = async () => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/get`, {userId});
@@ -68,6 +52,26 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
     } finally {
     } 
   };
+
+  
+
+  useEffect(() => {
+    if (user) {
+
+      const loadNotificationData = async () => {
+        const data = await fetchNotificationsData();
+          if (data) {
+            data.map((str) => {
+              str.time = moment(new Date(str.time)).fromNow();   
+            });
+      
+            setNotifications(data);
+          } 
+       };
+      loadNotificationData();
+    }
+  }, [ useDragControls, fetchNotificationsData]);
+
 
   const handleItemClick = (item) => {
     if(item.status == 0){ // update db to mark as read/ change 0 to 1

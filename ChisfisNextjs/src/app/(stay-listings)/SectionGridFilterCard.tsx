@@ -25,12 +25,6 @@ const [formData, setFormData] = useState();
 const { data: session } = useSession();
 const user = session?.user;
 
-useEffect(() => {
-  if (listings) {
-	loadListingsData();
-  }
-}, [])
-
 const loadListingsData = async () => {
  const data = await fetchListingsData();
  if (data) {
@@ -48,6 +42,13 @@ const loadListingsData = async () => {
     setLoading(false);
   } 
 };
+
+useEffect(() => {
+  if (listings) {
+	loadListingsData();
+  }
+}, [listings, loadListingsData])
+
 
 const renderFilteredListingsData = async (data) => {
   //const data = await fetchListingsData();

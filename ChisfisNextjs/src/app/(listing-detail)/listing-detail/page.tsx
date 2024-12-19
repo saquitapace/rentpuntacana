@@ -127,7 +127,7 @@ const ListingStayDetailPage = ({
 			alert("todo: display error message is the id isnt passed & display mock object data");
 			//setListingDetail(DEMO_DATA); // load the test view
 		}
-	},[]);
+	},[listingId, loadListingDetailData]);
 
 	const fetchListingDetailData = async () => {
 

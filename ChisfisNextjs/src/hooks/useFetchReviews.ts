@@ -31,7 +31,7 @@ const useFetchReviews = (par) => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [params]);
 
   return {
     data,

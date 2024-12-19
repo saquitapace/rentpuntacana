@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import { signOut, useSession } from "next-auth/react";
@@ -36,16 +36,16 @@ const NewHeader: FC<NewHeaderProps> = (
   const pathname = usePathname();
   const router = useRouter();
   
-  const handleSignOut = async () => {
-    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
-
-    dispatch(clearUserProfile());
-    signOut({ callbackUrl: '/' });
-  };
-
   const { translations, isLoading, error } = useSelector(
     (state: RootState) => state.translations
   );
+
+  
+  const handleSignOut = useCallback(async () => {
+    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
+    dispatch(clearUserProfile());
+    signOut({ callbackUrl: "/" });
+  }, [dispatch, session]);
 
   // Fetch user profile data when component mounts or session changes
   useEffect(() => {
@@ -83,7 +83,7 @@ const NewHeader: FC<NewHeaderProps> = (
     };
 
     fetchData();
-  }, [dispatch, session?.user?.email]);
+  }, [dispatch, session, handleSignOut]);
 
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>

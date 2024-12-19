@@ -141,7 +141,8 @@ const LangDropdown: FC<LangDropdownProps> = ({
 
   useEffect(() => {
     dispatch(fetchTranslations(getLangPref()) );
-  }, []);
+    alert(1);
+  }, [dispatch]);
 
   const updateActiveCurrency = (currCode: string) => {
     setCurrencies((prevCurrencies) =>

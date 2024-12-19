@@ -3,9 +3,9 @@
   "version": "0.2.4",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_NO_WARNINGS=1 next dev",
+    "dev": "next dev",
     "build": "next build",
-    "start": "cross-env NODE_NO_WARNINGS=1 next start",
+    "start": "next start",
     "lint": "next lint"
   },
   "prettier": "@epic-web/config/prettier",
