@@ -3,8 +3,9 @@
 import React, { FC, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie"; //@ezra - remove js-cookie
+//import Cookies from "js-cookie"; //@ezra - remove js-cookie
 import { ChatLayout } from "@/components/chat/chat-layout";
+import { getChatLayout } from "@/utils/helpers";
 
 export interface MessagesProps {}
 
@@ -21,7 +22,8 @@ const Messages: FC<MessagesProps> = ({}) => {
   const [defaultLayout, setDefaultLayout] = useState<any>();
 
   useEffect(() => {
-    const layout = Cookies.get("react-resizable-panels:layout");
+    //const layout = Cookies.get("react-resizable-panels:layout");
+    const layout = getChatLayout();
     setDefaultLayout(layout ? JSON.parse(layout) : undefined);
   }, []);
 

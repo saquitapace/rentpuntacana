@@ -69,3 +69,15 @@ export const getDefaultTranslations = () => {
     return null;
   }
 };
+
+export const getChatLayout = () => {
+  try {
+    if (typeof window !== "undefined") 
+    {
+      return JSON.parse(localStorage.getItem("react-resizable-panels:layout") || "null");
+    }
+  } catch {
+    console.error("Invalid JSON in localStorage");
+    return null;
+  }
+};
