@@ -12,21 +12,21 @@ export interface MessagesProps {}
 const Messages: FC<MessagesProps> = ({}) => {
   const { data: session } = useSession();
   const router = useRouter();
-
-  // Redirect if not authenticated
-  if (!session?.user) {
-    router.push("/login");
-    return null;
-  }
-
   const [defaultLayout, setDefaultLayout] = useState<any>();
 
   useEffect(() => {
     //const layout = Cookies.get("react-resizable-panels:layout");
     const layout = getChatLayout();
     setDefaultLayout(layout ? JSON.parse(layout) : undefined);
-  }, []);
+  }, [ setDefaultLayout ]);
 
+  
+  // Redirect if not authenticated
+  if (!session?.user) {
+    router.push("/login");
+    return null;
+  }
+  
   return (
     <div className="nc-Blank">
       <div className="container h-screen">

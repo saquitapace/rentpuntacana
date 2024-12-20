@@ -23,7 +23,7 @@ export default function Examples() {
     setSelectedExample(
       examples.find((example) => example.url === pathname) as Example,
     );
-  }, [pathname]);
+  }, [setSelectedExample,examples, pathname]);
 
   const handleChange = (value: string) => {
     setSelectedExample(

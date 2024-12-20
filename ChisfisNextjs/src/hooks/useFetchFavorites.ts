@@ -26,7 +26,7 @@ const useFetchFavorites = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user.userId, setData]);
 
   return {
     data,

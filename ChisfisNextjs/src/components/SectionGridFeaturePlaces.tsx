@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, FC, ReactNode } from "react";
+import React, { useState, useEffect, FC, ReactNode, useCallback } from "react";
 //import ButtonSecondary from "@/shared/ButtonSecondary";
 //import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StayCard from "./StayCard";
@@ -35,20 +35,8 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   const { data: session } = useSession();
   const user = session?.user;
 
-  useEffect(() => {
-    if (listings) {
-      loadListingsData();
-    }
-  }, [])
 
-  const loadListingsData = async () => {
-   const data = await fetchListingsData();
-   if (data) {
-      setListings(data);
-      setLoading(false);
-    }
-  };
-
+  
   const fetchListingsData = async () => {
     try {
       const userId =  user ? user.userId : 'guest';
@@ -64,6 +52,21 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
     } finally {
     } 
   };
+
+  const loadListingsData = useCallback( async () => {
+   const data = await fetchListingsData();
+   if (data) {
+      setListings(data);
+      setLoading(false);
+    }
+  }, [fetchListingsData]);
+
+  
+  useEffect(() => {
+    if (listings) {
+      loadListingsData();
+    }
+  }, [ listings,loadListingsData])
 
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">

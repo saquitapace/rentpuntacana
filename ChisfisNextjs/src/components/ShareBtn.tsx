@@ -16,6 +16,7 @@ import {
   EmailIcon,
 
 } from "react-share";
+import Image from 'next/image';
 
 const ShareBtn = ({ text, url, title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -127,7 +128,7 @@ const ShareBtn = ({ text, url, title }) => {
                 onClick={copyLinkToClipboard}
                 className=" cursor-pointer p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
               >
-                <img 
+                <Image 
                   src="/linkIcon.png" 
                   alt="Icon" 
                   width={getIconSize(40)}

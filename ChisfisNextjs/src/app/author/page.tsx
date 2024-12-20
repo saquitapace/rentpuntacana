@@ -4,7 +4,7 @@ import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import React, { Fragment, FC, useEffect, useState } from "react";
+import React, { Fragment, FC, useEffect, useState, useCallback } from "react";
 import Avatar from "@/shared/Avatar";
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
@@ -28,6 +28,7 @@ import {
   getUserId
 } from '@/store/slices/userProfileSlice';
 import { formatDateJoined } from "@/utils/helpers";
+import { updateJWT } from "@/store/slices/authSlice";
 
 export interface AuthorPageProps {}
 
@@ -58,10 +59,18 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   // console.log("Session:", session);
   // console.log("UserProfile:", userProfile);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(async () => {
+    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
     dispatch(clearUserProfile());
-    signOut({ callbackUrl: '/' });
-  };
+    signOut({ callbackUrl: "/" });
+  }, [dispatch, session]);
+
+  const loadListingDetailData = async () => {
+    const d = await fetchListingDetailData();
+    console.log(d);
+     setListings(d);
+    //setLoading(false);
+}
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -72,15 +81,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     {
       handleSignOut()
     }    
-  }, [dispatch, session?.user?.email ]);
+  }, [dispatch, session, loadListingDetailData, handleSignOut ]);
 
-
-    const loadListingDetailData = async () => {
-        const d = await fetchListingDetailData();
-        console.log(d);
-         setListings(d);
-        //setLoading(false);
-    }
   
     const fetchListingDetailData = async () => {
       try {

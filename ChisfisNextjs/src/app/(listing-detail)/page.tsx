@@ -106,7 +106,24 @@ const ListingStayDetailPage = ({
 		});
 	}
 
-	const loadListingDetailData = async () => {
+	useEffect(() => {
+		const fetchListingDetailData = async () => {
+			try {
+				const userId =  user ? user.userId : 'guest';
+				const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
+		
+				if (response) {
+					//console.log(response.data)
+				return await response.data;
+				}
+			} catch (error) {
+				console.error('Error fetching listing detail data:', error);
+				// alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
+			} finally {
+			} 
+		}
+
+		const loadListingDetailData = async () => {
 			const d = await fetchListingDetailData();
 			const prevData = listingDetail;
 			listingDetail = d;
@@ -116,32 +133,16 @@ const ListingStayDetailPage = ({
 			setGalleryPhotos(listingDetail['galleryImgs']);
 			renderAmenities(d.amenitites);
 			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
-	}
+		}
 
-	useEffect(() => {
 		if(listingId){ 
 			loadListingDetailData();
 		} else {
 			console.log("todo: display error message if the id isnt passed & display mock object data");
 			//setListingDetail(DEMO_DATA); // load the test view
 		}
-	},[]);
 
-	const fetchListingDetailData = async () => {
-		try {
-			const userId =  user ? user.userId : 'guest';
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
-	
-			if (response) {
-				//console.log(response.data)
-			return await response.data;
-			}
-		} catch (error) {
-			console.error('Error fetching listing detail data:', error);
-			// alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
-		} finally {
-		} 
-	}
+	},[listingId]);
 	
 	function closeModalAmenities() {
 		setIsOpenModalAmenities(false);

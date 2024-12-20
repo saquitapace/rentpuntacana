@@ -1,6 +1,6 @@
 "use client";
 import { User} from "@/app/userChatData";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -35,13 +35,38 @@ export function ChatLayout({
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      loadChatData();
-    }
-  }, []);
+  
+  const fetchChatData = useCallback( async () => {
+    let url1, url2, r1, r2;
+  
+    try {
 
-  const loadChatData = async () => {
+          url1 = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messagesSidebar/get`, params)
+          .then(function(response){
+          
+            r1 = response.data[0];
+          });
+          
+          url2 =  await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messages/get`, params)
+          .then(function(response){
+            
+            r2 = response.data[0];
+          });
+
+          const obj = [];
+                obj[0] = r1;
+                obj[1] = r2;
+
+                return await obj;
+
+        } catch (error) {
+          console.error(error);
+          //setIsLoading(false);
+          //setError(error.message);
+        }
+  }, [params] );
+
+  const loadChatData = useCallback( async () => {
     const data = await fetchChatData();
 
     let r1, r2, r3;
@@ -83,37 +108,13 @@ export function ChatLayout({
 
       setIsLoading(false);
     }
-  };
+  }, [fetchChatData,]);
 
-  const fetchChatData = async () => {
-    let url1, url2, r1, r2;
-  
-    try {
-
-          url1 = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messagesSidebar/get`, params)
-          .then(function(response){
-          
-            r1 = response.data[0];
-          });
-          
-          url2 =  await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messages/get`, params)
-          .then(function(response){
-            
-            r2 = response.data[0];
-          });
-
-          const obj = [];
-                obj[0] = r1;
-                obj[1] = r2;
-
-                return await obj;
-
-        } catch (error) {
-          console.error(error);
-          //setIsLoading(false);
-          //setError(error.message);
-        }
-  };
+  useEffect(() => {
+    if (user) {
+      loadChatData();
+    }
+  }, [user, loadChatData]);
 
   useEffect(() => {
 

@@ -132,7 +132,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
         setHasInitialResponse(true);
       }, 2500);
     }
-  }, []);
+  }, [hasInitialResponse, setHasInitialResponse, setMessages]);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {

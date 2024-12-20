@@ -39,38 +39,38 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
         hoveredElement.classList.add("deleteable");
   }
 
-  const fetchNotificationsData = async () => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/get`, {userId});
-
-      if (response) {
-       return await response.data[0];
-      }
-    } catch (error) {
-      console.error('Error fetching notification data:', error);
-      // alert("Loading notifications failed. Network error. Please contact helpdesk. Error code: 500.");
-    } finally {
-    } 
-  };
-
-  
-
+ 
   useEffect(() => {
     if (user) {
 
+      const fetchNotificationsData = async () => {
+        try {
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/notifications/get`, {userId});
+    
+          if (response) {
+           return await response.data[0];
+          }
+        } catch (error) {
+          console.error('Error fetching notification data:', error);
+          // alert("Loading notifications failed. Network error. Please contact helpdesk. Error code: 500.");
+        } finally {
+        } 
+      };
+    
       const loadNotificationData = async () => {
         const data = await fetchNotificationsData();
-          if (data) {
-            data.map((str) => {
-              str.time = moment(new Date(str.time)).fromNow();   
-            });
-      
-            setNotifications(data);
-          } 
-       };
+        
+        if (data) {
+          data.map((str) => {
+            str.time = moment(new Date(str.time)).fromNow();   
+          });
+    
+          setNotifications(data);
+        } 
+      };
       loadNotificationData();
     }
-  }, [ useDragControls, fetchNotificationsData]);
+  }, [ user, userId ]);
 
 
   const handleItemClick = (item) => {

@@ -40,7 +40,6 @@ const NewHeader: FC<NewHeaderProps> = (
     (state: RootState) => state.translations
   );
 
-  
   const handleSignOut = useCallback(async () => {
     await dispatch(updateJWT({ ...session, jti: null, exp: null }));
     dispatch(clearUserProfile());

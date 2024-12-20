@@ -9,7 +9,7 @@ export type StaySearchFormFields = "location" | "guests" | "dates";
 export interface PropertyType {
   name: string;
   description: string;
-  abbreviation: string;
+  abbreviation?: string;
   checked: boolean;
 }
 

@@ -1,6 +1,6 @@
 //saquita
 'use client';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useCallback, useEffect, useState } from 'react';
 import ContactForm  from '@/components/ContactForm';
 import {Dialog, Transition, TransitionChild } from '@headlessui/react';
 import { Squares2X2Icon, PrinterIcon, LanguageIcon } from '@heroicons/react/24/outline';
@@ -107,7 +107,7 @@ const ListingStayDetailPage = ({
 		});
 	}
 
-	const loadListingDetailData = async () => {
+	const loadListingDetailData = useCallback( async () => {
 			const d = await fetchListingDetailData();
 			const prevData = listingDetail;
 			listingDetail = d;
@@ -117,7 +117,7 @@ const ListingStayDetailPage = ({
 			setGalleryPhotos(listingDetail['galleryImgs']);
 			renderAmenities(d.amenitites);
 			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
-	}
+	}, [ formatDateJoined, setListingDetail]);
 
 	useEffect(() => {
 		
@@ -127,7 +127,7 @@ const ListingStayDetailPage = ({
 			alert("todo: display error message is the id isnt passed & display mock object data");
 			//setListingDetail(DEMO_DATA); // load the test view
 		}
-	},[listingId, loadListingDetailData]);
+	},[listingId]);
 
 	const fetchListingDetailData = async () => {
 
