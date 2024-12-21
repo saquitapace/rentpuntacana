@@ -4,7 +4,7 @@ import React, { FC, useState } from "react";
 import Checkbox from "@/shared/Checkbox";
 import i18n from "../../../utils/i18n";
 import options from "../../../utils/options";
-
+import Label from "@/components/Label";
 const generalAmenitiesOptions = options.getGeneralAmenities();
 const otherAmenitiesOptions = options.getOtherAmenities();
 const safeAmenitiesOptions = options.getSafeAmenities();
@@ -71,22 +71,10 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
       <div className="space-y-8">
         {/* ITEM */}
         <div>
-          <label className="text-lg font-semibold" htmlFor="">
+          <Label className="text-lg font-semibold">
             General amenities
-          </label>
+          </Label>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-           {/*} <Checkbox label="Wifi" name="Wifi" defaultChecked />
-            <Checkbox label="Cable" name="Cable" />
-            <Checkbox label="TV" name="TV" defaultChecked />
-            <Checkbox label="Air conditioning" name="Air conditioning" />
-            <Checkbox label="Fan" name="Fan" />
-            <Checkbox label="Security Guard" name="Security Guard" />
-            <Checkbox label="Dryer" name="Dryer" defaultChecked />
-            <Checkbox label="Washing machine" name="Washing machine" />
-            <Checkbox label="Fully Furnished" name="Furnished" defaultChecked />
-            <Checkbox label="Fridge" name="Fridge" />
-            <Checkbox label="Dryer" name="Dryer" defaultChecked />
-            <Checkbox label="Balcony" name="Balcony" defaultChecked /> */}
 
               {generalAmenitiesOptions.map((item, index) => (
                   <div key={item.field} className="pr-5">
@@ -125,17 +113,10 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
 
         {/* ITEM */}
         <div>
-          <label className="text-lg font-semibold" htmlFor="">
+          <Label className="text-lg font-semibold">
             Other amenities
-          </label>
+          </Label>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {/*<Checkbox label="Dishes" name="Dishes" />
-            <Checkbox label="Gas stove" name="Gas stove" />
-            <Checkbox label="Dishwasher" name="Dishwasher" defaultChecked />
-            <Checkbox label="Private Parking" name="Private Parking" />
-            <Checkbox label="Pool" name="Pool" />
-            <Checkbox label="Dining table" name="Dining table" /> */}
-
               {otherAmenitiesOptions.map((item, index) => (
                   <div key={item.field} className="pr-5">
                     <Checkbox
@@ -173,14 +154,10 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
 
         {/* ITEM */}
         <div>
-          <label className="text-lg font-semibold" htmlFor="">
+          <Label className="text-lg font-semibold">
             Safe amenities
-          </label>
+          </Label>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-           {/* <Checkbox label="Smoke Detector" name="Smoke Detector" defaultChecked />
-            <Checkbox label="Fire extinguisher" name="Fire extinguisher" />
-            <Checkbox label="Safe vault" name="Safe vault" /> */}
-
               {safeAmenitiesOptions.map((item, index) => (
                   <div key={item.field} className="pr-5">
                     <Checkbox
