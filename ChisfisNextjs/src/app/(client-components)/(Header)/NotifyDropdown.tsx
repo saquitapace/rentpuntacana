@@ -39,6 +39,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
   }
 
   useEffect(() => {
+    console.log("at notifications")
     if (user) {
       loadNotificationData();
     }
