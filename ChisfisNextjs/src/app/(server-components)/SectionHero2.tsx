@@ -5,6 +5,7 @@ import imagePng from "@/images/hero-right-3.png";
 import Image from "next/image";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 //import HeroRealEstateSearchForm from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/HeroRealEstateSearchForm";
 export interface SectionHero2Props {
@@ -15,14 +16,16 @@ export interface SectionHero2Props {
 const SectionHero2: FC<SectionHero2Props> = ({ className = "", children }) => {
   
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   return (
     <div className={`nc-SectionHero2 relative ${className}`}>
 
       <div className="absolute inset-y-0 w-5/6 xl:w-3/4 right-0 flex-grow">
-        <Image fill className="object-cover" src={imagePng} alt="hero" />     
+        <Image fill className="object-cover" src={imagePng} alt="hero"
+         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+        />     
       </div>
 
       <div className="relative inline-flex">
