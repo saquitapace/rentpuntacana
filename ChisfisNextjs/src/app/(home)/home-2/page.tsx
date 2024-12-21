@@ -1,5 +1,5 @@
 import React from "react";
-import SectionHero2 from "../../(server-components)/SectionHero"
+import SectionHero from "../../(server-components)/SectionHero"
 import SectionOurFeatures from "@/components/SectionOurFeatures";
 import BackgroundSection from "@/components/BackgroundSection";
 import SectionGridFeaturePlaces from "@/components/SectionGridFeaturePlaces";
@@ -14,7 +14,7 @@ function PageHome2() {
     <main className="nc-PageHome relative overflow-hidden">
       <div className="container relative space-y-5 mb-5 lg:space-y-5 lg:mb-5">
         
-        <SectionHero2 className="pt-0 lg:pt-0 lg:pb-10" />
+        <SectionHero className="pt-0 lg:pt-0 lg:pb-10" />
 
         <SectionGridFeaturePlaces cardType="card1" />
         
