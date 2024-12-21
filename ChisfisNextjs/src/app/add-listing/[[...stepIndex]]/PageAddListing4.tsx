@@ -2,14 +2,11 @@
 
 import React, { FC, useState } from "react";
 import Checkbox from "@/shared/Checkbox";
-import i18n from "../../../utils/i18n";
 import options from "../../../utils/options";
 import Label from "@/components/Label";
 const generalAmenitiesOptions = options.getGeneralAmenities();
 const otherAmenitiesOptions = options.getOtherAmenities();
 const safeAmenitiesOptions = options.getSafeAmenities();
-
-const language = i18n.getLanguage();
 
 export interface PageAddListing4Props {}
 
@@ -80,7 +77,7 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
                   <div key={item.field} className="pr-5">
                     <Checkbox
                       name={item.field}
-                      label={item[language]}
+                      label={item.field}
                       defaultChecked= {item.defaultChecked}
                       onChange={(e) => {
                         var idx = generalAmenities.indexOf(item.field, 0);
@@ -121,7 +118,7 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
                   <div key={item.field} className="pr-5">
                     <Checkbox
                       name={item.field}
-                      label={item[language]}
+                      label={item.field}
                       defaultChecked= {item.defaultChecked}
                       onChange={(e) => {
                         var idx = otherAmenities.indexOf(item.field, 0);
@@ -162,7 +159,7 @@ const PageAddListing4: FC<PageAddListing4Props> = () => {
                   <div key={item.field} className="pr-5">
                     <Checkbox
                       name={item.field}
-                      label={item[language]}
+                      label={item.field}
                       defaultChecked= {item.defaultChecked}
                       onChange={(e) => {
                         var idx = safeAmenities.indexOf(item.field, 0);
