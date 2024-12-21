@@ -24,6 +24,7 @@ const PhoneNumberInput: FC<Props> = ({
       value={phoneNumber}
       placeholder="Phone number"
       onChange={setVal}
+      name="phoneNumber"
       error={phoneNumber ? (isValidPhoneNumber(phoneNumber) ? undefined : 'Invalid phone number') : 'Phone number required'}/>
     </div>
   );
