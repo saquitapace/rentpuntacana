@@ -131,7 +131,7 @@ const ListingStayDetailPage = ({
 			setListingDetail(d);
 			setLoading(false);
 			setGalleryPhotos(listingDetail['galleryImgs']);
-			renderAmenities(d.amenitites);
+			renderAmenities(d.amenities);
 			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
 		}
 

@@ -15,7 +15,7 @@ export async function POST(request) {
     listings.description,
     listings.address,
     listings.map,
-    listings.amenitites,
+    listings.amenities,
     listings.userId AS authorId,
     listings.shortTermPrice AS price,
     listings.longTermPrice,

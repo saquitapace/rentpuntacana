@@ -29,7 +29,6 @@ export function ChatLayout({
   const [isMobile, setIsMobile] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
-  const params = {userId : user.userId}
   const [userData, setUserData] = useState([]);
   const [selectedUser, setSelectedUser] = useState({name:'', messages:'', avatar:''});
 
@@ -38,7 +37,8 @@ export function ChatLayout({
   
   const fetchChatData = useCallback( async () => {
     let url1, url2, r1, r2;
-  
+    const params = {userId : user.userId}
+
     try {
 
           url1 = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/messagesSidebar/get`, params)
@@ -64,7 +64,7 @@ export function ChatLayout({
           //setIsLoading(false);
           //setError(error.message);
         }
-  }, [params] );
+  }, [user]);
 
   const loadChatData = useCallback( async () => {
     const data = await fetchChatData();
@@ -108,7 +108,7 @@ export function ChatLayout({
 
       setIsLoading(false);
     }
-  }, [fetchChatData,]);
+  }, [fetchChatData]);
 
   useEffect(() => {
     if (user) {

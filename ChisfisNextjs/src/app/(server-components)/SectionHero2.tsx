@@ -5,6 +5,8 @@ import imagePng from "@/images/hero-right-3.png";
 import Image from "next/image";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
 
 //import HeroRealEstateSearchForm from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/HeroRealEstateSearchForm";
 export interface SectionHero2Props {
@@ -15,7 +17,7 @@ export interface SectionHero2Props {
 const SectionHero2: FC<SectionHero2Props> = ({ className = "", children }) => {
   
   const { translations, isLoading, error } = useSelector(
-    (state) => state.translations
+    (state: RootState) => state.translations
   );
 
   return (

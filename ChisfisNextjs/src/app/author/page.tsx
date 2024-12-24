@@ -1,21 +1,18 @@
 "use client";
-
-import CommentListing from "@/components/CommentListing";
+//import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
 import StayCard from "@/components/StayCard2";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import React, { Fragment, FC, useEffect, useState, useCallback } from "react";
-import Avatar from "@/shared/Avatar";
+import Avatar from "@/shared/Avatar"; 
 import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
 import { ExclamationTriangleIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
-import ExperiencesCard from "@/components/ExperiencesCard";
 import { signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import Reviews from '@/components/Reviews';
-import axios from "axios";
 import { 
   fetchUserProfile,
   getUserFullName,
@@ -29,6 +26,7 @@ import {
 } from '@/store/slices/userProfileSlice';
 import { formatDateJoined } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
+import useFetchPublished from "@/hooks/useFetchPublished";
 
 export interface AuthorPageProps {}
 
@@ -48,16 +46,16 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const fullName = useSelector(getUserFullName);
   const userId = useSelector(getUserId);
-
   const avatar = useSelector(getUserAvatar);
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
   const getUserIsLoading = useSelector(getUserLoading);
   const dateJoined = formatDateJoined( useSelector(getUserCreatedAt) );
-	
+  const [isloading, setIsLoading]= useState(true);
+
   // Debug logs
-  // console.log("Session:", session);
-  // console.log("UserProfile:", userProfile);
+  console.log("Session:", session);
+  console.log("UserProfile:", userProfile);
 
   const handleSignOut = useCallback(async () => {
     await dispatch(updateJWT({ ...session, jti: null, exp: null }));
@@ -65,40 +63,29 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
     signOut({ callbackUrl: "/" });
   }, [dispatch, session]);
 
-  const loadListingDetailData = async () => {
-    const d = await fetchListingDetailData();
-    console.log(d);
-     setListings(d);
-    //setLoading(false);
-}
-
   useEffect(() => {
-    if (session?.user?.email) {
-      //?
-      loadListingDetailData();
-    }
-    else
-    {
+    if (!session?.user?.email) {
       handleSignOut()
     }    
-  }, [dispatch, session, loadListingDetailData, handleSignOut ]);
+  }, [dispatch, session, handleSignOut]);
 
-  
-    const fetchListingDetailData = async () => {
-      try {
-        const userId =  user ? user.userId : 'guest';
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/published`, {userId:userId});
+
+    function usePublished() {
     
-        if (response) {
-          //console.log(response.data)
-        return await response.data[0];
+      const { data, loading, error } = useFetchPublished();
+    
+      useEffect(() => {
+        if (!loading && !error) {
+          setListings(data);
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching listing detail data:', error);
-        // alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
-      } finally {
-      } 
+      }, [data, loading, error]);
+    
+      return { data, loading, error };
     }
+    
+    usePublished();
+
 
   // Show loading state
   if (getUserIsLoading) {
@@ -272,7 +259,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
                 <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                   {DEMO_STAY_LISTINGS.filter((_, i) => i < 2).map(
                     (stay) => (
-                      <ExperiencesCard key={stay.id} data={stay} />
+                      <StayCard key={stay.id} data={stay} />
                     )
                   )}
                 </div>

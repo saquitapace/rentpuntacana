@@ -1,31 +1,30 @@
 //saquita
-'use client';
-import { FC, Fragment, useCallback, useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from 'react';
 import ContactForm  from '@/components/ContactForm';
-import {Dialog, Transition, TransitionChild } from '@headlessui/react';
-import { Squares2X2Icon, PrinterIcon, LanguageIcon } from '@heroicons/react/24/outline';
+//import {Description, Dialog, Transition, TransitionChild } from '@headlessui/react';
+import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline';
 import BtnLikeIcon from '@/components/BtnLikeIcon';
 import Price from '@/components/Price';
 import StartRating from '@/components/StartRating';
 import Avatar from '@/shared/Avatar';
 import ButtonSecondary from '@/shared/ButtonSecondary';
-import ButtonClose from '@/shared/ButtonClose';
-import Image from 'next/image';
+//import ButtonClose from '@/shared/ButtonClose';
+//import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation';
-import { Amenities_demos, PHOTOS } from '../constant';
+import { PHOTOS } from '../constant';
 import SectionDateRange from '../SectionDateRange';
+import DescriptionSection from '../(components)/descriptionSection';
 import { Route } from 'next';
 import ShareBtn from '@/components/ShareBtn';
-import Reviews from '../../../components/Reviews';
-import axios from 'axios';
-//import { ListingDetailType } from "@/data/types";
+import Reviews from '@/components/Reviews';
+import useFetchListingDetail from '@/hooks/useFetchListingDetail';
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import Link from 'next/link';
-import { formatPhoneNumberIntl } from 'react-phone-number-input';
-import { formatDateJoined } from "@/utils/helpers";
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { useSession } from "next-auth/react";
+//import Link from 'next/link';
+import { formatPhoneNumberIntl } from "react-phone-number-input";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import AmenitiesSection from '../(components)/amenitiesSection';
 
 const ListingStayDetailPage = ({
 	params,
@@ -35,8 +34,7 @@ const ListingStayDetailPage = ({
 	searchParams?: { [key: string]: string | string[] | undefined };
 	}) => {
 
-	const DEMO_DATA = DEMO_STAY_LISTINGS[0];
-
+		useState<IContactCardProps[]>([])
 	let [listingDetail, setListingDetail]= useState(
 		{
 			galleryImgs:[],
@@ -70,89 +68,35 @@ const ListingStayDetailPage = ({
 		  }
 	);
 
-	const { data: session } = useSession();
-	const user = session?.user;
-
 	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 	const thisPathname = usePathname();
 	const router = useRouter();
 	const listingId = searchParams.lid;
 	const [loading, setLoading] = useState(true);
 	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
-	const [arr,setArr] = useState([]);
-	const [amenitiesArray, setAmenitiesArray] = useState(false);
-	
-	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
-	
+	//const [arr, setArr] = useState([]);
+	//const [amenitiesArray, setAmenitiesArray] = useState(false);
+
 	const { translations, isLoading, error } = useSelector(
 		(state: RootState) => state.translations
 	);
-
-	const renderAmenities = async (amenities) => {
-		
-		setAmenitiesArray(true);
-
-		if(amenities === null){
-			return;
-		}
-
-		const Array = JSON.parse(amenities); 
-
-		Array.forEach(has => {
-			Amenities_demos.forEach(item => {
-				if(has == item.key){
-					arr.push({icon:item.icon,key:has })	
-				}
-			});
-		});
-	}
-
-	const loadListingDetailData = useCallback( async () => {
-			const d = await fetchListingDetailData();
-			const prevData = listingDetail;
-			listingDetail = d;
-		  	d.authorCreatedAt = formatDateJoined(d.authorCreatedAt)
-			setListingDetail(d);
-			setLoading(false);
-			setGalleryPhotos(listingDetail['galleryImgs']);
-			renderAmenities(d.amenitites);
-			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
-	}, [ formatDateJoined, setListingDetail]);
-
-	useEffect(() => {
-		
-		if(listingId){
-			loadListingDetailData();
-		} else {
-			alert("todo: display error message is the id isnt passed & display mock object data");
-			//setListingDetail(DEMO_DATA); // load the test view
-		}
-	},[listingId]);
-
-	const fetchListingDetailData = async () => {
-
-		try {
-			const userId =  user ? user.userId : 'guest';
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
 	
-			if (response) {
-				//console.log(response.data)
-			return await response.data;
+    function useFetchDetail() {
+		const { data, loading, error } = useFetchListingDetail({listingId:listingId});
+		
+		useEffect(() => {
+			if (data && !loading && !error) {
+				setListingDetail(data);
+				setLoading(false);
+				setGalleryPhotos(listingDetail['galleryImgs']);
+				setListingDetail((listingDetail) => ({ ...listingDetail, data }));
 			}
-		} catch (error) {
-			console.error('Error fetching listing detail data:', error);
-			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
-		} finally {
-		} 
+		}, [data, loading, error]);
+		
+		return { data, loading, error };
 	}
 	
-	function closeModalAmenities() {
-		setIsOpenModalAmenities(false);
-	}
-
-	function openModalAmenities() {
-		setIsOpenModalAmenities(true);
-	}
+	useFetchDetail();
 
 	const handleOpenModalImageGallery = () => {
 		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
@@ -251,131 +195,6 @@ const ListingStayDetailPage = ({
           			</div>
 				</div>
 			</div>
-		)
-	}
-
-	const renderSection2 = () => {
-		return (
-			<div className="listingSection__wrap">
-				<h2 className="text-xl font-semibold items-end">{translations.listingDescription} 
-					<div className="flex p-0 m-0 text-xs font-normal"><i>{translations.someInfoAutomaticallyTranslated}</i> <Link className="pl-3 underline" href="#">{translations.showOriginal}</Link>
-					<LanguageIcon className="pl-1 h-6 w-6" />
-					</div>
-				</h2>
-				
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				<div className="text-neutral-6000 dark:text-neutral-300">
-					<div>
-						{listingDetail.description}
-					</div>
-				</div>
-			</div>
-		)
-	}
-
-	const renderSection3 = () => {
-		return (
-			<div className="listingSection__wrap">
-				<div>
-					<h2 className="text-xl font-semibold">{translations.amenities} ({arr.length})</h2>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-
-				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3">
-				
-				{/* {!loading && ()} */}
-				
-					{amenitiesArray && (							
-						arr.map((item) => (
-							
-							<div key={item.name} className="flex items-center space-x-3">
-								<i className={`las text-3xl ${item.icon}`}></i>
-								<span className=" ">{item.key}</span>
-							</div>
-						))
-					)}
-				</div>
-
-				{/*<div className="w-14 border-b border-neutral-200"></div>
-				 <div >
-					<ButtonSecondary className="text-red-700" onClick={openModalAmenities}>
-						View more 20 amenities
-					</ButtonSecondary>
-				</div> 
-				{renderMotalAmenities()}*/}
-			</div>
-		)
-	}
-
-	const renderMotalAmenities = () => {
-		return (
-			<Transition appear show={isOpenModalAmenities} as={Fragment}>
-				<Dialog
-					as="div"
-					className="fixed inset-0 z-50 overflow-y-auto"
-					onClose={closeModalAmenities}
-				>
-					<div className="min-h-screen px-4 text-center">
-						<TransitionChild
-							as={Fragment}
-							enter="ease-out duration-300"
-							enterFrom="opacity-0"
-							enterTo="opacity-100"
-							leave="ease-in duration-200"
-							leaveFrom="opacity-100"
-							leaveTo="opacity-0"
-						>
-							<div className="fixed inset-0 bg-black bg-opacity-40" />
-						</TransitionChild>
-
-						{/* This element is to trick the browser into centering the modal contents. */}
-						<span
-							className="inline-block h-screen align-middle"
-							aria-hidden="true"
-						>
-							&#8203;
-						</span>
-						<TransitionChild
-							as={Fragment}
-							enter="ease-out duration-300"
-							enterFrom="opacity-0 scale-95"
-							enterTo="opacity-100 scale-100"
-							leave="ease-in duration-200"
-							leaveFrom="opacity-100 scale-100"
-							leaveTo="opacity-0 scale-95"
-						>
-							<div className="inline-block h-screen w-full max-w-4xl py-8">
-								<div className="inline-flex h-full w-full transform flex-col overflow-hidden rounded-2xl bg-white pb-2 text-left align-middle shadow-xl transition-all dark:border dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100">
-									<div className="relative flex-shrink-0 border-b border-neutral-200 px-6 py-4 text-center dark:border-neutral-800">
-										<h3
-											className="text-lg font-medium leading-6 text-gray-900"
-											id="headlessui-dialog-title-70"
-										>
-											Amenities
-										</h3>
-										<span className="absolute left-3 top-3">
-											<ButtonClose onClick={closeModalAmenities} />
-										</span>
-									</div>
-									<div className="divide-y divide-neutral-200 overflow-auto px-8 text-neutral-700 dark:text-neutral-300">
-										{Amenities_demos.filter((_, i) => i < 1212).map((item) => (
-											<div
-												key={item.name}
-												className="flex items-center space-x-5 py-2.5 sm:py-4 lg:space-x-8 lg:py-5"
-											>
-												<i
-													className={`las text-4xl text-neutral-6000 ${item.icon}`}
-												></i>
-												<span>{item.name}</span>
-											</div>
-										))}
-									</div>
-								</div>
-							</div>
-						</TransitionChild>
-					</div>
-				</Dialog>
-			</Transition>
 		)
 	}
 
@@ -550,64 +369,11 @@ const ListingStayDetailPage = ({
 			</div>
 		)
 	}
-
-	const renderSection8 = () => {
-		return (
-			<div className="listingSection__wrap text-red-700">
-				{/* HEADING */}
-				<h2 className="text-2xl font-semibold">Things to know</h2>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Cancellation policy</h4>
-					<span className="mt-3 block text-neutral-500 dark:text-neutral-400">
-						Refund 50% of the booking value when customers cancel the room
-						within 48 hours after successful booking and 14 days before the
-						check-in time. <br />
-						Then, cancel the room 14 days before the check-in time, get a 50%
-						refund of the total amount paid (minus the service fee).
-					</span>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Check-in time</h4>
-					<div className="mt-3 max-w-md text-sm text-neutral-500 dark:text-neutral-400 sm:text-base">
-						<div className="flex justify-between space-x-10 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-800">
-							<span>Check-in</span>
-							<span>08:00 am - 12:00 am</span>
-						</div>
-						<div className="flex justify-between space-x-10 p-3">
-							<span>Check-out</span>
-							<span>02:00 pm - 04:00 pm</span>
-						</div>
-					</div>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Special Note</h4>
-					<div className="prose sm:prose">
-						<ul className="mt-3 space-y-2 text-neutral-500 dark:text-neutral-400">
-							<li>
-								Ban and I will work together to keep the landscape and
-								environment green and clean by not littering, not using
-								stimulants and respecting people around.
-							</li>
-							<li>Do not sing karaoke past 11:30</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		)
-	}
 		
-const print =() => {
-	window.print
-}
+	const print =() => {
+		window.print
+	}
+
 	const renderSidebar = () => {
 		return (
 			<>
@@ -618,9 +384,10 @@ const print =() => {
 					)}
 					{listingDetail.price && (
 						<div>${listingDetail.price}
-						<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-							/{translations.month}
-						</span></div>
+							<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
+								/{translations.month}
+							</span>
+						</div>
 					)}
 				</span>
 
@@ -649,7 +416,7 @@ const print =() => {
 				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 				{!loading && (
 					<ContactForm
-					data={listingId}
+						data={listingId}
 					/>
 				)}
 			</div>
@@ -669,10 +436,9 @@ const print =() => {
 			{/*  HEADER */}
 			<header className="rounded-md sm:rounded-xl p-4">
 				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2 min-h-[280px]">
-					<div
+					{/* <div
 						className="relative col-span-2 row-span-3 cursor-pointer overflow-hidden rounded-md sm:row-span-2 sm:rounded-xl"
-						onClick={handleOpenModalImageGallery}
-					>
+						onClick={handleOpenModalImageGallery} >
 						<Image
 							fill
 							className="rounded-md object-cover sm:rounded-xl"
@@ -687,8 +453,7 @@ const print =() => {
 							key={index}
 							className={`relative overflow-hidden rounded-md sm:rounded-xl ${
 								index >= 3 ? 'hidden sm:block' : ''
-							}`}
-						> 
+							}`} > 
 							<div className="aspect-h-3 aspect-w-4 sm:aspect-h-5 sm:aspect-w-6">
 								<Image
 									fill
@@ -699,18 +464,15 @@ const print =() => {
 								/>
 							</div>
 
-							{/* OVERLAY */}
 							<div
 								className="absolute inset-0 cursor-pointer bg-neutral-900 bg-opacity-20 opacity-0 transition-opacity hover:opacity-100"
-								onClick={handleOpenModalImageGallery}
-							/>
+								onClick={handleOpenModalImageGallery} />
 						</div>
-					))}
+					))} */}
 
 					<button
 						className="absolute bottom-3 left-3 z-10 hidden rounded-xl bg-neutral-100 px-4 py-2 text-neutral-500 hover:bg-neutral-200 md:flex md:items-center md:justify-center"
-						onClick={handleOpenModalImageGallery}
-					>
+						onClick={handleOpenModalImageGallery} >
 						<Squares2X2Icon className="h-5 w-5" />
 						<span className="ml-2 text-sm font-medium text-neutral-800">
 							{translations.showAllPhotos}
@@ -720,31 +482,43 @@ const print =() => {
 			</header>
 
 			{/* MAIN */}
-			<main className="relative z-10 mt-0 flex flex-col lg:flex-row">
+			<main className="relative z-10 mt-0 flex flex-col lg:flex-row pb-10">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-3/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
 
 					{renderSection1()}
-					{renderSection2()}
-					{renderSection3()}
-					
+
+					{!loading && (
+						<DescriptionSection
+							className=""
+							description={listingDetail.description}
+						/>
+					)}
+
+					{!loading && (
+						<AmenitiesSection
+							className=""
+							amenities={listingDetail.amenities} 
+							loading={true}						
+						/>
+					)}
+
 					<Reviews
 						className=""
 						id={listingId}
 						type="listing"
 					/>
+
 					{!loading && (
-					<SectionDateRange
-						sDate={listingDetail.availabilityDate}
-						eDate={listingDetail.availabilityDate}
-					/>)}
+						<SectionDateRange
+							sDate={listingDetail.availabilityDate}
+							eDate={listingDetail.availabilityDate}
+						/>
+					)}
 					{renderSection5()}
-					{/* {renderSection6()} */}
 					{renderSection7()}
-					{/* {renderSection8()} */}
 				</div>
 
-				{/* SIDEBAR */}
 				<div className="mt-14 hidden flex-grow lg:mt-0 lg:block">
 					<div className="sticky top-28">{renderSidebar()}</div>
 				</div>

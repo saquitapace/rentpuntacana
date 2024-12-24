@@ -1,10 +1,10 @@
-import { useEffect, useState} from 'react';
-import axios from 'axios';
-import moment from 'moment';
+import { useEffect, useState} from "react";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
-const useFetchReviews = (par) => {
-
-  const [params, setParams] = useState(par);
+const useFetchListings = () => {
+	const { data: session } = useSession();
+	const user = session?.user;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -12,13 +12,11 @@ const useFetchReviews = (par) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/reviews/${params.type}/get`, params);
+      
+      const userId =  user ? user.userId : 'guest';
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:userId});
       const r2 = response.data[0];
         
-      r2.map((str) => {
-          str.time = moment(new Date(str.time)).fromNow();   
-      });
-
       setData(r2);
 
       } catch (error) {
@@ -29,13 +27,14 @@ const useFetchReviews = (par) => {
       setLoading(false);
     };
     fetchData();
-  }, [params]);
+
+  }, [user, setData]);
 
   return {
     data,
     loading,
-    error,
+    error
   };
 };
 
-export default useFetchReviews;
+export default useFetchListings;

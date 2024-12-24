@@ -1,8 +1,9 @@
 import { useEffect, useState} from 'react';
+import { useSession } from "next-auth/react";
+import { formatDateJoined } from "@/utils/helpers";
 import axios from 'axios';
-import moment from 'moment';
 
-const useFetchReviews = (par) => {
+const useFetchListingDetail = (par) => {
 
   const [params, setParams] = useState(par);
   const [data, setData] = useState([]);
@@ -12,14 +13,15 @@ const useFetchReviews = (par) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/reviews/${params.type}/get`, params);
-      const r2 = response.data[0];
-        
-      r2.map((str) => {
-          str.time = moment(new Date(str.time)).fromNow();   
-      });
+        const { data: session } = useSession();
+        const user = session?.user;
+        params.userId = user.userId;
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, params);
+        const r2 = response.data;
 
-      setData(r2);
+        r2.authorCreatedAt = formatDateJoined(r2.authorCreatedAt);
+
+        setData(r2);
 
       } catch (error) {
         console.error(error);
@@ -34,8 +36,8 @@ const useFetchReviews = (par) => {
   return {
     data,
     loading,
-    error,
+    error
   };
 };
 
-export default useFetchReviews;
+export default useFetchListingDetail;
