@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import NotFoundPng from "@/images/notFound.png";
 import Image from "next/image";
 
@@ -15,7 +15,6 @@ const NoResultsFound: FC<NoResultsFoundProps> = ({
 return(
   <div className="nc-NoResultsFound">
     <div className="container relative pt-5 pb-16 lg:pb-20 lg:pt-5">
-      {/* HEADER */}
       <header className="text-center max-w-2xl mx-auto space-y-2">
         <Image src={NotFoundPng} 
           className="notfound"

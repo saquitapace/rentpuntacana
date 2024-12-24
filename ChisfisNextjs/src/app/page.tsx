@@ -21,7 +21,7 @@ function PageHome() {
         <div className="relative py-5">
           <BackgroundSection />
           <SectionHowItWork />
-          </div>
+        </div>
 
           <SectionOurFeatures />
 
