@@ -10,6 +10,10 @@ export interface SectionSubscribe2Props {
 }
 
 const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
+
+  const handleClick = (e) =>{
+    alert("update subscriptin in user pref, display success or failure")
+  }
   return (
     <div
       className={`nc-SectionSubscribe2 relative flex flex-col lg:flex-row lg:items-center ${className}`}
@@ -25,13 +29,13 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
           <li className="flex items-center space-x-4">
             <Badge name="01" />
             <span className="font-medium text-neutral-700 dark:text-neutral-300">
-              Get more discount
+              Get updates on new Listings
             </span>
           </li>
           <li className="flex items-center space-x-4">
             <Badge color="red" name="02" />
             <span className="font-medium text-neutral-700 dark:text-neutral-300">
-              Get premium magazines
+              Get premium discounts
             </span>
           </li>
         </ul>
@@ -39,13 +43,17 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
           <Input
             required
             aria-required
-            placeholder="Enter your email"
+            placeholder="Email"
             type="email"
+            name="email"
+            id="email"
+            autoComplete="off"
             rounded="rounded-full"
             sizeClass="h-12 px-5 py-3"
           />
           <ButtonCircle
-            type="submit"
+            //type="submit"
+           //onClick={handleClick}
             className="absolute transform top-1/2 -translate-y-1/2 right-1.5"
             size="w-10 h-10"
           >

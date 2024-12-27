@@ -1,4 +1,4 @@
-import StayCard from "@/components/StayCard";
+import StayCard from "@/components/cards/StayCard";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import React, { FC } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";

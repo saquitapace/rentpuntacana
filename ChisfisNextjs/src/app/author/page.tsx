@@ -1,8 +1,7 @@
 "use client";
 //import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
-import StayCard from "@/components/StayCard2";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
+import StayCard from "@/components/cards/StayCard";
 import React, { Fragment, FC, useEffect, useState, useCallback } from "react";
 import Avatar from "@/shared/Avatar"; 
 import ButtonSecondary from "@/shared/ButtonSecondary";
@@ -257,11 +256,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               </Tab.Panel>
               <Tab.Panel className="mt-8">
                 <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 2).map(
-                    (stay) => (
-                      <StayCard key={stay.id} data={stay} />
-                    )
-                  )}
+                  todo
+                  
                 </div>
                 {/*<div className="flex mt-11 justify-center items-center">
                   <ButtonSecondary>Show me more</ButtonSecondary>

@@ -7,8 +7,6 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
-
-//import HeroRealEstateSearchForm from "../(client-components)/(HeroSearchForm)/(real-estate-search-form)/HeroRealEstateSearchForm";
 export interface SectionHero2Props {
   className?: string;
   children?: React.ReactNode;
@@ -40,7 +38,6 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "", children }) => {
           </div> 
         </div>
       </div>
-
     </div>
   );
 };

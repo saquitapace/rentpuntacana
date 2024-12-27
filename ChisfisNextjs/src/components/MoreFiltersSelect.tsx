@@ -2,7 +2,7 @@
 import React, { Fragment, FC, useState, useEffect } from "react";
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfOptions } from "./type";
+import { OptionsType } from "@/types/OptionsType";
 import options from "@/utils/options";
 import { useSelector } from "react-redux";
 import { ClipboardSignatureIcon } from "lucide-react";
@@ -18,10 +18,10 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
-  const [typeOfProperty1, setTypeOfProperty1] = React.useState<ClassOfOptions[]>(options.getGeneralAmenities());
-  const [typeOfProperty2, setTypeOfProperty2] = React.useState<ClassOfOptions[]>(options.getOtherAmenities());
-  const [typeOfProperty3, setTypeOfProperty3] = React.useState<ClassOfOptions[]>(options.getSafeAmenities());
-  const [typeOfProperty4, setTypeOfProperty4] = React.useState<ClassOfOptions[]>(options.getHouseRulesAmenities());
+  const [typeOfProperty1, setTypeOfProperty1] = useState<OptionsType[]>(options.getGeneralAmenities());
+  const [typeOfProperty2, setTypeOfProperty2] = useState<OptionsType[]>(options.getOtherAmenities());
+  const [typeOfProperty3, setTypeOfProperty3] = useState<OptionsType[]>(options.getSafeAmenities());
+  const [typeOfProperty4, setTypeOfProperty4] = useState<OptionsType[]>(options.getHouseRulesAmenities());
   const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
   const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
   //const closeModalMoreFilter = () => setisOpenMoreFilter(false); //todo: move modal code here when doing modal. saquita

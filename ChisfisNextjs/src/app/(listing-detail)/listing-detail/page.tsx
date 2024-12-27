@@ -1,30 +1,34 @@
 //saquita
 "use client";
 import { useEffect, useState } from 'react';
+// types
+import { ListingDetailDataType} from '@/types/ListingDetailDataType';
+//components
 import ContactForm  from '@/components/ContactForm';
-//import {Description, Dialog, Transition, TransitionChild } from '@headlessui/react';
-import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline';
-import BtnLikeIcon from '@/components/BtnLikeIcon';
 import Price from '@/components/Price';
 import StartRating from '@/components/StartRating';
-import Avatar from '@/shared/Avatar';
-import ButtonSecondary from '@/shared/ButtonSecondary';
-//import ButtonClose from '@/shared/ButtonClose';
-//import Image from 'next/image';
-import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation';
-import { PHOTOS } from '../constant';
-import SectionDateRange from '../SectionDateRange';
-import DescriptionSection from '../(components)/descriptionSection';
-import { Route } from 'next';
+import BtnLikeIcon from '@/components/FormElements/BtnLikeIcon';
 import ShareBtn from '@/components/ShareBtn';
 import Reviews from '@/components/Reviews';
+import AmenitiesSection from '../../../components/amenitiesSection';
+import DescriptionSection from '../../../components/descriptionSection';
+//shared ** move to components
+import Avatar from '@/shared/Avatar';
+import ButtonSecondary from '@/shared/ButtonSecondary';
+//hooks
 import useFetchListingDetail from '@/hooks/useFetchListingDetail';
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
-//import Link from 'next/link';
+//icons
+import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline';
+
+//? temporary - to delete...
+import { PHOTOS } from '../constant';
+import SectionDateRange from '../SectionDateRange';
 import { formatPhoneNumberIntl } from "react-phone-number-input";
+//? useSearchParams, useParams
+import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import AmenitiesSection from '../(components)/amenitiesSection';
+import { Route } from 'next';
 
 const ListingStayDetailPage = ({
 	params,
@@ -34,48 +38,52 @@ const ListingStayDetailPage = ({
 	searchParams?: { [key: string]: string | string[] | undefined };
 	}) => {
 
-		useState<IContactCardProps[]>([])
-	let [listingDetail, setListingDetail]= useState(
-		{
-			galleryImgs:[],
-			listingCategory:'',
-			address: null,
-			title: '',
-			bedrooms: 0,
-			bathrooms: 0,
-			sqft: 0,
-			amenities:[],
-			href:'',
-			likes: null,
-			availabilityDate: null,
-			saleOff: null,  
-			isAds: null,
-			price: null,
-			reviewStart: null,
-			reviewCount: null,
-			id:'',
-			description:'' ,
-			listingId: null,
-			authorFirstName:'',
-			authorLastName:'',
-			authorAvatar:'',
-			authorPhoneNumber: null,
-			authorCompanyName: null,
-			authorListingsCount:null,
-			authorId: null,
-			authorAbout:null,
-			authorCreatedAt:null
-		  }
-	);
+	let [listingDetail, setListingDetail]= useState<ListingDetailDataType>({
+		id: '',
+		href: '/',
+		title: '',
+		amenities: [],
+		featuredImage: '',
+		commentCount: 0,
+		viewCount: 0,
+		address: '',
+		reviewStart: 0,
+		reviewCount: 0,
+		likes: false,
+		galleryImgs: [],
+		price: '',
+		sqft: 0,
+		description: '',
+		availabilityDate: '',
+		bedrooms: 0,
+		bathrooms: 0,
+		isAds: false,
+		map: {
+			lat: 0,
+			lng: 0
+		},
+		author: {
+			firstName: '',
+			id: '',
+			lastName: '',
+			displayName: '',
+			avatar: '',
+			createdAt: '',
+			about: '',
+			companyName: '',
+			href: '/',
+			listingsCount: 0,
+			phoneNumber: '',
+			fullName: ''
+		},
+	});
 
-	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 	const thisPathname = usePathname();
 	const router = useRouter();
 	const listingId = searchParams.lid;
-	const [loading, setLoading] = useState(true);
 	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
-	//const [arr, setArr] = useState([]);
-	//const [amenitiesArray, setAmenitiesArray] = useState(false);
+	const [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
+	const [loading, setLoading] = useState(true);
 
 	const { translations, isLoading, error } = useSelector(
 		(state: RootState) => state.translations
@@ -83,12 +91,13 @@ const ListingStayDetailPage = ({
 	
     function useFetchDetail() {
 		const { data, loading, error } = useFetchListingDetail({listingId:listingId});
-		
+		//console.log(data);
+		//const dataObj = data?: ListingDetailDataType[] ;
 		useEffect(() => {
 			if (data && !loading && !error) {
 				setListingDetail(data);
 				setLoading(false);
-				setGalleryPhotos(listingDetail['galleryImgs']);
+				//setGalleryPhotos(listingDetail['galleryImgs']);
 				setListingDetail((listingDetail) => ({ ...listingDetail, data }));
 			}
 		}, [data, loading, error]);
@@ -106,7 +115,6 @@ const ListingStayDetailPage = ({
 		return (
 			
 			<div className="listingSection__wrap !space-y-6">
-      {/* <pre>{JSON.stringify(translations, null, 2)}</pre> */}
 				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
@@ -253,28 +261,28 @@ const ListingStayDetailPage = ({
 				<div className="flex items-center space-x-4">
 
 					<Avatar
-						imgUrl={listingDetail.authorAvatar}
-						userName={listingDetail.authorFirstName}
+						imgUrl={listingDetail.author.avatar}
+						userName={listingDetail.author.firstName}
 						hasChecked
 						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
 						sizeClass="h-16 w-16"
 						radius="rounded-full"
 					/>
 					<div>
-						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.authorId}`}>
-							{listingDetail.authorFirstName} { } {listingDetail.authorLastName}
+						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.author.id}`}>
+							{listingDetail.author.firstName} { } {listingDetail.author.lastName}
 						</a>
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
 							<span className="mx-2">·</span>
-							<a className="underline" href={`/publicProfile?uid=${listingDetail.authorId}`}>{listingDetail.authorListingsCount} {translations.listings}</a>
+							<a className="underline" href={`/publicProfile?uid=${listingDetail.author.id}`}>{listingDetail.author.listingsCount} {translations.listings}</a>
 						</div>
 					</div>
 				</div>
 
 				{/* desc */}
 				<span className="block text-neutral-6000 dark:text-neutral-300">
-				{listingDetail.authorAbout}
+				{listingDetail.author.about}
 				</span>
 
 				{/* info */}
@@ -294,7 +302,7 @@ const ListingStayDetailPage = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span>
+						<span>{translations.joinedIn} {translations.space}{listingDetail.author.createdAt}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -335,7 +343,7 @@ const ListingStayDetailPage = ({
 
 				<div>
 					<ButtonSecondary
-						href={`/publicProfile?uid=${listingDetail.authorId}` as Route<string>}
+						href={`/publicProfile?uid=${listingDetail.author.id}` as Route<string>}
 					>{translations.seeAgentProfile}</ButtonSecondary>
 				</div>
 			</div>
@@ -395,21 +403,21 @@ const ListingStayDetailPage = ({
 
 				<div className="flex">
 					<Avatar
-						imgUrl={listingDetail.authorAvatar}
+						imgUrl={listingDetail.author.avatar}
 						hasChecked
 						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
 						sizeClass="h-16 w-16"
-						userName={listingDetail.authorFirstName} />
+						userName={listingDetail.author.firstName} />
 
 					<div className="ml-3 sm:ml-4 space-y-1">
 						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-							{listingDetail.authorFirstName}{" "}{listingDetail.authorLastName}
+							{listingDetail.author.firstName}{" "}{listingDetail.author.lastName}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{formatPhoneNumberIntl(listingDetail.authorPhoneNumber)}
+							{formatPhoneNumberIntl(listingDetail.author.phoneNumber)}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{listingDetail.authorCompanyName}
+							{listingDetail.author.companyName}
 						</p>
 					</div>
 				</div>
@@ -517,6 +525,7 @@ const ListingStayDetailPage = ({
 					)}
 					{renderSection5()}
 					{renderSection7()}
+
 				</div>
 
 				<div className="mt-14 hidden flex-grow lg:mt-0 lg:block">

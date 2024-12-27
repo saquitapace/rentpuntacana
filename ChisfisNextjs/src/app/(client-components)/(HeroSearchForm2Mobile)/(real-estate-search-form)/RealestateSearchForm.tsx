@@ -5,7 +5,7 @@ import convertNumbThousand from "@/utils/convertNumbThousand";
 import LocationInput from "../LocationInput";
 import PriceRangeInput from "./PriceRangeInput";
 import PropertyTypeSelect from "./PropertyTypeSelect";
-import { ClassOfProperties } from "../../type";
+import { ClassOfProperties } from "@/types/PropertyType";
 
 const RealestateSearchForm = () => {
   //

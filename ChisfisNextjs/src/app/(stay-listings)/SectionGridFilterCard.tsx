@@ -7,7 +7,7 @@ import TabFilters from "./TabFilters";
 import MapContainer from "@/components/MapContainer";
 import axios from "axios";
 import useFetchListings from "@/hooks/useFetchListings";
-import StayCard from "@/components/StayCard";
+import StayCard from "@/components/cards/StayCard";
 import ToggleSwitch from "@/shared/ToggleSwitch";
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";

@@ -6,7 +6,7 @@ import React, { FC, Fragment, useState } from "react";
 import visaPng from "@/images/vis.png";
 import mastercardPng from "@/images/mastercard.svg";
 import Input from "@/shared/Input";
-import Label from "@/components/Label";
+import Label from "@/components/FormElements/Label";
 import Textarea from "@/shared/Textarea";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import StartRating from "@/components/StartRating";
@@ -15,7 +15,7 @@ import ModalSelectDate from "@/components/ModalSelectDate";
 import converSelectedDateToString from "@/utils/converSelectedDateToString";
 import ModalSelectGuests from "@/components/ModalSelectGuests";
 import Image from "next/image";
-import { GuestsObject } from "../(client-components)/type";
+import { GuestsObject } from "../../(client-components)/type";
 
 export interface CheckOutPagePageMainProps {
   className?: string;

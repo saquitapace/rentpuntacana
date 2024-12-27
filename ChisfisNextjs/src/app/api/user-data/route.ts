@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Format the response data  //todo: @ezra ca we remove?
+    // Format the response data  //todo: @ezra can we remove?
     const userData = {
       userId: user.userId,
       accountType: user.accountType,

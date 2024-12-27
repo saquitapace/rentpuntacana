@@ -2,7 +2,7 @@
 import React, { Fragment, FC, useState, useEffect} from "react";
 import { Popover, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
-//import { ClassOfProperties } from "../components/type";
+//import { ClassOfProperties } from "@/types/PropertyType";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";

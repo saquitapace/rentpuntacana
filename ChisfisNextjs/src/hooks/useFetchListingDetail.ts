@@ -9,16 +9,20 @@ const useFetchListingDetail = (par) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: session } = useSession();
-        const user = session?.user;
+       
         params.userId = user.userId;
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, params);
         const r2 = response.data;
 
+        r2.amenities = JSON.parse(r2.amenities);
+        r2.map = JSON.parse(r2.map);
+        r2.price = parseInt(r2.price);
         r2.authorCreatedAt = formatDateJoined(r2.authorCreatedAt);
 
         setData(r2);

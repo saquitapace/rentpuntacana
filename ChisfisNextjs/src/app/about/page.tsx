@@ -3,10 +3,10 @@ import React, { FC } from "react";
 import SectionFounder from "./SectionFounder";
 import SectionStatistic from "./SectionStatistic";
 import SectionHero from "./SectionHero";
-import BgGlassmorphism from "@/components/BgGlassmorphism";
-import BackgroundSection from "@/components/BackgroundSection";
+import BgGlassmorphism from "@/components/Sections/BgGlassmorphism";
+import BackgroundSection from "@/components/Sections/BackgroundSection";
 import SectionClientSay from "@/components/SectionClientSay";
-import SectionSubscribe2 from "@/components/SectionSubscribe2";
+import SectionSubscribe2 from "@/components/Sections/SectionSubscribe2";
 
 export interface PageAboutProps {}
 

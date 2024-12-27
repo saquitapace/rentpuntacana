@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
-import Label from "@/components/Label";
+import Label from "@/components/FormElements/Label";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import { useState } from "react";

@@ -10,7 +10,7 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 import DatePickerCustomHeaderTwoMonth from "@/components/DatePickerCustomHeaderTwoMonth";
 import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import ClearDataButton from "../components/ClearDataButton";
-import ButtonSubmit from "../components/ButtonSubmit";
+import ButtonSubmit from "./FormElements/ButtonSubmit";
 
 export interface FlightDateRangeInputProps {
   className?: string;

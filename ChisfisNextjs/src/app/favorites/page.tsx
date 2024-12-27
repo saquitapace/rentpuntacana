@@ -1,6 +1,6 @@
 "use client";
 
-import StayCard from "@/components/StayCard";
+import StayCard from "@/components/cards/StayCard";
 import Heading2 from '@/shared/Heading2';
 import { useEffect, useState } from "react";
 import ButtonSecondary from "@/shared/ButtonSecondary";

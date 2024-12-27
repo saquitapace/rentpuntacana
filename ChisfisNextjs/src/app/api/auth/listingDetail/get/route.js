@@ -72,25 +72,27 @@ FROM listings
 
 const [response2] = await pool.query(`
 SELECT
-users.firstName AS authorFirstName,
-users.about AS authorAbout,
-users.createdAt AS authorCreatedAt,
-users.lastName AS authorLastName,
-users.avatar AS authorAvatar,
-users.phoneNumber AS authorPhoneNumber,
-users.companyName AS authorCompanyName,
+users.firstName,
+users.about,
+users.createdAt,
+users.lastName,
+users.avatar,
+users.phoneNumber,
+users.companyName,
  (SELECT
         COUNT(*)
     FROM
         listings
     WHERE
         listings.userId = (SELECT userId from listings where listingId = ?)
-	) AS authorListingsCount
+	) AS listingsCount
 FROM 
 users
 WHERE users.userId = (SELECT userId from listings where listingId = ?)`,[id, id]);
 
-const mergedJSON = Object.assign({}, response1[0], response2[0]);
+response1[0].author = response2[0];
 
-  return NextResponse.json(mergedJSON);
+//const mergedJSON = Object.assign({}, response1[0], response2[0]);
+    
+  return NextResponse.json(response1[0]);
 }

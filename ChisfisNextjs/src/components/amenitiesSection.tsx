@@ -1,6 +1,6 @@
 import { Fragment, FC, useEffect} from "react";
 import { useState } from 'react';
-import { Amenities_demos } from '../constant';
+import { Amenities_demos } from '../app/(listing-detail)/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import {Dialog, Transition, TransitionChild } from '@headlessui/react';
@@ -54,22 +54,17 @@ const AmenitiesSection: FC<Props> = ({
   
       setAmenitiesArray(true);
 
-      if(amenities === null){
+      if(!amenities || amenities === null){
         return;
       }
   
-      const Array = JSON.parse(amenities); 
-  
-      Array.forEach(has => {
+      amenities.forEach(has => {
         Amenities_demos.forEach(item => {
           if(has == item.key){
             arr.push({icon:item.icon,key:has })	
           }
         });
       });
-
-
-
       
     },[amenities]);
 

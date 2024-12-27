@@ -14,9 +14,8 @@ import {
   LinkedinIcon,
   TelegramIcon,
   EmailIcon,
-
 } from "react-share";
-import Image from 'next/image';
+import { LinkIcon } from "@heroicons/react/24/outline";
 
 const ShareBtn = ({ text, url, title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -128,13 +127,11 @@ const ShareBtn = ({ text, url, title }) => {
                 onClick={copyLinkToClipboard}
                 className=" cursor-pointer p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
               >
-                <Image 
-                  src="/linkIcon.png" 
-                  alt="Icon" 
-                  width={getIconSize(40)}
-                  
-                />
-                
+
+              <LinkIcon 
+              className="h-6 w-6"
+              />
+              
               </span>
               </div>
             </div>

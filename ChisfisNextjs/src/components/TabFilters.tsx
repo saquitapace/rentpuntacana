@@ -3,7 +3,7 @@
 import { FC, Fragment, useState } from 'react';
 import PriceRangeInput from "@/components/PriceRangeInput";
 import PropertyTypeSelect from "@/components/PropertyTypeSelect";
-import BedBathSelect from "@/components/BedBathSelect";
+import BedBathSelect from "@/components/FormElements/BedBathSelect";
 import options from '@/utils/options';
 import {
 	Dialog,

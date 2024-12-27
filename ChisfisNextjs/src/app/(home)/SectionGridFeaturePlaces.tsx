@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect, FC, ReactNode } from "react";
-//import ButtonSecondary from "@/shared/ButtonSecondary";
-//import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import useFetchListings from "@/hooks/useFetchListings";
-import StayCard from "./cards/StayCard";
-import TabFilters from "../app/(stay-listings)/TabFilters";
-import NoResultsFound from "../app/noResultsFound";
-import SearchResultsLoading from "../components/SearchResultsLoading";
+import StayCard from "@/components/cards/StayCard";
+import NoResultsFound from "../noResultsFound";
+import SearchResultsLoading from "@/components/SearchResultsLoading";
+import HeaderFilter from "@/components/HeaderFilter";
 
 //saquita home
 export interface SectionGridFeaturePlacesProps {
@@ -16,15 +14,16 @@ export interface SectionGridFeaturePlacesProps {
   subHeading?: ReactNode;
   headingIsCenter?: boolean;
   tabs?: string[];
-  cardType?: "card1" | "card2";
 }
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   stayListings = [],
-  gridClass = "",
-  heading = "",
-  subHeading = "",
   headingIsCenter,
+  gridClass = "",
+  heading = "Featured Properties",
+  subHeading = "text goes here",
+  tabs = ["Punta Cana", "Bavaro", "Los Corales", "Fruisa"]
+
 }) => {
   
   const [listings, setListings] = useState([]);
@@ -51,7 +50,16 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   return (    
     <div className="nc-SectionGridFeaturePlaces relative">
 
-      <TabFilters onChange={null} viewAll={ listings.length>0 } />
+      <div className="mb-2 lg:mb-5 pt-8">
+        <HeaderFilter
+            tabActive={"Punta Cana"}
+            subHeading={""}
+            tabs={tabs}
+            heading=""
+          />
+      </div>
+
+      {/* <TabFilters onChange={null} viewAll={ listings.length>0 } /> */}
 
       <div className="divider divide-y divide-dashed hover:divide-solid"> </div>
 

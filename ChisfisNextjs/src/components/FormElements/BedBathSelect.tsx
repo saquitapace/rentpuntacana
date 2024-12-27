@@ -1,7 +1,7 @@
 "use client";
 import React, { Fragment, FC, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import { ClassOfBedBath } from "./type";
+import { BedBathType } from "@/types/bedBathType";
 import NcInputNumber from '@/components/NcInputNumber';
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
@@ -9,8 +9,7 @@ import { RootState } from "@/store/store";
 //import ButtonThird from "@/shared/ButtonThird";
 //import ButtonPrimary from "@/shared/ButtonPrimary";
 
-
-const defaultBedBath: ClassOfBedBath[] = options.getBedBaths();
+const defaultBedBath: BedBathType[] = options.getBedBaths();
 
 export interface BedBathSelectProps {
   onChange?: (data: any) => void;
@@ -21,7 +20,7 @@ const BedBathSelect: FC<BedBathSelectProps> = ({
   onChange,
   fieldClassName = "",
 }) => {
-  const [selection, setSelection] = React.useState<ClassOfBedBath[]>(defaultBedBath);
+  const [selection, setSelection] = React.useState<BedBathType[]>(defaultBedBath);
   const [total, setTotal] = useState(selection.filter((item) => item.defaultValue >0).length);
 
   const { translations, isLoading, error } = useSelector(

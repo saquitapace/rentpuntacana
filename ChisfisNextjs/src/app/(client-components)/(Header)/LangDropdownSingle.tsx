@@ -66,7 +66,7 @@ const LangDropdown: FC<LangDropdownProps> = ({
 
   useEffect(() => {
     dispatch(fetchTranslations(getLangPref()) );
-    alert(2);
+    //alert(2);
   }, [dispatch]);
 
   const updateActiveLanguage = (langCode: string) => {

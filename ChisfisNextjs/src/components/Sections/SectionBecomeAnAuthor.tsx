@@ -3,6 +3,7 @@ import rightImgDemo from "@/images/BecomeAnAuthorImg.png";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Logo from "@/shared/Logo";
 import Image from "next/image";
+import { Route } from "@/routers/types";
 
 export interface SectionBecomeAnAuthorProps {
   className?: string;
@@ -28,7 +29,9 @@ const SectionBecomeAnAuthor: FC<SectionBecomeAnAuthorProps> = ({
           booking accommodation, resort villas, hotels, private houses,
           apartments... becomes fast, convenient and easy.
         </span>
-        <ButtonPrimary className="mt-6 sm:mt-11">
+        <ButtonPrimary className="mt-6 sm:mt-11"
+        href={"/howitworks" as Route<string>}
+        >
           Become a Listing Agent
         </ButtonPrimary>
       </div>

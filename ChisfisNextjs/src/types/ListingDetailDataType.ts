@@ -2,32 +2,17 @@ import { Route } from "@/routers/types";
 import { StaticImageData } from "next/image";
 import { AuthorType } from "@/types/authorType";
 
-//  ######  CustomLink  ######## //
-export interface CustomLink {
-  label: string;
-  href: Route<string> | string;
-  targetBlank?: boolean;
-}
-
-export type TwMainColor =
-  | "pink"
-  | "green"
-  | "yellow"
-  | "red"
-  | "indigo"
-  | "blue"
-  | "purple"
-  | "gray";
-
-//
-export interface StayDataType {
+export interface ListingDetailDataType {
+  title: string;
+  availabilityDate: string;
+  description: string;
+  amenities: any;
   id: string | number;
   author: AuthorType;
-  date: string;
   href: Route<string>;
-  title: string;
   featuredImage: StaticImageData | string;
   commentCount: number;
+  sqft: number;
   viewCount: number;
   address: string;
   reviewStart: number;
@@ -35,7 +20,6 @@ export interface StayDataType {
   likes: boolean;
   galleryImgs: (StaticImageData | string)[];
   price: string;
-  maxGuests: number;
   bedrooms: number;
   bathrooms: number;
   saleOff?: string | null;

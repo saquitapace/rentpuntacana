@@ -1,12 +1,12 @@
 import React from "react";
 import SectionHero2 from "../app/(server-components)/SectionHero2";
-import SectionOurFeatures from "@/components/SectionOurFeatures";
-import BackgroundSection from "@/components/BackgroundSection";
+import SectionOurFeatures from "@/components/Sections/SectionOurFeatures";
+import BackgroundSection from "@/components/Sections/BackgroundSection";
 import SectionGridFeaturePlaces from "@/components/SectionGridFeaturePlaces";
-import SectionHowItWork from "@/components/SectionHowItWork";
-import SectionSubscribe2 from "@/components/SectionSubscribe2";
+import SectionHowItWork from "@/components/Sections/SectionHowItWork";
+import SectionSubscribe2 from "@/components/Sections/SectionSubscribe2";
 import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
-import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor";
+import SectionBecomeAnAuthor from "@/components/Sections/SectionBecomeAnAuthor";
 import SectionClientSay from "@/components/SectionClientSay";
 
 function PageHome() {

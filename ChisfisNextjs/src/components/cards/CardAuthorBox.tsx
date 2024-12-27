@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import { AuthorType } from "@/data/types";
+import { AuthorType } from "@/types/authorType";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Avatar from "@/shared/Avatar";
 import Badge from "@/shared/Badge";

@@ -4,6 +4,8 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  fullName: string;
+  displayName: string;
   accountType: string;
   auth_type: string;
   avatar?: string;

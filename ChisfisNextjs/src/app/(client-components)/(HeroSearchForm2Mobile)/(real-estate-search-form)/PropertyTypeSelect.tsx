@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { FC } from "react";
+import React, { useEffect, FC } from "react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfProperties } from "../../type";
+import { ClassOfProperties } from "@/types/PropertyType";
 
 // DEMO DATA
 

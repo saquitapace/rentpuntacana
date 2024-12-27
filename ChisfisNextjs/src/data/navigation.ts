@@ -5,13 +5,6 @@ import { Route } from '@/routers/types'
 
 
 const demoChildMenus: NavItemType[] = [
-
-	{
-		id: ncNanoId(),
-		href: '/home-1',
-		name: 'Home 1',
-		isNew: true,
-	},
 	{
 		id: ncNanoId(),
 		href: '/home-2',

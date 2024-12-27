@@ -1,7 +1,7 @@
 'use client';
 
 import { Transition } from '@headlessui/react';
-import StayCard from '@/components/StayCard';
+import StayCard from '@/components/cards/StayCard';
 import { StayDataType } from '@/data/types';
 import { FC, Fragment, useState } from 'react';
 
