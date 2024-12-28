@@ -5,7 +5,7 @@ import convertNumbThousand from "@/utils/convertNumbThousand";
 import LocationInput from "../LocationInput";
 import PriceRangeInput from "./PriceRangeInput";
 import PropertyTypeSelect from "./PropertyTypeSelect";
-import { ClassOfProperties } from "@/dataTypes/PropertyType";
+import { PropertyType } from "@/dataTypes/PropertyType";
 
 const RealestateSearchForm = () => {
   //
@@ -15,7 +15,7 @@ const RealestateSearchForm = () => {
   //
   const [locationInputTo, setLocationInputTo] = useState("");
   const [rangePrices, setRangePrices] = useState([100000, 4000000]);
-  const [typeOfProperty, setTypeOfProperty] = useState<ClassOfProperties[]>([
+  const [typeOfProperty, setTypeOfProperty] = useState<PropertyType[]>([
     {
       abbreviation:"",
       name: "Duplex House",

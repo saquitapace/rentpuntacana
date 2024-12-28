@@ -1,16 +1,16 @@
 'use client'
-import React, { Fragment, FC } from 'react'
+import React, { Fragment, FC } from 'react';
 import {
 	Popover,
 	PopoverButton,
 	PopoverPanel,
 	Transition,
 } from '@headlessui/react'
-import Checkbox from '@/shared/Checkbox'
-import { ClassOfProperties } from '@/dataTypes/PropertyType';
+import Checkbox from '@/shared/Checkbox';
+import { PropertyType } from '@/dataTypes/PropertyType';
 import { HomeIcon } from '@heroicons/react/24/outline';
 
-const defaultPropertyType: ClassOfProperties[] = [
+const defaultPropertyType: PropertyType[] = [
 	{
 		name: 'Duplex House',
 		description: 'Have a place to yourself',
@@ -44,7 +44,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
 	fieldClassName = '[ nc-hero-field-padding ]',
 }) => {
 	const [typeOfProperty, setTypeOfProperty] =
-		React.useState<ClassOfProperties[]>(defaultPropertyType)
+		React.useState<PropertyType[]>(defaultPropertyType)
 
 	let typeOfPropertyText = ''
 	if (typeOfProperty && typeOfProperty.length > 0) {

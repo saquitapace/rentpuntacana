@@ -1,10 +1,11 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import { StaySearchFormFields } from "../type";
 import StaySearchForm from "./(stay-search-form)/StaySearchForm";
 
 export type SearchTab = "Stays" | "Experiences" | "Flights";
+export type StaySearchFormFields = "location" | "guests" | "dates";
+
 
 export interface HeroSearchFormSmallProps {
   className?: string;

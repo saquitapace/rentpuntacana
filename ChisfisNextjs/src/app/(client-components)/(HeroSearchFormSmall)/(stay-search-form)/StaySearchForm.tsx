@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import LocationInput from "../LocationInput";
-import GuestsInput from "../GuestsInput";
 import StayDatesRangeInput from "./StayDatesRangeInput";
-import { StaySearchFormFields } from "../../type";
+
+export type StaySearchFormFields = "location" | "guests" | "dates";
 
 export interface StaySearchFormProps {
   defaultFieldFocus?: StaySearchFormFields;
@@ -21,11 +21,7 @@ const StaySearchForm: FC<StaySearchFormProps> = ({ defaultFieldFocus }) => {
         <StayDatesRangeInput className="flex-[1.2]" />
 
         <div className="self-center border-r border-slate-200 dark:border-slate-700 h-8"></div>
-        <GuestsInput
-          className="flex-1"
-          autoFocus={defaultFieldFocus === "guests"}
-          submitLink="/listing-search"
-        />
+      
       </form>
     );
   };

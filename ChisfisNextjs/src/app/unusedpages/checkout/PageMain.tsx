@@ -13,9 +13,8 @@ import StartRating from "@/components/StartRating";
 import NcModal from "@/shared/NcModal";
 import ModalSelectDate from "@/components/ModalSelectDate";
 import converSelectedDateToString from "@/utils/converSelectedDateToString";
-import ModalSelectGuests from "@/components/ModalSelectGuests";
+//import ModalSelectGuests from "@/components/ModalSelectGuests";
 import Image from "next/image";
-import { GuestsObject } from "../../(client-components)/type";
 
 export interface CheckOutPagePageMainProps {
   className?: string;
@@ -28,12 +27,6 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
     new Date("2023/02/06")
   );
   const [endDate, setEndDate] = useState<Date | null>(new Date("2023/02/23"));
-
-  const [guests, setGuests] = useState<GuestsObject>({
-    guestAdults: 2,
-    guestChildren: 1,
-    guestInfants: 1,
-  });
 
   const renderSidebar = () => {
     return (
@@ -128,7 +121,7 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
               )}
             />
 
-            <ModalSelectGuests
+            {/* <ModalSelectGuests
               renderChildren={({ openModal }) => (
                 <button
                   type="button"
@@ -149,7 +142,7 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
                   <PencilSquareIcon className="w-6 h-6 text-neutral-6000 dark:text-neutral-400" />
                 </button>
               )}
-            />
+            /> */}
           </div>
         </div>
 

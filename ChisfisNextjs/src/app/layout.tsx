@@ -2,14 +2,14 @@ import { Poppins } from 'next/font/google';
 import '@/fonts/line-awesome-1.3.0/css/line-awesome.css';
 import '@/styles/globals.css';
 import '@/styles/index.scss';
-import 'rc-slider/assets/index.css';
+//import 'rc-slider/assets/index.css';
 import { Metadata } from 'next';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from '../utils/authOptions';
 
-import { Providers } from '@/components/providers/Providers';
-
 import NewHeader from './(client-components)/(Header)/NewHeader';
+
+import { Providers } from '@/app/Layout/Providers';
 import ClientCommons from '@/app/Layout/ClientCommons';
 import Footer from '@/app/Layout/Footer';
 import FooterNav from '@/app/Layout/FooterNav';

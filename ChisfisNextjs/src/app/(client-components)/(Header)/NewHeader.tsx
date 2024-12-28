@@ -7,21 +7,21 @@ import Link from "next/link";
 import { Route } from "@/routers/types";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from 'next/navigation';
-import NotifyDropdown from "./NotifyDropdown";
-import AvatarDropdown from "./AvatarDropdown";
+import NotifyDropdown from "./components/NotifyDropdown";
+import AvatarDropdown from "./components/AvatarDropdown";
 import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
-import LangDropdownSingle from "./LangDropdownSingle";
+//import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
+import LangDropdownSingle from "./components/LangDropdownSingle";
 import { AppDispatch, RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; 
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
 //import LangDropdown from "./LangDropdown";
-import SearchDropdown from "./SearchDropdown";
+//import SearchDropdown from "./SearchDropdown";
 
 export interface NewHeaderProps {
   className?: string;
@@ -95,9 +95,9 @@ const NewHeader: FC<NewHeaderProps> = (
             <Navigation />
           </div>
 
-          <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
+          {/* <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
             <HeroSearchForm2MobileFactory />
-          </div>
+          </div> */}
           
           <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
            

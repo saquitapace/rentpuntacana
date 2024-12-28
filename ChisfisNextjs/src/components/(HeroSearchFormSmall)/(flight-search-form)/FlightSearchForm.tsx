@@ -7,7 +7,13 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
 import NcInputNumber from "@/components/NcInputNumber";
 import FlightDateRangeInput from "./FlightDateRangeInput";
-import { GuestsObject } from "../../type";
+
+
+export interface GuestsObject {
+  guestAdults?: number;
+  guestChildren?: number;
+  guestInfants?: number;
+}
 
 export interface FlightSearchFormProps {}
 

@@ -4,5 +4,3 @@ export interface PropertyType {
   abbreviation?: string;
   checked: boolean;
 }
-
-export interface ClassOfProperties extends PropertyType {}

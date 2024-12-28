@@ -4,7 +4,7 @@ import {
   UserData,
   userData,
   Users,
-} from "@/app/userChatData";
+} from "@/dataTypes/userChatData";
 import { User } from "next-auth";
 import { create } from "zustand";
 

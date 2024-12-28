@@ -1,5 +1,5 @@
 "use client";
-import { User} from "@/app/userChatData";
+import { User} from "@/dataTypes/userChatData";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   ResizableHandle,

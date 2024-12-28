@@ -10,4 +10,6 @@ export interface User {
   auth_type: string;
   avatar?: string;
   password?: string;
+  phoneNumber?: string;
+  socials?:[];
 } 

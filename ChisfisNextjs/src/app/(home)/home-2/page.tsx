@@ -8,7 +8,7 @@ import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
 import SectionBecomeAnAuthor from "@/components/Sections/SectionBecomeAnAuthor";
 import SectionClientSay from "@/components/SectionClientSay";
 import SectionHero2ArchivePage from "../../(client-components)/SectionHero2";
-import BgGlassmorphism from "@/components/Sections/BgGlassmorphism";
+//import BgGlassmorphism from "@/components/Sections/BgGlassmorphism";
 
 function PageHome2() {
   return (

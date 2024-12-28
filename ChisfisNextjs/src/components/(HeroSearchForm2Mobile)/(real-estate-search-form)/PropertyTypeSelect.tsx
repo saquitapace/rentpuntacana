@@ -2,13 +2,11 @@
 
 import React, { FC, useEffect } from "react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfProperties } from "@/dataTypes/PropertyType";
-
-// DEMO DATA
+import { PropertyType } from "@/dataTypes/PropertyType";
 
 export interface PropertyTypeSelectProps {
-  onChange?: (data: ClassOfProperties[]) => void;
-  defaultValue?: ClassOfProperties[];
+  onChange?: (data: PropertyType[]) => void;
+  defaultValue?: PropertyType[];
 }
 
 const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
@@ -16,7 +14,7 @@ const PropertyTypeSelect: FC<PropertyTypeSelectProps> = ({
   defaultValue,
 }) => {
   const [typeOfProperty, setTypeOfProperty] = React.useState<
-    ClassOfProperties[]
+  PropertyType[]
   >(defaultValue || []);
 
   useEffect(() => {

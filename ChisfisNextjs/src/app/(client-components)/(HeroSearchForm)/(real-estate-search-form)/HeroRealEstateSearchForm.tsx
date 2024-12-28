@@ -47,8 +47,7 @@ const HeroRealEstateSearchForm: FC<HeroRealEstateSearchFormProps> = ({
       case "Buy":
         return <RealEstateSearchForm />;
       case "Rent":
-        return  ""
-  
+        return <RealEstateSearchForm />;
       default:
         return <RealEstateSearchForm />;
     }

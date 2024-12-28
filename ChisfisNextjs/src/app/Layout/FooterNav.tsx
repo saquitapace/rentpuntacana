@@ -29,14 +29,14 @@ const NAV: NavItem[] = [
     link: "/",
     icon: MagnifyingGlassIcon,
   },
-  {
-    name: "Favorites",
-    link: "/favorites",
-    icon: HeartIcon,
-  },
+  // {
+  //   name: "Favorites",
+  //   link: "/favorites",
+  //   icon: HeartIcon,
+  // },
   {
     name: "Log in",
-    link: "/account",
+    link: "/login",
     icon: UserCircleIcon,
   },
   {

@@ -3,8 +3,13 @@ import React, { useState } from "react";
 import LocationInput from "../LocationInput";
 import GuestsInput from "../GuestsInput";
 import DatesRangeInput from "../DatesRangeInput";
-import { GuestsObject } from "../../type";
 import converSelectedDateToString from "@/utils/converSelectedDateToString";
+
+export interface GuestsObject {
+  guestAdults?: number;
+  guestChildren?: number;
+  guestInfants?: number;
+}
 
 const FlightSearchForm = () => {
   //

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
-import ThemeProviderWrapper from '@/app/theme-provider';
+import ThemeProviderWrapper from '@/app/Layout/theme-provider';
 
 interface ProvidersProps {
   children: React.ReactNode;

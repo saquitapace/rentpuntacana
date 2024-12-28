@@ -17,7 +17,6 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import ButtonSubmit from './ButtonSubmit'
 import { useTimeoutFn } from 'react-use'
 import StaySearchForm from './(stay-search-form)/StaySearchForm'
-import CarsSearchForm from './(car-search-form)/CarsSearchForm'
 import FlightSearchForm from './(flight-search-form)/FlightSearchForm'
 
 const HeroSearchForm2Mobile = () => {

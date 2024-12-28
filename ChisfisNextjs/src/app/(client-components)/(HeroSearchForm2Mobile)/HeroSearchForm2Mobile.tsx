@@ -16,9 +16,9 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import ButtonSubmit from './ButtonSubmit'
 import { useTimeoutFn } from 'react-use'
-import StaySearchForm from './(stay-search-form)/StaySearchForm'
-import CarsSearchForm from './(car-search-form)/CarsSearchForm'
-import FlightSearchForm from './(flight-search-form)/FlightSearchForm'
+// import StaySearchForm from './(stay-search-form)/StaySearchForm'
+// import CarsSearchForm from './(car-search-form)/CarsSearchForm'
+// import FlightSearchForm from './(flight-search-form)/FlightSearchForm'
 
 const HeroSearchForm2Mobile = () => {
 	const [showModal, setShowModal] = useState(false)
@@ -122,8 +122,8 @@ const HeroSearchForm2Mobile = () => {
 												)}
 											</TabList>
 											<div className="flex flex-1 overflow-hidden px-1.5 pt-3 sm:px-4">
-												<TabPanels className="hiddenScrollbar flex-1 overflow-y-auto py-4">
-													<TabPanel>
+												<TabPanels className="hiddenScrollbar flex-1 overflow-y-auto py-4"> todo
+													{/* <TabPanel>
 														<div className="animate-[myblur_0.4s_ease-in-out] transition-opacity">
 															<StaySearchForm />
 														</div>
@@ -137,7 +137,7 @@ const HeroSearchForm2Mobile = () => {
 														<div className="animate-[myblur_0.4s_ease-in-out] transition-opacity">
 															<FlightSearchForm />
 														</div>
-													</TabPanel>
+													</TabPanel> */}
 												</TabPanels>
 											</div>
 											<div className="flex justify-between border-t border-neutral-200 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-neutral-900">
