@@ -2,7 +2,7 @@
 
 import React, { useEffect, FC } from "react";
 import Checkbox from "@/shared/Checkbox";
-import { ClassOfProperties } from "@/types/PropertyType";
+import { ClassOfProperties } from "@/dataTypes/PropertyType";
 
 // DEMO DATA
 

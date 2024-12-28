@@ -5,19 +5,19 @@ import Badge from "@/shared/Badge";
 import Input from "@/shared/Input";
 import Image from "next/image";
 
-export interface SectionSubscribe2Props {
+export interface SectionSubscribeProps {
   className?: string;
 }
 
-const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
+const SectionSubscribe: FC<SectionSubscribeProps> = ({ className = "" }) => {
 
   const handleClick = (e) =>{
     alert("update subscriptin in user pref, display success or failure")
   }
   return (
     <div
-      className={`nc-SectionSubscribe2 relative flex flex-col lg:flex-row lg:items-center ${className}`}
-      data-nc-id="SectionSubscribe2"
+      className={`nc-SectionSubscribe relative flex flex-col lg:flex-row lg:items-center ${className}`}
+      data-nc-id="SectionSubscribe"
     >
       <div className="flex-shrink-0 mb-10 lg:mb-0 lg:mr-10 lg:w-2/5">
         <h2 className="font-semibold text-4xl">Join our newsletter 🎉</h2>
@@ -68,4 +68,4 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
   );
 };
 
-export default SectionSubscribe2;
+export default SectionSubscribe;

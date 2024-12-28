@@ -1,16 +1,18 @@
 import { Poppins } from 'next/font/google';
-import './globals.css';
 import '@/fonts/line-awesome-1.3.0/css/line-awesome.css';
+import '@/styles/globals.css';
 import '@/styles/index.scss';
 import 'rc-slider/assets/index.css';
-import Footer from '@/app/Layout/Footer';
-import FooterNav from '@/app/Layout/FooterNav';
 import { Metadata } from 'next';
-import NewHeader from './(client-components)/(Header)/NewHeader';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from '../utils/authOptions';
+
 import { Providers } from '@/components/providers/Providers';
-import ClientCommons from './ClientCommons';
+
+import NewHeader from './(client-components)/(Header)/NewHeader';
+import ClientCommons from '@/app/Layout/ClientCommons';
+import Footer from '@/app/Layout/Footer';
+import FooterNav from '@/app/Layout/FooterNav';
 
 const poppins = Poppins({
 	subsets: ['latin'],

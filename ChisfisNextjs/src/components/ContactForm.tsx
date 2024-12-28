@@ -41,8 +41,8 @@ const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <div className="w-full flex flex-col space-y-6 xl:space-y-7">
-				<Input value={contactName} placeholder={translations.yourName} onChange={(e) => setContactName(e.target.value)}
- />			<Input type="text" value={listingRE} placeholder={translations.regardingListing} onChange={(e) => setListingRE(e.target.value)} />
+				<Input value={contactName} placeholder={translations.yourName} onChange={(e) => setContactName(e.target.value)} />
+        <Input type="text" value={listingRE} placeholder={translations.regardingListing} onChange={(e) => setListingRE(e.target.value)} />
 
 				<Input type="email" value={contactEmail} placeholder={translations.email} onChange={(e) => setContactEmail(e.target.value)} />
         <div>
@@ -58,7 +58,7 @@ const ContactForm: FC<ContactFormProps> = ({
 				<Checkbox
 					className="termsAndConditions"
 					name=""
-					label={translations.contactTerms}
+          label={translations.contactTerms}
         />
         <ButtonPrimary className="flex flex-1 stretch">{translations.sendMessage}</ButtonPrimary>
 
@@ -66,7 +66,7 @@ const ContactForm: FC<ContactFormProps> = ({
           <Link aria-label="Chat on WhatsApp" className="whatsapp flex justify-center" target="_blank" href={`https://wa.me/${contactPhone}?text=${translations.contactAgentPlaceholder}`}>
             <i className="lab la-whatsapp text-3xl whatsapp"></i> <div className="pt-1">{translations.space}{translations.messageOnWhatsApp}</div>
           </Link>
-        </ButtonSecondary>
+        </ButtonSecondary> 
 			</div>
   );
 };

@@ -1,4 +1,4 @@
-import { TwMainColor } from "@/data/types";
+import { TwMainColor } from "@/dataTypes/TwMainColor";
 import { Route } from "@/routers/types";
 import Link from "next/link";
 import React, { FC, ReactNode } from "react";

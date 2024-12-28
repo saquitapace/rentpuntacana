@@ -2,17 +2,16 @@ import { Route } from "@/routers/types";
 import { StaticImageData } from "next/image";
 import { AuthorType } from "@/types/authorType";
 
-export interface ListingDetailDataType {
-  title: string;
-  availabilityDate: string;
-  description: string;
-  amenities: any;
+export interface ListingDataType {
   id: string | number;
+  sqft: number;
+  listingId: string;
   author: AuthorType;
+  date: string;
   href: Route<string>;
+  title: string;
   featuredImage: StaticImageData | string;
   commentCount: number;
-  sqft: number;
   viewCount: number;
   address: string;
   reviewStart: number;

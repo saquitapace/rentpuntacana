@@ -2,7 +2,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 // types
-import { ListingDetailDataType} from '@/types/ListingDetailDataType';
+import { ListingDetailDataType} from '@/dataTypes/ListingDetailDataType';
 //components
 import ContactForm  from '@/components/ContactForm';
 import Price from '@/components/Price';
@@ -47,16 +47,16 @@ const ListingStayDetailPage = ({
 		commentCount: 0,
 		viewCount: 0,
 		address: '',
-		reviewStart: 0,
-		reviewCount: 0,
+		reviewStart: null,
+		reviewCount: null,
 		likes: false,
 		galleryImgs: [],
 		price: '',
 		sqft: 0,
 		description: '',
 		availabilityDate: '',
-		bedrooms: 0,
-		bathrooms: 0,
+		bedrooms: null,
+		bathrooms: null,
 		isAds: false,
 		map: {
 			lat: 0,
@@ -173,13 +173,15 @@ const ListingStayDetailPage = ({
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bedrooms} <span className="hidden sm:inline-block">{translations.bedrooms}</span>
+							{listingDetail.bedrooms} 
+							<span className="hidden sm:inline-block pl-2">{listingDetail.bedrooms > 1 ? translations.bedrooms : translations.bedroom }</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-						{listingDetail.bathrooms} <span className="hidden sm:inline-block">{translations.bathrooms}</span>
+							{listingDetail.bathrooms} 
+							<span className="hidden sm:inline-block pl-2">{listingDetail.bathrooms > 1 ? translations.bathrooms : translations.bathroom }</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
@@ -191,15 +193,11 @@ const ListingStayDetailPage = ({
 
 					<div className="flex items-center space-x-3">
 						<i className="las la-wifi text-lg"></i>
-						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{translations.wifi}
-						</span>
+						<span className="hidden sm:inline-block">{translations.wifi}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-smoking-ban text-lg"></i>
-						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{translations.noSmoking}
-						</span>
+						<span className="hidden sm:inline-block">{translations.noSmoking}</span>
           			</div>
 				</div>
 			</div>
@@ -385,7 +383,7 @@ const ListingStayDetailPage = ({
 	const renderSidebar = () => {
 		return (
 			<>
-			<div className="listingSectionSidebar__wrap shadow-xl">
+			<div className="listingSectionSidebar__wrap shadow-xl max-w-[400px]">
 				<span className="text-3xl font-semibold">
 					{!!listingDetail.price || listingDetail.price == null && (
 						<Price className="text-3xl font-semibold" price={listingDetail.price} />

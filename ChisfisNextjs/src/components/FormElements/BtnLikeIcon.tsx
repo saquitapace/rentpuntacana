@@ -14,12 +14,12 @@ export interface BtnLikeIconProps {
 
 const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   className = "",
-  colorClass = "",
-  isLiked,
+  colorClass = 'text-white bg-black bg-opacity-30 hover:bg-opacity-50',
+	isLiked = false,
   id
 }) => {
 
-  let [likedState, setLikedState] = useState(isLiked);
+  const [likedState, setLikedState] = useState(isLiked);
   const [listingId, setListingId] = useState(id);
   const { data: session } = useSession();
   const router = useRouter();
@@ -56,6 +56,8 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   };
 
   const handleClick = async () => {
+    setLikedState(!likedState)
+
     if (!session?.user) {
       alert("add the login modal or message; do not redirect");
       //router.push('/login');
@@ -74,28 +76,29 @@ const BtnLikeIcon: FC<BtnLikeIconProps> = ({
   };
 
   return (
-    <button
-      className={`w-8 h-8 flex items-center justify-center rounded-full ${className} ${
-        likedState ? "nc-liked" : ""
-      }`}
-      onClick={handleClick}
+    <div
+    className={`nc-BtnLikeIcon flex h-8 w-8 cursor-pointer items-center justify-center rounded-full ${
+      likedState ? 'nc-BtnLikeIcon--liked' : ''
+    } ${colorClass} ${className}`}
+    data-nc-id="BtnLikeIcon"
+    title="Save"
+    onClick={handleClick}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="h-5 w-5"
+      fill={likedState >0 ? '#ef4444' : 'none'}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className={`w-5 h-5 ${colorClass}`}
-        viewBox="0 0 24 24"
-        fill={likedState >0 ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-        />
-      </svg>
-    </button>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+      />
+    </svg>
+  </div>
   );
 };
-
 export default BtnLikeIcon;

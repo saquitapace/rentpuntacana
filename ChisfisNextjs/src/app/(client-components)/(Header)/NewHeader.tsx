@@ -101,10 +101,9 @@ const NewHeader: FC<NewHeaderProps> = (
           
           <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
            
-          {(pathname != "/login" && pathname !== "/signup")  && 
-            // <LangDropdown />
+          {/* {(pathname != "/login" && pathname !== "/signup")  && 
             <SearchDropdown />
-          }
+          } */}
 
            {(pathname != "/login" && pathname !== "/signup")  && 
               <LangDropdownSingle />

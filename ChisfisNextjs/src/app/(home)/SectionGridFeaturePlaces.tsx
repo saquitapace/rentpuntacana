@@ -8,7 +8,6 @@ import HeaderFilter from "@/components/HeaderFilter";
 
 //saquita home
 export interface SectionGridFeaturePlacesProps {
-  stayListings?: [];
   gridClass?: string;
   heading?: ReactNode;
   subHeading?: ReactNode;
@@ -17,7 +16,6 @@ export interface SectionGridFeaturePlacesProps {
 }
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
-  stayListings = [],
   headingIsCenter,
   gridClass = "",
   heading = "Featured Properties",

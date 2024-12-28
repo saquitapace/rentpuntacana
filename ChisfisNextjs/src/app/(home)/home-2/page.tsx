@@ -3,11 +3,11 @@ import SectionOurFeatures from "@/components/Sections/SectionOurFeatures";
 import BackgroundSection from "@/components/Sections/BackgroundSection";
 import SectionGridFeaturePlaces from "../SectionGridFeaturePlaces";
 import SectionHowItWork from "@/components/Sections/SectionHowItWork";
-import SectionSubscribe2 from "@/components/Sections/SectionSubscribe2";
+import SectionSubscribe from "@/components/Sections/SectionSubscribe";
 import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
 import SectionBecomeAnAuthor from "@/components/Sections/SectionBecomeAnAuthor";
 import SectionClientSay from "@/components/SectionClientSay";
-import SectionHero2ArchivePage from "../../(server-components)/SectionHero2ArchivePage";
+import SectionHero2ArchivePage from "../../(client-components)/SectionHero2";
 import BgGlassmorphism from "@/components/Sections/BgGlassmorphism";
 
 function PageHome2() {
@@ -18,7 +18,7 @@ function PageHome2() {
         <SectionHero2ArchivePage />
         <SectionGridFeaturePlaces />
 
-        {/* <BgGlassmorphism /> */}
+        {/* <BgGlassmorphism/> */}
  
         <div className="relative py-10">
           <BackgroundSection />
@@ -39,7 +39,7 @@ function PageHome2() {
           <SectionClientSay />
         </div>
 
-        <SectionSubscribe2 />
+        <SectionSubscribe />
 
       </div>
     </main>

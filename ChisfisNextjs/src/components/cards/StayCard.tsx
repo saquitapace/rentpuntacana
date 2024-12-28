@@ -1,7 +1,5 @@
-"use client";
-import React, { FC, useState } from "react";
-import { StayDataType } from "@/data/types";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
+import React, { FC } from "react";
+import { ListingDataType } from "@/dataTypes/ListingDataType";
 import StartRating from "@/components/StartRating";
 import Price from "@/components/Price";
 import BtnLikeIcon from "@/components/FormElements/BtnLikeIcon";
@@ -13,23 +11,20 @@ import { Route } from "next";
 import { useSelector } from 'react-redux';
 import { RootState } from "@/store/store";
 
-const DEMO_DATA = DEMO_STAY_LISTINGS[0];
-
 export interface StayCardProps {
   className?: string;
-  data?: StayDataType;
+  data?: ListingDataType;
   size?: "default" | "small";
 }
 
 const StayCard: FC<StayCardProps> = ({
   size = "default",
   className = "",
-  data = DEMO_DATA
+  data
 }) => {
 
   let {
     galleryImgs,
-    //listingCategory,
     address,
     title,
     bedrooms,
@@ -61,7 +56,7 @@ const StayCard: FC<StayCardProps> = ({
           href={href as Route}
           galleryClass={size === "default" ? undefined : ""}
         />
-        <BtnLikeIcon isLiked={likes} id={listingId} colorClass="text-white" className="absolute right-3 top-3 z-[1]" />
+        <BtnLikeIcon isLiked={likes} id={listingId} className="absolute right-3 top-3 z-[1]" />
         {saleOff && <SaleOffBadge className="absolute left-3 top-3" />}
       </div>
     );

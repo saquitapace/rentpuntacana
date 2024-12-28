@@ -7,7 +7,7 @@ import {
 	Transition,
 } from '@headlessui/react'
 import Checkbox from '@/shared/Checkbox'
-import { ClassOfProperties } from '@/types/PropertyType';
+import { ClassOfProperties } from '@/dataTypes/PropertyType';
 import { HomeIcon } from '@heroicons/react/24/outline';
 
 const defaultPropertyType: ClassOfProperties[] = [

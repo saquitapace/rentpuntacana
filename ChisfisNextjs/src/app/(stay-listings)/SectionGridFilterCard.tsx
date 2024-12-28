@@ -1,7 +1,6 @@
 "use client";
-
 import React, { FC, useState, useEffect } from "react";
-import { StayDataType } from "@/data/types";
+import { ListingDataType } from "@/dataTypes/ListingDataType";
 import Pagination from "@/shared/Pagination";
 import TabFilters from "./TabFilters";
 import MapContainer from "@/components/MapContainer";
@@ -37,7 +36,7 @@ const renderFilteredListingsData = async (data) => {
        }
      });
    
-    const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
+    const DEMO_DATA2: ListingDataType[] = data.filter((d: { map: null; }) => d.map !==null);
       setMapData(DEMO_DATA2);
       setListings(data);
       setLoading(false);
@@ -62,7 +61,7 @@ function useListings() {
           data['key'] = data['listingId'];
         });
       
-      const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
+      const DEMO_DATA2: ListingDataType[] = data.filter((d: { map: null; }) => d.map !==null);
         //console.log(DEMO_DATA2)
         setMapData(DEMO_DATA2);
         setListings(data);

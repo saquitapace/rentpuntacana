@@ -1,10 +1,10 @@
 import React from "react";
-import SectionHero2 from "../app/(server-components)/SectionHero2";
+import SectionHero1 from "./(client-components)/SectionHero1";
 import SectionOurFeatures from "@/components/Sections/SectionOurFeatures";
 import BackgroundSection from "@/components/Sections/BackgroundSection";
 import SectionGridFeaturePlaces from "@/components/SectionGridFeaturePlaces";
 import SectionHowItWork from "@/components/Sections/SectionHowItWork";
-import SectionSubscribe2 from "@/components/Sections/SectionSubscribe2";
+import SectionSubscribe from "@/components/Sections/SectionSubscribe";
 import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
 import SectionBecomeAnAuthor from "@/components/Sections/SectionBecomeAnAuthor";
 import SectionClientSay from "@/components/SectionClientSay";
@@ -14,7 +14,7 @@ function PageHome() {
     <main className="nc-PageHome relative overflow-hidden">
       <div className="container relative space-y-5 mb-5 lg:space-y-5 lg:mb-5">
         
-        <SectionHero2 className="pt-0 lg:pt-0 lg:pb-0" />
+        <SectionHero1 className="pt-0 lg:pt-0 lg:pb-0" />
 
         <SectionGridFeaturePlaces cardType="card1" />
         
@@ -37,7 +37,7 @@ function PageHome() {
           <SectionClientSay />
         </div>
 
-        <SectionSubscribe2 />
+        <SectionSubscribe />
 
       </div>
     </main>

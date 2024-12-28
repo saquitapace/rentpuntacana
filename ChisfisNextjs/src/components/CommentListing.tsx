@@ -73,7 +73,7 @@ const CommentListing: FC<CommentListingProps> = ({
               {date}
             </span>
           </div>
-          <div className="flex text-yellow-500">
+          <div className="flex text-orange-500">
 
             {!!starPoint || starPoint <=0 && (
             <><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /><OutlineStarIcon className="w-4 h-4" /></>           

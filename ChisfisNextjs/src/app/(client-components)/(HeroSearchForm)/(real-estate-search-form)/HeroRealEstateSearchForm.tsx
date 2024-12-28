@@ -42,12 +42,13 @@ const HeroRealEstateSearchForm: FC<HeroRealEstateSearchFormProps> = ({
       </ul>
     );
   };
-
   const renderForm = () => {
     switch (tabActive) {
       case "Buy":
         return <RealEstateSearchForm />;
-
+      case "Rent":
+        return  ""
+  
       default:
         return <RealEstateSearchForm />;
     }

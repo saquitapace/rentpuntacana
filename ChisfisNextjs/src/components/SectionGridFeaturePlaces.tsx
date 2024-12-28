@@ -10,7 +10,6 @@ import SearchResultsLoading from "../components/SearchResultsLoading";
 
 //saquita home
 export interface SectionGridFeaturePlacesProps {
-  stayListings?: [];
   gridClass?: string;
   heading?: ReactNode;
   subHeading?: ReactNode;
@@ -20,7 +19,6 @@ export interface SectionGridFeaturePlacesProps {
 }
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
-  stayListings = [],
   gridClass = "",
   heading = "",
   subHeading = "",

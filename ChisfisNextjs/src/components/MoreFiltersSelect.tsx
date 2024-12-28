@@ -2,7 +2,7 @@
 import React, { Fragment, FC, useState, useEffect } from "react";
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import Checkbox from "@/shared/Checkbox";
-import { OptionsType } from "@/types/OptionsType";
+import { OptionsType } from "@/dataTypes/OptionsType";
 import options from "@/utils/options";
 import { useSelector } from "react-redux";
 import { ClipboardSignatureIcon } from "lucide-react";

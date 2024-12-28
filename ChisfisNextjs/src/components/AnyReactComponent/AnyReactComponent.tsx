@@ -2,12 +2,12 @@
 
 import { Transition } from '@headlessui/react';
 import StayCard from '@/components/cards/StayCard';
-import { StayDataType } from '@/data/types';
+import { ListingDataType } from '@/dataTypes/ListingDataType';
 import { FC, Fragment, useState } from 'react';
 
 export interface AnyReactComponentProps {
 	className?: string
-	listing?: StayDataType
+	listing?: ListingDataType
 	experiences?: {}
 	isSelected?: boolean
 	lat: number

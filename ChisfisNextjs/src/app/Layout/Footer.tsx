@@ -2,14 +2,14 @@
 
 import Logo from "@/shared/Logo";
 import SocialsList1 from "@/shared/SocialsList1";
-import { CustomLink } from "@/data/types";
+import { CustomLinkDataType } from "@/dataTypes/CustomLinkDataType";
 import React from "react";
 import FooterNav from "./FooterNav";
 
 export interface WidgetFooterMenu {
   id: string;
   title: string;
-  menus: CustomLink[];
+  menus: CustomLinkDataType[];
 }
 
 const widgetMenus: WidgetFooterMenu[] = [
