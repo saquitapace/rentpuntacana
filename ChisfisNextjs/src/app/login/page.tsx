@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import facebookSvg from "@/images/Facebook.svg";
+//import facebookSvg from "@/images/Facebook.svg";
 import googleSvg from "@/images/Google.svg";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
@@ -23,11 +23,11 @@ const loginSocials = [
     provider: "google",
     icon: googleSvg,
   },
-  {
-    name: "Continue with Facebook",
-    provider: "facebook",
-    icon: facebookSvg,
-  },
+  // {
+  //   name: "Continue with Facebook",
+  //   provider: "facebook",
+  //   icon: facebookSvg,
+  // },
 ];
 
 const PageLogin: FC<PageLoginProps> = ({}) => {
@@ -43,6 +43,10 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
     email: "",
     password: "",
   });
+
+  const { translations, isLoading, error } = useSelector(
+    (state: RootState) => state.translations
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -88,7 +92,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
       }
     } catch (error: any) {
       console.error("Login error:", error);
-      setLocalError(error.message || "An error occurred during login");
+      setLocalError(error || translations.anErrorOccurredDuringSignIn);
     } finally {
       dispatch(resetAuthState());
     }
@@ -101,7 +105,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
     <div className={`nc-PageLogin`}>
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-10 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] text-neutral-900 dark:text-neutral-100 justify-center">
-          Sign In
+          {translations.signin}
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* SOCIAL LOGIN BUTTONS */}
@@ -128,7 +132,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           {/* OR */}
           <div className="relative text-center">
             <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
-              OR
+              {translations.or}
             </span>
             <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
           </div>
@@ -142,7 +146,7 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
           <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
-                Email
+                {translations.email}
               </span>
               <Input
                 type="email"
@@ -155,9 +159,9 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Password
+                {translations.password}
                 <Link href="/forgotPassword" className="text-sm underline">
-                  Forgot password?
+                  {translations.forgotPassword}
                 </Link>
               </span>
               <Input
@@ -169,15 +173,15 @@ const PageLogin: FC<PageLoginProps> = ({}) => {
               />
             </label>
             <ButtonPrimary type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Signing in..." : "Continue"}
+              {isSubmitting ? translations.signingIn : translations.continue}
             </ButtonPrimary>
           </form>
 
           {/* ==== */}
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
-            New user? {` `}
+            {translations.newUser} {translations.space}
             <Link href="/signup" className="font-semibold underline">
-              Create an account
+              {translations.createAnAccount}
             </Link>
           </span>
         </div>
