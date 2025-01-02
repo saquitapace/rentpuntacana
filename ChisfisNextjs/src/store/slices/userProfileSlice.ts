@@ -6,6 +6,8 @@ interface UserProfileState {
   accountType: string;
   avatar: string;
   companyName: string;
+  fullName: string;
+  displayName: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -13,6 +15,7 @@ interface UserProfileState {
   phoneNumber: string;
   about: string;
   languages: string[];
+  socials: string[],
   createdAt: string;
   isLoading: boolean;
   error: string | null;
@@ -23,9 +26,12 @@ const initialState: UserProfileState = {
   accountType: '',
   avatar: '/images/avatars/default.png',
   companyName: '',
+  fullName: '',
+  displayName: '',
   firstName: '',
   lastName: '',
   email: '',
+  socials:[],
   address: '',
   phoneNumber: '',
   about: 'Hi! I am new here.',

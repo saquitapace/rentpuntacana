@@ -1,13 +1,13 @@
+// user-data service
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../utils/authOptions';
 import { pool } from '@/lib/db';
-//import bcrypt from 'bcryptjs';
-import { getUserByEmail } from '@/lib/db-functions';
-
+import { getUserByEmail } from '@/app/api/auth/user/get/route';
 export const dynamic = 'force-dynamic';
 
 // GET: Fetch user data
+
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
+
     const user = await getUserByEmail(session.user.email)
     
     if (!user) {
@@ -28,24 +29,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Format the response data  //todo: @ezra can we remove?
-    const userData = {
-      userId: user.userId,
-      accountType: user.accountType,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      companyName: user.companyName,
-      about: user.about || '',
-      avatar: user.avatar || '',
-      languages: user.languages ? JSON.parse(user.languages) : [],
-      createdAt: user.createdAt,
-      phoneNumber: user.phoneNumber || '',
-      jwt: user.jwt || null,
-      jwtExpiresAt: user.jwtExpiresAt || null
-    };
-
-    return NextResponse.json(userData);
+    return NextResponse.json(user);
 
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -115,19 +99,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({
       message: 'Profile updated successfully',
-      user: {
-        userId: updatedUser.userId,
-        accountType: updatedUser.accountType,
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
-        email: updatedUser.email,
-        companyName: updatedUser.companyName,
-        about: updatedUser.about || '',
-        avatar: updatedUser.avatar || '/images/avatars/default.png',
-        languages: updatedUser.languages ? JSON.parse(updatedUser.languages) : ['English'],
-        createdAt: updatedUser.createdAt,
-        phoneNumber: updatedUser.phoneNumber || ''
-      }
+      updatedUser
     });
 
   } catch (error) {
@@ -141,36 +113,3 @@ export async function PUT(req: NextRequest) {
     connection.release();
   }
 }
-
-// DELETE: Delete user account
-// export async function DELETE(req: NextRequest) {
-//   try {
-//     const session = await getServerSession(authOptions)
-    
-//     if (!session?.user?.email) {
-//       return NextResponse.json(
-//         { error: 'Unauthorized' },
-//         { status: 401 }
-//       )
-//     }
-
-//     const user = await getUserByEmail(session.user.email)
-//     if (!user) {
-//       return NextResponse.json(
-//         { error: 'User not found' },
-//         { status: 404 }
-//       )
-//     }
-
-//     // Delete user directly using pool
-//     await pool.query('DELETE FROM users WHERE userId = ?', [user.userId]);
-
-//     return NextResponse.json({ message: 'User deleted successfully' })
-//   } catch (error) {
-//     console.error('Error deleting user:', error)
-//     return NextResponse.json(
-//       { error: 'Internal server error' },
-//       { status: 500 }
-//     )
-//   }
-// }
