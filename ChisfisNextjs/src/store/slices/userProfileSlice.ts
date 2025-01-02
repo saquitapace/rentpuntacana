@@ -11,7 +11,7 @@ interface UserProfileState {
   firstName: string;
   lastName: string;
   email: string;
-  address: string;
+  location: string;
   phoneNumber: string;
   about: string;
   languages: string[];
@@ -24,7 +24,7 @@ interface UserProfileState {
 const initialState: UserProfileState = {
   userId: '',
   accountType: '',
-  avatar: '/images/avatars/default.png',
+  avatar: '',
   companyName: '',
   fullName: '',
   displayName: '',
@@ -32,7 +32,7 @@ const initialState: UserProfileState = {
   lastName: '',
   email: '',
   socials:[],
-  address: '',
+  location: '',
   phoneNumber: '',
   about: 'Hi! I am new here.',
   languages: ['English'],
