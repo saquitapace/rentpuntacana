@@ -32,7 +32,7 @@ const SectionHero1: FC<SectionHero1Props> = ({ className = "", children }) => {
             <h2 className="pt-10 pr-8 max-w-[350px] text-2xl md:text-3xl xl:text-4xl">
               {translations.homeH2}
             </h2>
-            <ButtonPrimary href="/listing-search" sizeClass="mt-10 px-5 py-4 sm:px-7">
+            <ButtonPrimary href="/listing-search" className="mt-10 px-5 py-4 sm:px-7">
             {translations.startYourSearch}
             </ButtonPrimary>
           </div> 

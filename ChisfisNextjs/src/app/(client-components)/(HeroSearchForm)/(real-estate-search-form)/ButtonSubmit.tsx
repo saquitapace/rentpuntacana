@@ -3,14 +3,15 @@ import Link from "next/link";
 import React, { FC } from "react";
 
 interface Props {
-  href?: PathName;
+  href?: string;
 }
 
 const ButtonSubmit: FC<Props> = ({ href = "/listing-search" }) => {
   return (
     <Link
-      href={href}
-      type="button"
+      href={{
+        pathname: href
+      }}
       className="h-14 md:h-16 w-full md:w-16 rounded-full bg-primary-6000 hover:bg-primary-700 flex items-center justify-center text-neutral-50 focus:outline-none"
     >
       <span className="mr-3 md:hidden">Search</span>

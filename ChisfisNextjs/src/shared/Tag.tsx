@@ -1,11 +1,14 @@
-import { TaxonomyType } from "@/data/types";
 import { Route } from "@/routers/types";
 import Link from "next/link";
-import React, { FC } from "react";
+import { FC } from "react";
 
 export interface TagProps {
   className?: string;
-  tag: TaxonomyType;
+  tag: {
+    name: string;
+    href: Route<string>;
+    count?: number;
+  };
   hideCount?: boolean;
 }
 

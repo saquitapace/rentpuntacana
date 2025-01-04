@@ -80,7 +80,7 @@ const ModalSelectGuests: FC<ModalSelectGuestsProps> = ({ renderChildren }) => {
                         Clear data
                       </button>
                       <ButtonPrimary
-                        sizeClass="px-6 py-3 !rounded-xl"
+                        className="px-6 py-3 !rounded-xl"
                         onClick={() => {
                           closeModal();
                         }}

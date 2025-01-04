@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useChatStore, { Example } from "@/hooks/useChatStore";
+import { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -29,7 +30,7 @@ export default function Examples() {
     setSelectedExample(
       examples.find((example) => example.url === value) as Example,
     );
-    router.push(value);
+    router.push(value as Route);
   };
 
   return (

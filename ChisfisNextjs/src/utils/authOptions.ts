@@ -1,9 +1,8 @@
-
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByEmail } from '@/app/api/auth/user/get/route';
 import bcrypt from "bcryptjs";
+import { getUserByEmail } from "@/lib/db-functions";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -53,7 +52,18 @@ export const authOptions: NextAuthOptions = {
             lastName: user.lastName,
             accountType: user.accountType,
             avatar: user.avatar || '/images/avatars/default.png',
-            auth_type: user.auth_type
+            auth_type: user.auth_type as "credentials" | "google",
+            companyName: user.companyName || '',
+            fullName: user.fullName || '',
+            displayName: user.displayName || '',
+            location: user.location || '',
+            phoneNumber: user.phoneNumber || '',
+            about: user.about || '',
+            languages: user.languages || [],
+            socials: user.socials || [],
+            createdAt: user.createdAt || '',
+            isLoading: false,
+            error: null
           };
         }
       })

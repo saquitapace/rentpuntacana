@@ -37,6 +37,20 @@ const FlightSearchForm: FC<FlightSearchFormProps> = ({}) => {
   const totalGuests =
     guestChildrenInputValue + guestAdultsInputValue + guestInfantsInputValue;
 
+  const handleChangeData = (value: number, type: string) => {
+    switch (type) {
+      case "guestAdults":
+        setGuestAdultsInputValue(value);
+        break;
+      case "guestChildren":
+        setGuestChildrenInputValue(value);
+        break;
+      case "guestInfants":
+        setGuestInfantsInputValue(value);
+        break;
+    }
+  };
+
   const renderGuest = () => {
     return (
       <div className="">

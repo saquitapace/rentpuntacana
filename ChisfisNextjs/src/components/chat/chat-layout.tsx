@@ -19,7 +19,11 @@ interface ChatLayoutProps {
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
 }
-
+export type SelectedUser = {
+  name: string;
+  messages: any[];
+  avatar: string;
+}
 export function ChatLayout({
   defaultLayout = [320, 480],
   defaultCollapsed = false,
@@ -30,7 +34,8 @@ export function ChatLayout({
   const { data: session } = useSession();
   const user = session?.user;
   const [userData, setUserData] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({name:'', messages:'', avatar:''});
+
+  const [selectedUser, setSelectedUser] = useState<SelectedUser>({name:'', messages:[], avatar:''});
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,7 +62,7 @@ export function ChatLayout({
                 obj[0] = r1;
                 obj[1] = r2;
 
-                return await obj;
+                return  obj;
 
         } catch (error) {
           console.error(error);

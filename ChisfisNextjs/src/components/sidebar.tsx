@@ -14,6 +14,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Message } from "@/dataTypes/userChatData";
 import { useSession } from "next-auth/react";
 import useChatStore from "@/hooks/useChatStore";
+import { SelectedUser } from "./chat/chat-layout";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -36,16 +37,16 @@ export function Sidebar({isCollapsed, chats, isMobile }: SidebarProps) {
   const users = useChatStore((state) => state.users); 
   const [activeUserIndex, setActiveUserIndex]=useState(0);
 
-  const handleClick =(index) =>{
+  const handleClick =(index : number) =>{
     //alert(index)
     console.log(users[index])
     useChatStore.setState((state) => ({
-      selectedUser: users[index]
+      ...state,
+      selectedUser: ({ ...users[index], messages: (users[index] as unknown as any)?.messages, formId: users[index].userId }as unknown as SelectedUser & {id: string, fromId : string, userId : string, messages : Message[]}) ,
+  
     }));
 
-    useChatStore.setState((state) => ({
-      messages: users[index].messages
-    }));
+  
 
     setActiveUserIndex(index);
   }

@@ -37,7 +37,7 @@ const { translations, isLoading, error } = useSelector(
             {translations.homeH2}
             </h2>
 
-            <ButtonPrimary href="/listing-search" sizeClass="mt-10 px-5 py-4 sm:px-7">
+            <ButtonPrimary href="/listing-search" className="mt-10 px-5 py-4 sm:px-7">
             {translations.startYourSearch}
             </ButtonPrimary>
           </div>

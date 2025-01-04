@@ -190,7 +190,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 										</ButtonThird>
 										<ButtonPrimary
 											onClick={close}
-											sizeClass="px-4 py-2 sm:px-5"
+											className="px-4 py-2 sm:px-5"
 										>
 											Apply
 										</ButtonPrimary>
@@ -526,7 +526,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 										</ButtonThird>
 										<ButtonPrimary
 											onClick={closeModalMoreFilterMobile}
-											sizeClass="px-4 py-2 sm:px-5"
+											className="px-4 py-2 sm:px-5"
 										>
 											Apply
 										</ButtonPrimary>

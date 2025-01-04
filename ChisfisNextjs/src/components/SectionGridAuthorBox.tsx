@@ -2,10 +2,10 @@ import CardAuthorBox from "@/components/cards/CardAuthorBox";
 import CardAuthorBox2 from "@/components/cards/CardAuthorBox2";
 import Heading from "@/shared/Heading";
 import { DEMO_AUTHORS } from "@/data/authors";
-import { AuthorType } from "@/types/authorType";
 import React, { FC } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { Route } from "@/routers/types";
+import { AuthorType } from "@/dataTypes/AuthorType";
 
 export interface SectionGridAuthorBoxProps {
   className?: string;

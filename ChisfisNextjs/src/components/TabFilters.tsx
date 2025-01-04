@@ -26,6 +26,7 @@ import Slider from 'rc-slider';
 import convertNumbThousand from '@/utils/convertNumbThousand';
 import MoreFiltersSelect from "@/components/MoreFiltersSelect";
 import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 export interface TabFiltersProps  {
 	onChange: (e: any) => void; 
@@ -49,7 +50,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 	const [rangePrices, setRangePrices] = useState([0, 1000]);
 
 	const { translations, isLoading, error } = useSelector(
-		(state) => state.translations
+		(state: RootState) => state.translations
 	  );
 	
 	const moreFilter1 = options.getGeneralAmenities();
@@ -188,7 +189,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 										</ButtonThird>
 										<ButtonPrimary
 											onClick={close}
-											sizeClass="px-4 py-2 sm:px-5"
+											className="px-4 py-2 sm:px-5"
 										>
 											Apply
 										</ButtonPrimary>
@@ -524,7 +525,7 @@ const TabFilters: FC<TabFiltersProps> = ({
 										</ButtonThird>
 										<ButtonPrimary
 											onClick={closeModalMoreFilterMobile}
-											sizeClass="px-4 py-2 sm:px-5"
+											className="px-4 py-2 sm:px-5"
 										>
 											Apply
 										</ButtonPrimary>

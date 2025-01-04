@@ -1,21 +1,22 @@
 "use client";
 
+import Label from "@/components/FormElements/Label";
+import ModalSelectDate from "@/components/ModalSelectDate";
+import StartRating from "@/components/StartRating";
+import mastercardPng from "@/images/mastercard.svg";
+import visaPng from "@/images/vis.png";
+import ButtonPrimary from "@/shared/ButtonPrimary";
+import Input from "@/shared/Input";
+import NcModal from "@/shared/NcModal";
+import Textarea from "@/shared/Textarea";
+import converSelectedDateToString from "@/utils/converSelectedDateToString";
 import { Tab } from "@headlessui/react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import React, { FC, Fragment, useState } from "react";
-import visaPng from "@/images/vis.png";
-import mastercardPng from "@/images/mastercard.svg";
-import Input from "@/shared/Input";
-import Label from "@/components/FormElements/Label";
-import Textarea from "@/shared/Textarea";
-import ButtonPrimary from "@/shared/ButtonPrimary";
-import StartRating from "@/components/StartRating";
-import NcModal from "@/shared/NcModal";
-import ModalSelectDate from "@/components/ModalSelectDate";
-import converSelectedDateToString from "@/utils/converSelectedDateToString";
+import { FC, Fragment, useState } from "react";
 //import ModalSelectGuests from "@/components/ModalSelectGuests";
 import Image from "next/image";
 
+import { Route } from 'next';
 export interface CheckOutPagePageMainProps {
   className?: string;
 }
@@ -235,7 +236,7 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
               </Tab.Panels>
             </Tab.Group>
             <div className="pt-8">
-              <ButtonPrimary href={"/pay-done"}>Confirm and pay</ButtonPrimary>
+              <ButtonPrimary href={"/pay-done" as Route}>Confirm and pay</ButtonPrimary>
             </div>
           </div>
         </div>

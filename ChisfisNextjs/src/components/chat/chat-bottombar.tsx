@@ -18,14 +18,16 @@ import { ChatInput } from "../ui/chat/chat-input";
 import useChatStore from "@/hooks/useChatStore";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { SelectedUser } from "./chat-layout";
 
 interface ChatBottombarProps {
   isMobile: boolean;
+  messages: Message[];
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
-export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
+export default function ChatBottombar({ isMobile, messages }: ChatBottombarProps) {
 
   const { data: session } = useSession();
   const userSessionInfo = session?.user;

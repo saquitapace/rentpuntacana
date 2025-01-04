@@ -4,7 +4,7 @@ import React, { FC } from "react";
 export interface SocialsListProps {
   className?: string;
   itemClass?: string;
-  socials?: [] //SocialType[];
+  socials?: string[] //SocialType[];
 }
 
 const socialsDemo: SocialType[] = [

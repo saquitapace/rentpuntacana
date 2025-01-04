@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../utils/authOptions';
 import { pool } from '@/lib/db';
-import { getUserByEmail } from '@/app/api/auth/user/get/route';
+import { getUserByEmail } from '@/lib/db-functions';
 export const dynamic = 'force-dynamic';
 
 // GET: Fetch user data

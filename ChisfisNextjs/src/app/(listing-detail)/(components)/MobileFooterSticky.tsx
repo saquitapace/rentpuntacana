@@ -34,7 +34,7 @@ const MobileFooterSticky = () => {
         <ModalReserveMobile
           renderChildren={({ openModal }) => (
             <ButtonPrimary
-              sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
+              className="px-5 sm:px-7 py-3 !rounded-2xl"
               onClick={openModal}
             >
               Contact todo**

@@ -27,6 +27,14 @@ export const forgotPassword = createAsyncThunk(
    }
 );
 
+async function createInbox() {
+   const API_KEY = "e6209418fb671c31e08b51eef5152bb840b3fc4f0500a4a9e5621e7ce7115eec";
+
+   // call MailSlurp createInbox endpoint
+   return await axios
+   .post(`https://api.mailslurp.com/createInbox?apiKey=${API_KEY}`)
+   .then((res) => res.data);
+}
 export const sendForgotPasswordEmail = createAsyncThunk(
 'forgotPassword/sendEmail',
    async ({ email, password }: { email: string, password: string }, { rejectWithValue }) => {
@@ -38,12 +46,7 @@ export const sendForgotPasswordEmail = createAsyncThunk(
          
          const mailslurp = new MailSlurp({ apiKey: "e6209418fb671c31e08b51eef5152bb840b3fc4f0500a4a9e5621e7ce7115eec" });
          
-         async function createInbox() {
-            // call MailSlurp createInbox endpoint
-            return await axios
-            .post(`https://api.mailslurp.com/createInbox?apiKey=${API_KEY}`)
-            .then((res) => res.data);
-         }
+   
 
          await axios({
             method: "POST",

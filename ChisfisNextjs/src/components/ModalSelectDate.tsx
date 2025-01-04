@@ -120,7 +120,7 @@ const ModalSelectDate: FC<ModalSelectDateProps> = ({ renderChildren }) => {
                         Clear dates
                       </button>
                       <ButtonPrimary
-                        sizeClass="px-6 py-3 !rounded-xl"
+                        className="px-6 py-3 !rounded-xl"
                         onClick={() => {
                           closeModal();
                         }}

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
-interface UserProfileState {
+export interface UserProfileState {
   userId: string;
   accountType: string;
   avatar: string;
@@ -15,10 +15,16 @@ interface UserProfileState {
   phoneNumber: string;
   about: string;
   languages: string[];
-  socials: string[],
+  socials: string[] ,
   createdAt: string;
   isLoading: boolean;
   error: string | null;
+  password: string | null;
+  email_verified: boolean;
+  auth_type : string | null;
+  address: string | null;
+  jwt: string | null;
+  jwtExpiresAt: string | null;
 }
 
 const initialState: UserProfileState = {
@@ -36,9 +42,15 @@ const initialState: UserProfileState = {
   phoneNumber: '',
   about: 'Hi! I am new here.',
   languages: ['English'],
+  address: null,
   createdAt: '',
   isLoading: false,
-  error: null
+  error: null,
+  password: null,
+  email_verified: false,
+  auth_type: null,
+  jwt: null,
+  jwtExpiresAt: null
 };
 
 export const fetchUserProfile = createAsyncThunk(
