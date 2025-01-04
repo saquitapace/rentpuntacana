@@ -6,6 +6,7 @@ import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import ThemeProviderWrapper from '@/app/Layout/theme-provider'
 import { PreloadedState } from '@/store/type'
+import NextThemeProvider from './providers/NextThemeProvider'
 
 interface ProvidersProps {
 	children: React.ReactNode
@@ -23,9 +24,9 @@ export function Providers({
 	return (
 		<Provider store={store}>
 			<SessionProvider session={session}>
-				<ThemeProvider attribute="class">
+				<NextThemeProvider>
 					<ThemeProviderWrapper>{children}</ThemeProviderWrapper>
-				</ThemeProvider>
+				</NextThemeProvider>
 			</SessionProvider>
 		</Provider>
 	)
