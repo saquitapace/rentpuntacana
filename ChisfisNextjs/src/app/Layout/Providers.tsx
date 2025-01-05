@@ -7,6 +7,7 @@ import { ThemeProvider } from 'next-themes'
 import ThemeProviderWrapper from '@/app/Layout/theme-provider'
 import { PreloadedState } from '@/store/type'
 import NextThemeProvider from './providers/NextThemeProvider'
+import NotificationProvider from './providers/NotificationProvider'
 
 interface ProvidersProps {
 	children: React.ReactNode
@@ -25,7 +26,9 @@ export function Providers({
 		<Provider store={store}>
 			<SessionProvider session={session}>
 				<NextThemeProvider>
-					<ThemeProviderWrapper>{children}</ThemeProviderWrapper>
+					<NotificationProvider>
+						<ThemeProviderWrapper>{children}</ThemeProviderWrapper>
+					</NotificationProvider>
 				</NextThemeProvider>
 			</SessionProvider>
 		</Provider>
