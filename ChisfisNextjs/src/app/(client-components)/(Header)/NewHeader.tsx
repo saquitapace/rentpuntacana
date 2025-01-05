@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
+import NotificationExample from "@/components/NotificationExample";
 //import LangDropdown from "./LangDropdown";
 //import SearchDropdown from "./SearchDropdown";
 
@@ -93,6 +94,10 @@ const NewHeader: FC<NewHeaderProps> = (
           <div className="hidden md:flex justify-start flex-1 space-x-4 sm:space-x-10">
             <Logo className="w-24 self-center" />
             <Navigation />
+            <div className="flex justify-center items-center">
+              <NotificationExample/>
+            </div>
+
           </div>
 
           {/* <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
