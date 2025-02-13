@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { AuthorType } from "@/types/authorType";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Avatar from "@/shared/Avatar";
 import convertNumbThousand from "@/utils/convertNumbThousand";
 import Link from "next/link";
 import Image from "next/image";
+import { AuthorType } from "@/dataTypes/AuthorType";
 
 export interface CardAuthorBox2Props {
   className?: string;

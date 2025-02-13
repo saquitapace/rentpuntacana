@@ -193,6 +193,14 @@ const DEMO_AUTHORS: AuthorType[] = __authors.map((item, index) => ({
   ...item,
   avatar: imgs[index] || item.avatar,
   href: item.href as Route,
+  companyName: "Demo Company",
+  phoneNumber: "+1 123-456-7890",
+  fullName: `${item.firstName} ${item.lastName}`,
+  createdAt: new Date().toISOString(),
+  verified: true,
+  countArticles: item.count || 0,
+  about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  listingsCount: 10,
 }));
 
 export { DEMO_AUTHORS };

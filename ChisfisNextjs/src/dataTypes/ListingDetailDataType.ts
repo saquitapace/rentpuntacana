@@ -1,6 +1,6 @@
 import { Route } from "@/routers/types";
 import { StaticImageData } from "next/image";
-import { AuthorType } from "@/types/AuthorType";
+import { AuthorType } from "./AuthorType";
 
 export interface ListingDetailDataType {
   title: string;

@@ -14,10 +14,11 @@ import {
 import { ChatMessageList } from "../ui/chat/chat-message-list";
 //import { DotsVerticalIcon, HeartIcon, Share1Icon } from "@radix-ui/react-icons";
 import { Heart } from "lucide-react";
+import { SelectedUser } from "./chat-layout";
 
 interface ChatListProps {
   messages: Message[];
-  selectedUser: {};
+  selectedUser: SelectedUser;
   sendMessage: (newMessage: Message) => void;
   isMobile: boolean;
 }
@@ -103,7 +104,7 @@ export function ChatList({
           })}
         </AnimatePresence>
       </ChatMessageList>
-      <ChatBottombar messages={messages} selectedUser={selectedUser} isMobile={isMobile} />
+      <ChatBottombar messages={messages}  isMobile={isMobile} />
     </div>
   );
 }

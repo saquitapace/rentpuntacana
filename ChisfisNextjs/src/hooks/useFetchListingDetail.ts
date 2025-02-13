@@ -35,7 +35,7 @@ const useFetchListingDetail = (par) => {
       setLoading(false);
     };
     fetchData();
-  }, [params]);
+  }, [params,user?.userId]);
 
   return {
     data,

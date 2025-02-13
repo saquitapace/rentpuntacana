@@ -60,7 +60,7 @@ const Badge: FC<BadgeProps> = ({
     className;
   return !!href ? (
     <Link
-      href={href || ""}
+      href={href }
       className={`transition-colors hover:text-white duration-300 ${CLASSES} ${getColorClass()}`}
     >
       {name}

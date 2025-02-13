@@ -1,3 +1,4 @@
+import { UserProfileState } from '@/store/slices/userProfileSlice';
 import { pool } from './db';
 import { generateUserId } from '@/utils/helpers';
 
@@ -174,7 +175,6 @@ export async function createUser(userData: {
     
     return {
       userId,
-      userId: userId,
       email: userData.email,
       firstName: userData.firstName,
       lastName: userData.lastName,
@@ -191,14 +191,59 @@ export async function createUser(userData: {
   }
 }
 
-// export async function testConnection() {
-//   try {
-//     const connection = await pool.getConnection();
-//     console.log('Database connected successfully');
-//     connection.release();
-//     return true;
-//   } catch (error) {
-//     console.error('Database connection error:', error);
-//     return false;
-//   }
-// }
+export async function testConnection() {
+  try {
+    const connection = await pool.getConnection();
+    console.log('Database connected successfully');
+    connection.release();
+    return true;
+  } catch (error) {
+    console.error('Database connection error:', error);
+    return false;
+  }
+}
+
+export async function getUserByEmail(email: string) {
+  try {
+    console.log('Fetching user for email:', email);
+    const [rows] = await pool.execute(
+      `SELECT
+       u.userId,
+       u.accountType, 
+       u.avatar,
+       u.companyName,
+       CONCAT( COALESCE(u.firstName, ''), ' ', 
+       COALESCE( u.lastName, '' ) ) AS fullName,
+       CONCAT( COALESCE(u.firstName, ''), ' ', 
+       COALESCE( SUBSTRING(u.lastName, 1, 1), '' ) ) AS displayName,
+      u.firstName,
+      u.lastName,
+      u.location,
+      u.phoneNumber,
+      u.about,
+      u.languages,
+      u.socials,
+      u.createdAt,
+      lc.email, lc.password, lc.google_id, lc.auth_type, lc.jwt, lc.jwtExpiresAt
+       FROM users u 
+       JOIN login_cred lc ON u.userId = lc.userId 
+       WHERE lc.email = ?`,
+      [email]
+    );
+    console.log('Query result:', rows);
+
+    const user = (rows as UserProfileState[])[0];
+
+    user.socials = JSON.parse(user.socials as unknown as string);
+    user.languages = JSON.parse(user.languages as unknown as string);
+
+    if (!user) {
+      return null; // Return null when no user is found
+    }
+    
+    return user;
+  } catch (error) {
+    console.error('Database error in getUserByEmail:', error);
+    throw new Error('Failed to fetch user');
+  }
+}

@@ -8,12 +8,12 @@ import SectionSubscribe from "@/components/Sections/SectionSubscribe";
 import SectionGridAuthorBox from "@/components/SectionGridAuthorBox";
 import SectionBecomeAnAuthor from "@/components/Sections/SectionBecomeAnAuthor";
 import SectionClientSay from "@/components/SectionClientSay";
+import NotificationExample from "@/components/NotificationExample";
 
 function PageHome() {
   return (
     <main className="nc-PageHome relative overflow-hidden">
       <div className="container relative space-y-5 mb-5 lg:space-y-5 lg:mb-5">
-        
         <SectionHero1 className="pt-0 lg:pt-0 lg:pb-0" />
 
         <SectionGridFeaturePlaces cardType="card1" />

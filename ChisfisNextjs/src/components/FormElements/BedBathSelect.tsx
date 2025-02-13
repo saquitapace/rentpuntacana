@@ -1,11 +1,11 @@
 "use client";
 import React, { Fragment, FC, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import { BedBathType } from "@/types/bedBathType";
 import NcInputNumber from '@/components/NcInputNumber';
 import { useSelector } from 'react-redux';
 import options from "@/utils/options";
 import { RootState } from "@/store/store";
+import { BedBathType } from "@/dataTypes/BedBathType";
 //import ButtonThird from "@/shared/ButtonThird";
 //import ButtonPrimary from "@/shared/ButtonPrimary";
 

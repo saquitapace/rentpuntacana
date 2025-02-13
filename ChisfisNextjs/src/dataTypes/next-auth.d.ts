@@ -14,8 +14,19 @@ declare module "next-auth" {
     firstName: string
     lastName: string
     accountType: string
-    avatar?: string
+    avatar: string
     auth_type: 'credentials' | 'google'
+    companyName: string
+    fullName: string
+    displayName: string
+    location: string
+    phoneNumber: string
+    about: string
+    languages: string[]
+    socials: string[]
+    createdAt: string
+    isLoading: boolean
+    error: string | null
   }
 
   interface Session {

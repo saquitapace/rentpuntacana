@@ -95,7 +95,7 @@ const ListingStayDetailPage = ({
 		//const dataObj = data?: ListingDetailDataType[] ;
 		useEffect(() => {
 			if (data && !loading && !error) {
-				setListingDetail(data);
+				setListingDetail(data as unknown as ListingDetailDataType);
 				setLoading(false);
 				//setGalleryPhotos(listingDetail['galleryImgs']);
 				setListingDetail((listingDetail) => ({ ...listingDetail, data }));

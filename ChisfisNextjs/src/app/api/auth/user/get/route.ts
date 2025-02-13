@@ -1,47 +1,39 @@
 //user get
-import { pool } from '../../../../../lib/db';
+import { getUserByEmail } from '@/lib/db-functions';
+import { NextResponse } from 'next/server';
 
-export async function getUserByEmail(email: string) {
+
+// nextjs dont allow to exprt functions other than GET, POST, PUT, DELETE , so we need to move this to db functions and export it from there
+
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: Request) {
     try {
-      console.log('Fetching user for email:', email);
-      const [rows] = await pool.execute(
-        `SELECT
-         u.userId,
-         u.accountType, 
-         u.avatar,
-         u.companyName,
-         CONCAT( COALESCE(u.firstName, ''), ' ', 
-         COALESCE( u.lastName, '' ) ) AS fullName,
-         CONCAT( COALESCE(u.firstName, ''), ' ', 
-         COALESCE( SUBSTRING(u.lastName, 1, 1), '' ) ) AS displayName,
-        u.firstName,
-        u.lastName,
-        u.location,
-        u.phoneNumber,
-        u.about,
-        u.languages,
-        u.socials,
-        u.createdAt,
-        lc.email, lc.password, lc.google_id, lc.auth_type, lc.jwt, lc.jwtExpiresAt
-         FROM users u 
-         JOIN login_cred lc ON u.userId = lc.userId 
-         WHERE lc.email = ?`,
-        [email]
-      );
-      console.log('Query result:', rows);
-
-      const user = (rows as any[])[0];
-
-      user.socials = JSON.parse(user.socials);
-      user.languages = JSON.parse(user.languages);
-
-      if (!user) {
-        return null; // Return null when no user is found
+      const { searchParams } = new URL(request.url);
+      const email = searchParams.get('email');
+  
+      if (!email) {
+        return NextResponse.json(
+          { error: 'Email parameter is required' },
+          { status: 400 }
+        );
       }
+  
+      const user = await getUserByEmail(email);
       
-      return user;
+      if (!user) {
+        return NextResponse.json(
+          { error: 'User not found' },
+          { status: 404 }
+        );
+      }
+  
+      return NextResponse.json(user);
     } catch (error) {
-      console.error('Database error in getUserByEmail:', error);
-      throw new Error('Failed to fetch user');
+      console.error('Error in GET handler:', error);
+      return NextResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
     }
   }
