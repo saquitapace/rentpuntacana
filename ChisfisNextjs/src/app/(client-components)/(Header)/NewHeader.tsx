@@ -28,12 +28,7 @@ export interface NewHeaderProps {
 }
 
 const NewHeader: FC<NewHeaderProps> = (
-<<<<<<< HEAD
-  { className = ''
-  }
-=======
   { className = "" }
->>>>>>> main
 ) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();

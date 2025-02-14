@@ -41,10 +41,6 @@ const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <div className="w-full flex flex-col space-y-6 xl:space-y-7">
-<<<<<<< HEAD
-				<Input value={contactName} placeholder={translations.yourName} onChange={(e) => setContactName(e.target.value)} />
-        <Input type="text" value={listingRE} placeholder={translations.regardingListing} onChange={(e) => setListingRE(e.target.value)} />
-=======
 				<Input value={contactName} 
         type="text"
         name="contactName"
@@ -65,7 +61,6 @@ const ContactForm: FC<ContactFormProps> = ({
         placeholder={translations.email}
         autoComplete="off"
         onChange={(e) => setContactEmail(e.target.value)} />
->>>>>>> main
 
         <div>
             <PhoneNumberInput
@@ -81,13 +76,8 @@ const ContactForm: FC<ContactFormProps> = ({
 					
 				<Checkbox
 					className="termsAndConditions"
-<<<<<<< HEAD
-					name=""
-          label={translations.contactTerms}
-=======
 					name="termsAndConditions"
 					label={translations.contactTerms}
->>>>>>> main
         />
         <ButtonPrimary className="flex flex-1 stretch">{translations.sendMessage}</ButtonPrimary>
 
