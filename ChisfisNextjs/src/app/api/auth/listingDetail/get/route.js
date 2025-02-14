@@ -24,7 +24,7 @@ export async function POST(request) {
     listings.PurchasePrice,
     listings.sqft,
 	listings.href,
-    (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId) As galleryImgs,
+    (SELECT JSON_OBJECT(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId) As galleryImgs,
     (SELECT
         url
     FROM

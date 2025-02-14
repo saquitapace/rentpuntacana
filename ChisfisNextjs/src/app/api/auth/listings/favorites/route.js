@@ -20,7 +20,7 @@ export async function POST(request) {
     l.PurchasePrice,
     l.sqft,
     l.href,
-    JSON_ARRAYAGG(CASE WHEN li.category = 'gallery' THEN li.url END) AS galleryImgs,
+    JSON_OBJECT(CASE WHEN li.category = 'gallery' THEN li.url END) AS galleryImgs,
     MAX(CASE WHEN li.category = 'feature' THEN li.url END) AS featuredImage,
     COUNT(DISTINCT lv.id) AS viewCount,
     COUNT(DISTINCT lr.id) AS reviewCount,
