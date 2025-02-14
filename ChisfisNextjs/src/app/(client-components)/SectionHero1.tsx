@@ -22,7 +22,9 @@ const SectionHero1: FC<SectionHero1Props> = ({ className = "", children }) => {
     <div className={`nc-SectionHero1 relative ${className}`}>
 
       <div className="absolute inset-y-0 w-5/6 xl:w-3/4 right-0 flex-grow">
-        <Image fill className="object-cover" src={imagePng} alt="hero" />     
+        <Image fill className="object-cover" src={imagePng} alt="hero"
+         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+        />     
       </div>
 
       <div className="relative inline-flex">

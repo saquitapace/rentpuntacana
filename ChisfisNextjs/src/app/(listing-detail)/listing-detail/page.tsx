@@ -490,9 +490,10 @@ const ListingStayDetailPage = ({
 			{/* MAIN */}
 			<main className="relative z-10 mt-0 flex flex-col lg:flex-row pb-10">
 				{/* CONTENT */}
-				<div className="w-full space-y-8 lg:w-3/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
+				<div className="w-full space-y-8 lg:w-4/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
 
 					{renderSection1()}
+<<<<<<< HEAD
 
 					{!loading && (
 						<DescriptionSection
@@ -509,6 +510,11 @@ const ListingStayDetailPage = ({
 						/>
 					)}
 
+=======
+					{renderSection2()}
+					{/* {renderSection3()} */}
+					
+>>>>>>> main
 					<Reviews
 						className=""
 						id={listingId}
@@ -526,7 +532,12 @@ const ListingStayDetailPage = ({
 
 				</div>
 
+<<<<<<< HEAD
 				<div className="mt-14 hidden flex-grow lg:mt-0 lg:block">
+=======
+				{/* SIDEBAR */}
+				<div className="mt-14 hidden flex-grow max-w-[420px] lg:mt-0 lg:block">
+>>>>>>> main
 					<div className="sticky top-28">{renderSidebar()}</div>
 				</div>
 			</main>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import i18n from "../../../utils/i18n";
 import options from "../../../utils/options";
 import Input from "@/shared/Input";
 import Select from "@/shared/Select";
@@ -12,10 +11,8 @@ import FormItem from "../FormItem";
 // 1 import form to track all changes.
 
 //options for form
-//const listing_types = options.getListingTypes(); // not used yet
+
 const rental_length = options.getRentalLength();
-const language =  i18n.getLanguage();
-const strings = i18n.getStrings();
 
 const page1FormData = JSON.parse(sessionStorage.getItem("page1FormData"))
 
@@ -97,7 +94,7 @@ const PageAddListing1: FC<PageAddListing1Props> = () => {
                   <div key={item.field} className="pr-5">
                     <Checkbox
                       name={item.field}
-                      label={item[language]}
+                      label={item.field}
                       defaultChecked= {item.defaultChecked}
                       onChange={(e) => {
                         var idx = rentalLength.indexOf(item.field, 0);

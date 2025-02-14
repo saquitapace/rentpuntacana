@@ -41,6 +41,7 @@ const SectionSubscribe: FC<SectionSubscribeProps> = ({ className = "" }) => {
         </ul>
         <form className="mt-10 relative max-w-sm">
           <Input
+            name="subscribe"
             required
             aria-required
             placeholder="Email"

@@ -41,24 +41,53 @@ const ContactForm: FC<ContactFormProps> = ({
 
   return (
     <div className="w-full flex flex-col space-y-6 xl:space-y-7">
+<<<<<<< HEAD
 				<Input value={contactName} placeholder={translations.yourName} onChange={(e) => setContactName(e.target.value)} />
         <Input type="text" value={listingRE} placeholder={translations.regardingListing} onChange={(e) => setListingRE(e.target.value)} />
+=======
+				<Input value={contactName} 
+        type="text"
+        name="contactName"
+        placeholder={translations.yourName} 
+        onChange={(e) => setContactName(e.target.value)} />			
+        
+        <Input 
+        type="text" 
+        name="subject"
+        value={listingRE} 
+        placeholder={translations.regardingListing} 
+        onChange={(e) => setListingRE(e.target.value)} />
 
-				<Input type="email" value={contactEmail} placeholder={translations.email} onChange={(e) => setContactEmail(e.target.value)} />
+				<Input 
+        type="email"
+        name="email"
+        value={contactEmail} 
+        placeholder={translations.email}
+        autoComplete="off"
+        onChange={(e) => setContactEmail(e.target.value)} />
+>>>>>>> main
+
         <div>
             <PhoneNumberInput
               className="mt-1.5"
               phoneNumber={contactPhone}
             />
-          </div>
+         </div>
+
 				<Textarea
+          name="contactFormBody"
           defaultValue={translations.contactAgentPlaceholder}
         />
 					
 				<Checkbox
 					className="termsAndConditions"
+<<<<<<< HEAD
 					name=""
           label={translations.contactTerms}
+=======
+					name="termsAndConditions"
+					label={translations.contactTerms}
+>>>>>>> main
         />
         <ButtonPrimary className="flex flex-1 stretch">{translations.sendMessage}</ButtonPrimary>
 
