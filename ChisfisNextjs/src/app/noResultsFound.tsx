@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-import { FC } from "react";
-import NotFoundPng from "@/images/notFound.png";
-=======
 import React, { FC, useState } from "react";
 import NotFoundImage from "@/images/notFound.png";
 import ErrorImage from "@/images/error.svg";
 import SearchImage from "@/images/search.svg";
 
->>>>>>> main
 import Image from "next/image";
 
 export interface NoResultsFoundProps {
