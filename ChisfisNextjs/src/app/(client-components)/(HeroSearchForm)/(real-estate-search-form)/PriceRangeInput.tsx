@@ -9,7 +9,7 @@ import {
 } from '@headlessui/react'
 import Slider from 'rc-slider'
 import convertNumbThousand from '@/utils/convertNumbThousand'
-import ButtonSubmit from '../ButtonSubmit'
+import ButtonSubmit from './ButtonSubmit';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline'
 
 export interface PriceRangeInputProps {

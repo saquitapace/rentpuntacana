@@ -2,10 +2,15 @@
 
 import converSelectedDateToString from "@/utils/converSelectedDateToString";
 import React, { useState } from "react";
-import { GuestsObject } from "../../type";
 import GuestsInput from "../GuestsInput";
 import LocationInput from "../LocationInput";
 import DatesRangeInput from "../DatesRangeInput";
+
+export interface GuestsObject {
+  guestAdults?: number;
+  guestChildren?: number;
+  guestInfants?: number;
+}
 
 const StaySearchForm = () => {
   //

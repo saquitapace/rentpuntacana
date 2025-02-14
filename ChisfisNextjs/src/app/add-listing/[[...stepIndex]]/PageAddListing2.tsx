@@ -2,7 +2,7 @@
 
 import { MapPinIcon } from '@heroicons/react/24/solid'
 import LocationMarker from '@/components/AnyReactComponent/LocationMarker'
-import Label from '@/components/Label'
+import Label from '@/components/FormElements/Label'
 import { FC, useState } from 'react'
 import ButtonSecondary from '@/shared/ButtonSecondary'
 import ButtonPrimary from '@/shared/ButtonPrimary'

@@ -17,14 +17,14 @@ export async function POST(request) {
     listings.description,
     listings.address,
     listings.map,
-    listings.amenitites,
+    listings.amenities,
     listings.userId AS authorId,
     listings.shortTermPrice AS price,
     listings.longTermPrice,
     listings.PurchasePrice,
     listings.sqft,
 	listings.href,
-    (SELECT JSON_ARRAYAGG(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId) As galleryImgs,
+    (SELECT JSON_OBJECT(url) As galleryImgs From listing_images where category = 'gallery' and listing_images.listingId = listings.listingId) As galleryImgs,
     (SELECT
         url
     FROM
@@ -72,25 +72,27 @@ FROM listings
 
 const [response2] = await pool.query(`
 SELECT
-users.firstName AS authorFirstName,
-users.about AS authorAbout,
-users.createdAt AS authorCreatedAt,
-users.lastName AS authorLastName,
-users.avatar AS authorAvatar,
-users.phoneNumber AS authorPhoneNumber,
-users.companyName AS authorCompanyName,
+users.firstName,
+users.about,
+users.createdAt,
+users.lastName,
+users.avatar,
+users.phoneNumber,
+users.companyName,
  (SELECT
         COUNT(*)
     FROM
         listings
     WHERE
         listings.userId = (SELECT userId from listings where listingId = ?)
-	) AS authorListingsCount
+	) AS listingsCount
 FROM 
 users
 WHERE users.userId = (SELECT userId from listings where listingId = ?)`,[id, id]);
 
-const mergedJSON = Object.assign({}, response1[0], response2[0]);
+response1[0].author = response2[0];
 
-  return NextResponse.json(mergedJSON);
+//const mergedJSON = Object.assign({}, response1[0], response2[0]);
+    
+  return NextResponse.json(response1[0]);
 }

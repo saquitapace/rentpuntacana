@@ -7,11 +7,11 @@ import {
 import AnyReactComponent from '@/components/AnyReactComponent/AnyReactComponent'
 import { FC } from 'react'
 import Checkbox from '@/shared/Checkbox'
-import { StayDataType } from '@/data/types'
+import { ListingDataType } from '@/dataTypes/ListingDataType';
 
 interface MapContainerProps {
 	currentHoverID: string | number
-	DEMO_DATA: StayDataType[]
+	DEMO_DATA: ListingDataType[]
 	listingType: 'experiences' | 'stay'
 }
 
@@ -56,11 +56,11 @@ const MapContainer: FC<MapContainerProps> = ({
 							lng={item.map.lng}
 							experiences={
 								listingType === 'experiences'
-									? (item as StayDataType)
+									? (item as ListingDataType)
 									: undefined
 							}
 							listing={
-								listingType === 'stay' ? (item as StayDataType) : undefined
+								listingType === 'stay' ? (item as ListingDataType) : undefined
 							}
 						/>
 					</AdvancedMarker>

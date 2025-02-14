@@ -12,8 +12,7 @@ const useFetchFavorites = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      let response;
-        response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/favorites`, {userId:user.userId});
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/favorites`, {userId:user.userId});
       const r2 = response.data[0];
         
       setData(r2);
@@ -26,12 +25,12 @@ const useFetchFavorites = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user, setData]);
 
   return {
     data,
     loading,
-    error,
+    error
   };
 };
 

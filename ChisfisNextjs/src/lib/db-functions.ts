@@ -1,29 +1,29 @@
 import { pool } from './db';
 import { generateUserId } from '@/utils/helpers';
 
-export async function getUserByEmail(email: string) {
-  try {
-    console.log('Fetching user for email:', email);
-    const [rows] = await pool.execute(
-      `SELECT u.*, lc.email, lc.password, lc.google_id, lc.auth_type, lc.jwt, lc.jwtExpiresAt
-       FROM users u 
-       JOIN login_cred lc ON u.userId = lc.userId 
-       WHERE lc.email = ?`,
-      [email]
-    );
-    console.log('Query result:', rows);
+// export async function getUserByEmail(email: string) {
+//   try {
+//     console.log('Fetching user for email:', email);
+//     const [rows] = await pool.execute(
+//       `SELECT u.*, lc.email, lc.password, lc.google_id, lc.auth_type, lc.jwt, lc.jwtExpiresAt
+//        FROM users u 
+//        JOIN login_cred lc ON u.userId = lc.userId 
+//        WHERE lc.email = ?`,
+//       [email]
+//     );
+//     console.log('Query result:', rows);
     
-    const user = (rows as any[])[0];
-    if (!user) {
-      return null; // Return null when no user is found
-    }
+//     const user = (rows as any[])[0];
+//     if (!user) {
+//       return null; // Return null when no user is found
+//     }
     
-    return user;
-  } catch (error) {
-    console.error('Database error in getUserByEmail:', error);
-    throw new Error('Failed to fetch user');
-  }
-}
+//     return user;
+//   } catch (error) {
+//     console.error('Database error in getUserByEmail:', error);
+//     throw new Error('Failed to fetch user');
+//   }
+// }
 
 export async function updateUser(userId: string, data: any) {
   const connection = await pool.getConnection();
@@ -118,7 +118,7 @@ export async function createUser(userData: {
         avatar,
         phoneNumber,
         about,
-        languages
+        languages,
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
@@ -191,14 +191,14 @@ export async function createUser(userData: {
   }
 }
 
-export async function testConnection() {
-  try {
-    const connection = await pool.getConnection();
-    console.log('Database connected successfully');
-    connection.release();
-    return true;
-  } catch (error) {
-    console.error('Database connection error:', error);
-    return false;
-  }
-}
+// export async function testConnection() {
+//   try {
+//     const connection = await pool.getConnection();
+//     console.log('Database connected successfully');
+//     connection.release();
+//     return true;
+//   } catch (error) {
+//     console.error('Database connection error:', error);
+//     return false;
+//   }
+// }

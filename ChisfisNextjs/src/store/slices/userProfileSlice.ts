@@ -6,13 +6,16 @@ interface UserProfileState {
   accountType: string;
   avatar: string;
   companyName: string;
+  fullName: string;
+  displayName: string;
   firstName: string;
   lastName: string;
   email: string;
-  address: string;
+  location: string;
   phoneNumber: string;
   about: string;
   languages: string[];
+  socials: string[],
   createdAt: string;
   isLoading: boolean;
   error: string | null;
@@ -21,12 +24,15 @@ interface UserProfileState {
 const initialState: UserProfileState = {
   userId: '',
   accountType: '',
-  avatar: '/images/avatars/default.png',
+  avatar: '',
   companyName: '',
+  fullName: '',
+  displayName: '',
   firstName: '',
   lastName: '',
   email: '',
-  address: '',
+  socials:[],
+  location: '',
   phoneNumber: '',
   about: 'Hi! I am new here.',
   languages: ['English'],

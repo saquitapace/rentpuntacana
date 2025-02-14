@@ -1,5 +1,4 @@
-import { DateRage } from "@/app/(client-components)/type";
-
+export type DateRage = [Date | null, Date | null];
 const converSelectedDateToString = ([startDate, endDate]: DateRage) => {
   const dateString =
     (startDate?.toLocaleDateString("en-US", {

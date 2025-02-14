@@ -72,6 +72,7 @@ export const Amenities_demos = [
   { name: "la-infinity", icon: "la-infinity" },
 ];
 
+
 export const imageGallery: ListingGalleryImage[] = [...PHOTOS].map(
   (item, index): ListingGalleryImage => {
     return {

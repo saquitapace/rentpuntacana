@@ -11,7 +11,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { Message } from "@/app/userChatData";
+import { Message } from "@/dataTypes/userChatData";
 import { useSession } from "next-auth/react";
 import useChatStore from "@/hooks/useChatStore";
 

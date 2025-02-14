@@ -1,15 +1,13 @@
-'use client'
+'use client';
 
-import { Transition } from '@headlessui/react'
-import ExperiencesCard from '@/components/ExperiencesCard'
-import StayCard from '@/components/StayCard'
-import { StayDataType } from '@/data/types'
-import React, { FC, Fragment } from 'react'
-import { useState } from 'react'
+import { Transition } from '@headlessui/react';
+import StayCard from '@/components/cards/StayCard';
+import { ListingDataType } from '@/dataTypes/ListingDataType';
+import { FC, Fragment, useState } from 'react';
 
 export interface AnyReactComponentProps {
 	className?: string
-	listing?: StayDataType
+	listing?: ListingDataType
 	experiences?: {}
 	isSelected?: boolean
 	lat: number
@@ -19,8 +17,7 @@ export interface AnyReactComponentProps {
 const AnyReactComponent: FC<AnyReactComponentProps> = ({
 	className = '',
 	listing,
-	experiences,
-	isSelected,
+	isSelected
 }) => {
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -52,14 +49,6 @@ const AnyReactComponent: FC<AnyReactComponentProps> = ({
 				<div className="aspect-w-1 absolute -left-12 bottom-full z-50 w-[260px] pb-3">
 					{listing && (
 						<StayCard size="small" data={listing} className="shadow-2xl" />
-					)}
-					{experiences && (
-						<ExperiencesCard
-							size="small"
-							data={experiences}
-							ratioClass="aspect-w-12 aspect-h-10"
-							className="rounded-3xl bg-white shadow-2xl dark:bg-neutral-900"
-						/>
 					)}
 				</div>
 			</Transition>

@@ -2,33 +2,38 @@
 
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from 'next/navigation';
-import NotifyDropdown from "./NotifyDropdown";
-import AvatarDropdown from "./AvatarDropdown";
+import NotifyDropdown from "./components/NotifyDropdown";
+import AvatarDropdown from "./components/AvatarDropdown";
 import Logo from "@/shared/Logo";
 import Navigation from "@/shared/Navigation/Navigation";
 import Button from "@/shared/Button";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
-import LangDropdownSingle from "./LangDropdownSingle";
+//import HeroSearchForm2MobileFactory from "../(HeroSearchForm2Mobile)/HeroSearchForm2MobileFactory";
+import LangDropdownSingle from "./components/LangDropdownSingle";
 import { AppDispatch, RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; 
 import { clearUserProfile, fetchUserProfile, setUserProfile } from "@/store/slices/userProfileSlice";
 import { isTokenValid } from "@/utils/helpers";
 import { updateJWT } from "@/store/slices/authSlice";
 //import LangDropdown from "./LangDropdown";
-import SearchDropdown from "./SearchDropdown";
+//import SearchDropdown from "./SearchDropdown";
 
 export interface NewHeaderProps {
   className?: string;
 }
 
 const NewHeader: FC<NewHeaderProps> = (
+<<<<<<< HEAD
+  { className = ''
+  }
+=======
   { className = "" }
+>>>>>>> main
 ) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
@@ -36,16 +41,15 @@ const NewHeader: FC<NewHeaderProps> = (
   const pathname = usePathname();
   const router = useRouter();
   
-  const handleSignOut = async () => {
-    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
-
-    dispatch(clearUserProfile());
-    signOut({ callbackUrl: '/' });
-  };
-
   const { translations, isLoading, error } = useSelector(
     (state: RootState) => state.translations
   );
+
+  const handleSignOut = useCallback(async () => {
+    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
+    dispatch(clearUserProfile());
+    signOut({ callbackUrl: "/" });
+  }, [dispatch, session]);
 
   // Fetch user profile data when component mounts or session changes
   useEffect(() => {
@@ -83,7 +87,7 @@ const NewHeader: FC<NewHeaderProps> = (
     };
 
     fetchData();
-  }, [dispatch, session?.user?.email]);
+  }, [dispatch, session, handleSignOut]);
 
   return (
     <div className={`nc-Header border-b border-neutral-200 sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
@@ -95,16 +99,15 @@ const NewHeader: FC<NewHeaderProps> = (
             <Navigation />
           </div>
 
-          <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
+          {/* <div className="self-center lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
             <HeroSearchForm2MobileFactory />
-          </div>
+          </div> */}
           
           <div className="hidden md:flex flex-shrink-0 justify-center items-center flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
            
-          {(pathname != "/login" && pathname !== "/signup")  && 
-            // <LangDropdown />
+          {/* {(pathname != "/login" && pathname !== "/signup")  && 
             <SearchDropdown />
-          }
+          } */}
 
            {(pathname != "/login" && pathname !== "/signup")  && 
               <LangDropdownSingle />
@@ -119,8 +122,7 @@ const NewHeader: FC<NewHeaderProps> = (
                   <Link
                     href={"/howitworks" as Route<string>}
                     className="self-center text-opacity-90 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-                  >
-                    + {translations.addListing}
+                  >{translations.addListing}
                   </Link>
                     <Button 
                       className="self-center block" 
@@ -144,7 +146,7 @@ const NewHeader: FC<NewHeaderProps> = (
                     href={"/add-listing" as Route<string>}
                     className="self-center text-opacity-90 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                   >
-                    + {translations.addListing}
+                  {translations.addListing}
                   </Link>
                 )}
                 <NotifyDropdown />

@@ -1,4 +1,3 @@
-// use-fetch-data.js
 import { useEffect, useState} from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -13,8 +12,7 @@ const useFetchReviews = (par) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      let response;
-        response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/reviews/${params.type}/get`, params);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/reviews/${params.type}/get`, params);
       const r2 = response.data[0];
         
       r2.map((str) => {
@@ -31,7 +29,7 @@ const useFetchReviews = (par) => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [params]);
 
   return {
     data,

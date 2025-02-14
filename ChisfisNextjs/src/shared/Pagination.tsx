@@ -1,10 +1,10 @@
-import { CustomLink } from "@/data/types";
+import { CustomLinkDataType } from "@/dataTypes/CustomLinkDataType";
 import React, { FC } from "react";
 import twFocusClass from "@/utils/twFocusClass";
 import Link from "next/link";
 import { Route } from "@/routers/types";
 
-const DEMO_PAGINATION: CustomLink[] = [
+const DEMO_PAGINATION: CustomLinkDataType[] = [
   {
     label: "1",
     href: "#",
@@ -28,7 +28,7 @@ export interface PaginationProps {
 }
 
 const Pagination: FC<PaginationProps> = ({ className = "" }) => {
-  const renderItem = (pag: CustomLink, index: number) => {
+  const renderItem = (pag: CustomLinkDataType, index: number) => {
     if (index === 0) {
       // RETURN ACTIVE PAGINATION
       return (

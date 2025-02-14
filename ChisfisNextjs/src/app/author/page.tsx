@@ -1,21 +1,17 @@
 "use client";
-
-import CommentListing from "@/components/CommentListing";
+//import CommentListing from "@/components/CommentListing";
 import StartRating from "@/components/StartRating";
-import StayCard from "@/components/StayCard2";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import React, { Fragment, FC, useEffect, useState } from "react";
-import Avatar from "@/shared/Avatar";
-import ButtonSecondary from "@/shared/ButtonSecondary";
+import StayCard from "@/components/cards/StayCard";
+import React, { Fragment, FC, useEffect, useMemo, useState, useCallback } from "react";
+import Avatar from "@/shared/Avatar"; 
+//import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
-import { ExclamationTriangleIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, EyeIcon, HomeIcon, ChatBubbleBottomCenterTextIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { Tab } from "@headlessui/react";
-import ExperiencesCard from "@/components/ExperiencesCard";
 import { signOut, useSession } from "next-auth/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import Reviews from '@/components/Reviews';
-import axios from "axios";
 import { 
   fetchUserProfile,
   getUserFullName,
@@ -25,9 +21,10 @@ import {
   getUserLoading,
   getUserCreatedAt,
   clearUserProfile,
-  getUserId
 } from '@/store/slices/userProfileSlice';
 import { formatDateJoined } from "@/utils/helpers";
+import { updateJWT } from "@/store/slices/authSlice";
+import useFetchPublished from "@/hooks/useFetchPublished";
 
 export interface AuthorPageProps {}
 
@@ -46,57 +43,55 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
   // Get user data from Redux store
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const fullName = useSelector(getUserFullName);
-  const userId = useSelector(getUserId);
-
   const avatar = useSelector(getUserAvatar);
   const languages = useSelector(getUserLanguages);
   const about = useSelector(getUserAbout);
   const getUserIsLoading = useSelector(getUserLoading);
   const dateJoined = formatDateJoined( useSelector(getUserCreatedAt) );
-	
+  const [isloading, setIsLoading]= useState(true);
+  
   // Debug logs
-  // console.log("Session:", session);
-  // console.log("UserProfile:", userProfile);
+  console.log("Session:", session);
+  console.log("UserProfile:", userProfile);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(async () => {
+    await dispatch(updateJWT({ ...session, jti: null, exp: null }));
     dispatch(clearUserProfile());
-    signOut({ callbackUrl: '/' });
-  };
+    signOut({ callbackUrl: "/" });
+  }, [dispatch, session]);
+
+
+
+  // const socials = useMemo(() => {
+  //   return filterTodos(todos, tab); // Skipped if todos and tab haven't changed  
+  // }, [todos, tab]);
+
+
+  function usePublished() {
+
+    const { data, loading, error } = useFetchPublished();
+  
+    useEffect(() => {
+      
+       console.log("send request")
+      if (!loading && !error) {
+        setListings(data);
+        setIsLoading(false);
+      }
+    }, [data, loading, error]);
+  
+    return { data, loading, error };
+  }
+  
+  usePublished();
+
 
   useEffect(() => {
-    if (session?.user?.email) {
-      //?
-      loadListingDetailData();
-    }
-    else
-    {
+    if (!session?.user?.email) {
       handleSignOut()
-    }    
-  }, [dispatch, session?.user?.email ]);
-
-
-    const loadListingDetailData = async () => {
-        const d = await fetchListingDetailData();
-        console.log(d);
-         setListings(d);
-        //setLoading(false);
     }
-  
-    const fetchListingDetailData = async () => {
-      try {
-        const userId =  user ? user.userId : 'guest';
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/published`, {userId:userId});
     
-        if (response) {
-          //console.log(response.data)
-        return await response.data[0];
-        }
-      } catch (error) {
-        console.error('Error fetching listing detail data:', error);
-        // alert("Loading listing detail failed. Network error. Please contact helpdesk. Error code: 500.");
-      } finally {
-      } 
-    }
+  }, [dispatch, session, handleSignOut]);
 
   // Show loading state
   if (getUserIsLoading) {
@@ -149,6 +144,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
         {/* Social Links */}
         <SocialsList
+          socials={userProfile.socials}
           className="!space-x-3"
           itemClass="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xl"
         />
@@ -159,41 +155,15 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
         <div className="space-y-4 w-full">
           {/* Location */}
           <div className="flex items-center space-x-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-neutral-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              />
-            </svg>
+            <HomeIcon className="h-6 w-6"/>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
-              Punta Cana, Dominican Republic
+              {userProfile.location}
             </span>
           </div>
 
           {/* Languages */}
           <div className="flex items-center space-x-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-neutral-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-              />
-            </svg>
+            <ChatBubbleBottomCenterTextIcon className="h-6 w-6"/>
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
               {translations.speaks} {Array.isArray(languages) ? languages.join(', ') : 'English'}
             </span>
@@ -201,20 +171,7 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
           {/* Join Date */}
           <div className="flex items-center space-x-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-neutral-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
+            <CheckBadgeIcon className="h-6 w-6"/> 
             <span className="text-neutral-600 dark:text-neutral-300 flex-1 text-left">
               {translations.joinedIn} {translations.space} {dateJoined}
             </span>
@@ -268,11 +225,8 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
               </Tab.Panel>
               <Tab.Panel className="mt-8">
                 <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-                  {DEMO_STAY_LISTINGS.filter((_, i) => i < 2).map(
-                    (stay) => (
-                      <ExperiencesCard key={stay.id} data={stay} />
-                    )
-                  )}
+                  todo
+                  
                 </div>
                 {/*<div className="flex mt-11 justify-center items-center">
                   <ButtonSecondary>Show me more</ButtonSecondary>
@@ -288,10 +242,9 @@ const AuthorPage: FC<AuthorPageProps> = ({}) => {
 
   const renderSection2 = () => {
     return (
-
       <Reviews
       className=""
-      id={userId}
+      id={userProfile.userId}
       type="user"
     />
     );

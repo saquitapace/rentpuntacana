@@ -1,16 +1,20 @@
 "use client";
-
 import React from "react";
 import ButtonClose from "@/shared/ButtonClose";
 import Logo from "@/shared/Logo";
 import { Disclosure } from "@headlessui/react";
 import { NavItemType } from "./NavigationItem";
 import { NAVIGATION_DEMO } from "@/data/navigation";
-import ButtonPrimary from "@/shared/ButtonPrimary";
-import SocialsList from "@/shared/SocialsList";
+// import ButtonPrimary from "@/shared/ButtonPrimary";
+// import SocialsList from "@/shared/SocialsList";
+
+import NotifyDropdown from "@/app/(client-components)/(Header)/components/NotifyDropdown";
+import AvatarDropdown from "@/app/(client-components)/(Header)/components/AvatarDropdown";
+import LangDropdownSingle from "@/app/(client-components)/(Header)/components/LangDropdownSingle";
+
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+
 import Link from "next/link";
-import LangDropdown from "@/app/(client-components)/(Header)/LangDropdown";
 
 export interface NavMobileProps {
   data?: NavItemType[];
@@ -106,18 +110,6 @@ const NavMobile: React.FC<NavMobileProps> = ({
     <div className="overflow-y-auto w-full h-screen py-2 transition transform shadow-lg ring-1 dark:ring-neutral-700 bg-white dark:bg-neutral-900 divide-y-2 divide-neutral-100 dark:divide-neutral-800">
       <div className="py-6 px-5">
         <Logo />
-        <div className="flex flex-col mt-5 text-neutral-700 dark:text-neutral-300 text-sm">
-          <span>
-            Discover the most outstanding articles on all topics of life. Write
-            your stories and share them
-          </span>
-
-          <div className="flex justify-between items-center mt-4">
-            <SocialsList itemClass="w-9 h-9 flex items-center justify-center rounded-full bg-neutral-100 text-xl dark:bg-neutral-800 dark:text-neutral-300" />
-            <span className="block">
-            </span>
-          </div>
-        </div>
         <span className="absolute right-2 top-2 p-1">
           <ButtonClose onClick={onClickClose} />
         </span>
@@ -126,19 +118,19 @@ const NavMobile: React.FC<NavMobileProps> = ({
         {data.map(_renderItem)}
       </ul>
       <div className="flex items-center justify-between py-6 px-5">
-        <a
-          className="inline-block"
-          href="https://themeforest.net/item/chisfis-online-booking-nextjs-template/43399526"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ButtonPrimary>Get Template</ButtonPrimary>
-        </a>
 
-        <LangDropdown
-          className="flex"
-          panelClassName="z-10 w-screen max-w-[280px] px-4 mb-3 right-3 bottom-full sm:px-0"
+        <LangDropdownSingle
+          panelClassName="w-screen px-0"
         />
+      </div>
+      <div className="flex items-center justify-between py-6 px-5">
+        <NotifyDropdown />
+        </div>
+        <div className="flex items-center justify-between py-6 px-5">
+
+        <AvatarDropdown handleSignOut={function (): Promise<void> {
+          throw new Error("Function not implemented.");
+        } } /> 
       </div>
     </div>
   );

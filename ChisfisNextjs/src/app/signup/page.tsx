@@ -33,7 +33,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    accountType: "",
+    accountType: null,
     firstName: "",
     lastName: "",
     email: "",
@@ -57,7 +57,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
       await signIn("google", {
         callbackUrl: "/",
       });
-      
+        
     } catch (error) {
       console.error("SignUp error:", error);
       setError("An error occurred during sign up");
@@ -90,6 +90,7 @@ const PageSignUp: FC<PageSignUpProps> = ({}) => {
         password: formData.password,
       })).unwrap();
 
+      
       router.push( redirect( formData.accountType ) );
     } catch (error: any) {
       console.error("Signup error:", error);

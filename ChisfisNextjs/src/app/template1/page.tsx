@@ -5,7 +5,7 @@ import ButtonSecondary from "@/shared/ButtonSecondary";
 import SocialsList from "@/shared/SocialsList";
 import Image from "next/image";
 import Input from "@/shared/Input";
-import Label from "@/components/Label";
+import Label from "@/components/FormElements/Label";
 import Textarea from "@/shared/Textarea";
 import avatar4 from "@/images/avatars/Image-4.png";
 import { useSession } from "next-auth/react";

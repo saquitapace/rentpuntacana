@@ -1,31 +1,34 @@
 //saquita
-'use client';
-import { FC, Fragment, useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from 'react';
+// types
+import { ListingDetailDataType} from '@/dataTypes/ListingDetailDataType';
+//components
 import ContactForm  from '@/components/ContactForm';
-import {Dialog, Transition, TransitionChild } from '@headlessui/react';
-import { Squares2X2Icon, PrinterIcon, LanguageIcon } from '@heroicons/react/24/outline';
-import BtnLikeIcon from '@/components/BtnLikeIcon';
 import Price from '@/components/Price';
 import StartRating from '@/components/StartRating';
+import BtnLikeIcon from '@/components/FormElements/BtnLikeIcon';
+import ShareBtn from '@/components/ShareBtn';
+import Reviews from '@/components/Reviews';
+import AmenitiesSection from '../../../components/amenitiesSection';
+import DescriptionSection from '../../../components/descriptionSection';
+//shared ** move to components
 import Avatar from '@/shared/Avatar';
 import ButtonSecondary from '@/shared/ButtonSecondary';
-import ButtonClose from '@/shared/ButtonClose';
-import Image from 'next/image';
-import { usePathname, useSearchParams, useRouter, useParams } from 'next/navigation';
-import { Amenities_demos, PHOTOS } from '../constant';
+//hooks
+import useFetchListingDetail from '@/hooks/useFetchListingDetail';
+//icons
+import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline';
+
+//? temporary - to delete...
+import { PHOTOS } from '../constant';
 import SectionDateRange from '../SectionDateRange';
+import { formatPhoneNumberIntl } from "react-phone-number-input";
+//? useSearchParams, useParams
+import { usePathname, useRouter } from 'next/navigation';
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import { Route } from 'next';
-import ShareBtn from '@/components/ShareBtn';
-import Reviews from '../../../components/Reviews';
-import axios from 'axios';
-//import { ListingDetailType } from "@/data/types";
-import { DEMO_STAY_LISTINGS } from "@/data/listings";
-import Link from 'next/link';
-import { formatPhoneNumberIntl } from 'react-phone-number-input';
-import { formatDateJoined } from "@/utils/helpers";
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { useSession } from "next-auth/react";
 
 const ListingStayDetailPage = ({
 	params,
@@ -35,124 +38,74 @@ const ListingStayDetailPage = ({
 	searchParams?: { [key: string]: string | string[] | undefined };
 	}) => {
 
-	const DEMO_DATA = DEMO_STAY_LISTINGS[0];
+	let [listingDetail, setListingDetail]= useState<ListingDetailDataType>({
+		id: '',
+		href: '/',
+		title: '',
+		amenities: [],
+		featuredImage: '',
+		commentCount: 0,
+		viewCount: 0,
+		address: '',
+		reviewStart: null,
+		reviewCount: null,
+		likes: false,
+		galleryImgs: [],
+		price: '',
+		sqft: 0,
+		description: '',
+		availabilityDate: '',
+		bedrooms: null,
+		bathrooms: null,
+		isAds: false,
+		map: {
+			lat: 0,
+			lng: 0
+		},
+		author: {
+			firstName: '',
+			id: '',
+			lastName: '',
+			displayName: '',
+			avatar: '',
+			createdAt: '',
+			about: '',
+			companyName: '',
+			href: '/',
+			listingsCount: 0,
+			phoneNumber: '',
+			fullName: ''
+		},
+	});
 
-	let [listingDetail, setListingDetail]= useState(
-		{
-			galleryImgs:[],
-			listingCategory:'',
-			address: null,
-			title: '',
-			bedrooms: 0,
-			bathrooms: 0,
-			sqft: 0,
-			amenities:[],
-			href:'',
-			likes: null,
-			availabilityDate: null,
-			saleOff: null,  
-			isAds: null,
-			price: null,
-			reviewStart: null,
-			reviewCount: null,
-			id:'',
-			description:'' ,
-			listingId: null,
-			authorFirstName:'',
-			authorLastName:'',
-			authorAvatar:'',
-			authorPhoneNumber: null,
-			authorCompanyName: null,
-			authorListingsCount:null,
-			authorId: null,
-			authorAbout:null,
-			authorCreatedAt:null
-		  }
-	);
-
-	const { data: session } = useSession();
-	const user = session?.user;
-
-	let [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
 	const thisPathname = usePathname();
 	const router = useRouter();
 	const listingId = searchParams.lid;
-	const [loading, setLoading] = useState(true);
 	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
-	const [arr,setArr] = useState([]);
-	const [amenitiesArray, setAmenitiesArray] = useState(false);
-	
-	let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
-	
+	const [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
+	const [loading, setLoading] = useState(true);
+
 	const { translations, isLoading, error } = useSelector(
 		(state: RootState) => state.translations
 	);
-
-	const renderAmenities = async (amenities) => {
-		
-		setAmenitiesArray(true);
-
-		if(amenities === null){
-			return;
-		}
-
-		const Array = JSON.parse(amenities); 
-
-		Array.forEach(has => {
-			Amenities_demos.forEach(item => {
-				if(has == item.key){
-					arr.push({icon:item.icon,key:has })	
-				}
-			});
-		});
-	}
-
-	const loadListingDetailData = async () => {
-			const d = await fetchListingDetailData();
-			const prevData = listingDetail;
-			listingDetail = d;
-		  	d.authorCreatedAt = formatDateJoined(d.authorCreatedAt)
-			setListingDetail(d);
-			setLoading(false);
-			setGalleryPhotos(listingDetail['galleryImgs']);
-			renderAmenities(d.amenitites);
-			setListingDetail((listingDetail) => ({ ...listingDetail, d }));
-	}
-
-	useEffect(() => {
-		
-		if(listingId){
-			loadListingDetailData();
-		} else {
-			alert("todo: display error message is the id isnt passed & display mock object data");
-			//setListingDetail(DEMO_DATA); // load the test view
-		}
-	},[]);
-
-	const fetchListingDetailData = async () => {
-
-		try {
-			const userId =  user ? user.userId : 'guest';
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listingDetail/get`, {listingId:listingId,userId:userId});
 	
-			if (response) {
-				//console.log(response.data)
-			return await response.data;
+    function useFetchDetail() {
+		const { data, loading, error } = useFetchListingDetail({listingId:listingId});
+		//console.log(data);
+		//const dataObj = data?: ListingDetailDataType[] ;
+		useEffect(() => {
+			if (data && !loading && !error) {
+				setListingDetail(data);
+				setLoading(false);
+				//setGalleryPhotos(listingDetail['galleryImgs']);
+				setListingDetail((listingDetail) => ({ ...listingDetail, data }));
 			}
-		} catch (error) {
-			console.error('Error fetching listing detail data:', error);
-			// alert("Loading listing detaol failed. Network error. Please contact helpdesk. Error code: 500.");
-		} finally {
-		} 
+		}, [data, loading, error]);
+		
+		return { data, loading, error };
 	}
 	
-	function closeModalAmenities() {
-		setIsOpenModalAmenities(false);
-	}
-
-	function openModalAmenities() {
-		setIsOpenModalAmenities(true);
-	}
+	useFetchDetail();
 
 	const handleOpenModalImageGallery = () => {
 		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
@@ -162,7 +115,6 @@ const ListingStayDetailPage = ({
 		return (
 			
 			<div className="listingSection__wrap !space-y-6">
-      {/* <pre>{JSON.stringify(translations, null, 2)}</pre> */}
 				<div className="flex items-center justify-between">	
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
@@ -221,13 +173,15 @@ const ListingStayDetailPage = ({
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bedrooms} <span className="hidden sm:inline-block">{translations.bedrooms}</span>
+							{listingDetail.bedrooms} 
+							<span className="hidden sm:inline-block pl-2">{listingDetail.bedrooms > 1 ? translations.bedrooms : translations.bedroom }</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-						{listingDetail.bathrooms} <span className="hidden sm:inline-block">{translations.bathrooms}</span>
+							{listingDetail.bathrooms} 
+							<span className="hidden sm:inline-block pl-2">{listingDetail.bathrooms > 1 ? translations.bathrooms : translations.bathroom }</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
@@ -239,143 +193,14 @@ const ListingStayDetailPage = ({
 
 					<div className="flex items-center space-x-3">
 						<i className="las la-wifi text-lg"></i>
-						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{translations.wifi}
-						</span>
+						<span className="hidden sm:inline-block">{translations.wifi}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-smoking-ban text-lg"></i>
-						<span className="text-sm text-neutral-500 dark:text-neutral-400">
-						{translations.noSmoking}
-						</span>
+						<span className="hidden sm:inline-block">{translations.noSmoking}</span>
           			</div>
 				</div>
 			</div>
-		)
-	}
-
-	const renderSection2 = () => {
-		return (
-			<div className="listingSection__wrap">
-				<h2 className="text-xl font-semibold items-end">{translations.listingDescription} 
-					<div className="flex p-0 m-0 text-xs font-normal"><i>{translations.someInfoAutomaticallyTranslated}</i> <Link className="pl-3 underline" href="#">{translations.showOriginal}</Link>
-					<LanguageIcon className="pl-1 h-6 w-6" />
-					</div>
-				</h2>
-				
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-				<div className="text-neutral-6000 dark:text-neutral-300">
-					<div>
-						{listingDetail.description}
-					</div>
-				</div>
-			</div>
-		)
-	}
-
-	const renderSection3 = () => {
-		return (
-			<div className="listingSection__wrap">
-				<div>
-					<h2 className="text-xl font-semibold">{translations.amenities} ({arr.length})</h2>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-
-				<div className="grid grid-cols-1 gap-6 text-sm text-neutral-700 dark:text-neutral-300 xl:grid-cols-3">
-				
-				{/* {!loading && ()} */}
-				
-					{amenitiesArray && (							
-						arr.map((item) => (
-							
-							<div key={item.name} className="flex items-center space-x-3">
-								<i className={`las text-3xl ${item.icon}`}></i>
-								<span className=" ">{item.key}</span>
-							</div>
-						))
-					)}
-				</div>
-
-				{/*<div className="w-14 border-b border-neutral-200"></div>
-				 <div >
-					<ButtonSecondary className="text-red-700" onClick={openModalAmenities}>
-						View more 20 amenities
-					</ButtonSecondary>
-				</div> 
-				{renderMotalAmenities()}*/}
-			</div>
-		)
-	}
-
-	const renderMotalAmenities = () => {
-		return (
-			<Transition appear show={isOpenModalAmenities} as={Fragment}>
-				<Dialog
-					as="div"
-					className="fixed inset-0 z-50 overflow-y-auto"
-					onClose={closeModalAmenities}
-				>
-					<div className="min-h-screen px-4 text-center">
-						<TransitionChild
-							as={Fragment}
-							enter="ease-out duration-300"
-							enterFrom="opacity-0"
-							enterTo="opacity-100"
-							leave="ease-in duration-200"
-							leaveFrom="opacity-100"
-							leaveTo="opacity-0"
-						>
-							<div className="fixed inset-0 bg-black bg-opacity-40" />
-						</TransitionChild>
-
-						{/* This element is to trick the browser into centering the modal contents. */}
-						<span
-							className="inline-block h-screen align-middle"
-							aria-hidden="true"
-						>
-							&#8203;
-						</span>
-						<TransitionChild
-							as={Fragment}
-							enter="ease-out duration-300"
-							enterFrom="opacity-0 scale-95"
-							enterTo="opacity-100 scale-100"
-							leave="ease-in duration-200"
-							leaveFrom="opacity-100 scale-100"
-							leaveTo="opacity-0 scale-95"
-						>
-							<div className="inline-block h-screen w-full max-w-4xl py-8">
-								<div className="inline-flex h-full w-full transform flex-col overflow-hidden rounded-2xl bg-white pb-2 text-left align-middle shadow-xl transition-all dark:border dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100">
-									<div className="relative flex-shrink-0 border-b border-neutral-200 px-6 py-4 text-center dark:border-neutral-800">
-										<h3
-											className="text-lg font-medium leading-6 text-gray-900"
-											id="headlessui-dialog-title-70"
-										>
-											Amenities
-										</h3>
-										<span className="absolute left-3 top-3">
-											<ButtonClose onClick={closeModalAmenities} />
-										</span>
-									</div>
-									<div className="divide-y divide-neutral-200 overflow-auto px-8 text-neutral-700 dark:text-neutral-300">
-										{Amenities_demos.filter((_, i) => i < 1212).map((item) => (
-											<div
-												key={item.name}
-												className="flex items-center space-x-5 py-2.5 sm:py-4 lg:space-x-8 lg:py-5"
-											>
-												<i
-													className={`las text-4xl text-neutral-6000 ${item.icon}`}
-												></i>
-												<span>{item.name}</span>
-											</div>
-										))}
-									</div>
-								</div>
-							</div>
-						</TransitionChild>
-					</div>
-				</Dialog>
-			</Transition>
 		)
 	}
 
@@ -434,28 +259,28 @@ const ListingStayDetailPage = ({
 				<div className="flex items-center space-x-4">
 
 					<Avatar
-						imgUrl={listingDetail.authorAvatar}
-						userName={listingDetail.authorFirstName}
+						imgUrl={listingDetail.author.avatar}
+						userName={listingDetail.author.firstName}
 						hasChecked
 						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
 						sizeClass="h-16 w-16"
 						radius="rounded-full"
 					/>
 					<div>
-						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.authorId}`}>
-							{listingDetail.authorFirstName} { } {listingDetail.authorLastName}
+						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.author.id}`}>
+							{listingDetail.author.firstName} { } {listingDetail.author.lastName}
 						</a>
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
 							<span className="mx-2">·</span>
-							<a className="underline" href={`/publicProfile?uid=${listingDetail.authorId}`}>{listingDetail.authorListingsCount} {translations.listings}</a>
+							<a className="underline" href={`/publicProfile?uid=${listingDetail.author.id}`}>{listingDetail.author.listingsCount} {translations.listings}</a>
 						</div>
 					</div>
 				</div>
 
 				{/* desc */}
 				<span className="block text-neutral-6000 dark:text-neutral-300">
-				{listingDetail.authorAbout}
+				{listingDetail.author.about}
 				</span>
 
 				{/* info */}
@@ -475,7 +300,7 @@ const ListingStayDetailPage = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>{translations.joinedIn} {translations.space}{listingDetail.authorCreatedAt}</span>
+						<span>{translations.joinedIn} {translations.space}{listingDetail.author.createdAt}</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -516,7 +341,7 @@ const ListingStayDetailPage = ({
 
 				<div>
 					<ButtonSecondary
-						href={`/publicProfile?uid=${listingDetail.authorId}` as Route<string>}
+						href={`/publicProfile?uid=${listingDetail.author.id}` as Route<string>}
 					>{translations.seeAgentProfile}</ButtonSecondary>
 				</div>
 			</div>
@@ -550,77 +375,25 @@ const ListingStayDetailPage = ({
 			</div>
 		)
 	}
-
-	const renderSection8 = () => {
-		return (
-			<div className="listingSection__wrap text-red-700">
-				{/* HEADING */}
-				<h2 className="text-2xl font-semibold">Things to know</h2>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Cancellation policy</h4>
-					<span className="mt-3 block text-neutral-500 dark:text-neutral-400">
-						Refund 50% of the booking value when customers cancel the room
-						within 48 hours after successful booking and 14 days before the
-						check-in time. <br />
-						Then, cancel the room 14 days before the check-in time, get a 50%
-						refund of the total amount paid (minus the service fee).
-					</span>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Check-in time</h4>
-					<div className="mt-3 max-w-md text-sm text-neutral-500 dark:text-neutral-400 sm:text-base">
-						<div className="flex justify-between space-x-10 rounded-lg bg-neutral-100 p-3 dark:bg-neutral-800">
-							<span>Check-in</span>
-							<span>08:00 am - 12:00 am</span>
-						</div>
-						<div className="flex justify-between space-x-10 p-3">
-							<span>Check-out</span>
-							<span>02:00 pm - 04:00 pm</span>
-						</div>
-					</div>
-				</div>
-				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-				{/* CONTENT */}
-				<div>
-					<h4 className="text-lg font-semibold">Special Note</h4>
-					<div className="prose sm:prose">
-						<ul className="mt-3 space-y-2 text-neutral-500 dark:text-neutral-400">
-							<li>
-								Ban and I will work together to keep the landscape and
-								environment green and clean by not littering, not using
-								stimulants and respecting people around.
-							</li>
-							<li>Do not sing karaoke past 11:30</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		)
-	}
 		
-const print =() => {
-	window.print
-}
+	const print =() => {
+		window.print
+	}
+
 	const renderSidebar = () => {
 		return (
 			<>
-			<div className="listingSectionSidebar__wrap shadow-xl">
+			<div className="listingSectionSidebar__wrap shadow-xl max-w-[400px]">
 				<span className="text-3xl font-semibold">
 					{!!listingDetail.price || listingDetail.price == null && (
 						<Price className="text-3xl font-semibold" price={listingDetail.price} />
 					)}
 					{listingDetail.price && (
 						<div>${listingDetail.price}
-						<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-							/{translations.month}
-						</span></div>
+							<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
+								/{translations.month}
+							</span>
+						</div>
 					)}
 				</span>
 
@@ -628,28 +401,28 @@ const print =() => {
 
 				<div className="flex">
 					<Avatar
-						imgUrl={listingDetail.authorAvatar}
+						imgUrl={listingDetail.author.avatar}
 						hasChecked
 						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
 						sizeClass="h-16 w-16"
-						userName={listingDetail.authorFirstName} />
+						userName={listingDetail.author.firstName} />
 
 					<div className="ml-3 sm:ml-4 space-y-1">
 						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-							{listingDetail.authorFirstName}{" "}{listingDetail.authorLastName}
+							{listingDetail.author.firstName}{" "}{listingDetail.author.lastName}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{formatPhoneNumberIntl(listingDetail.authorPhoneNumber)}
+							{formatPhoneNumberIntl(listingDetail.author.phoneNumber)}
 						</p>
 						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{listingDetail.authorCompanyName}
+							{listingDetail.author.companyName}
 						</p>
 					</div>
 				</div>
 				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 				{!loading && (
 					<ContactForm
-					data={listingId}
+						data={listingId}
 					/>
 				)}
 			</div>
@@ -669,10 +442,9 @@ const print =() => {
 			{/*  HEADER */}
 			<header className="rounded-md sm:rounded-xl p-4">
 				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2 min-h-[280px]">
-					<div
+					{/* <div
 						className="relative col-span-2 row-span-3 cursor-pointer overflow-hidden rounded-md sm:row-span-2 sm:rounded-xl"
-						onClick={handleOpenModalImageGallery}
-					>
+						onClick={handleOpenModalImageGallery} >
 						<Image
 							fill
 							className="rounded-md object-cover sm:rounded-xl"
@@ -687,8 +459,7 @@ const print =() => {
 							key={index}
 							className={`relative overflow-hidden rounded-md sm:rounded-xl ${
 								index >= 3 ? 'hidden sm:block' : ''
-							}`}
-						> 
+							}`} > 
 							<div className="aspect-h-3 aspect-w-4 sm:aspect-h-5 sm:aspect-w-6">
 								<Image
 									fill
@@ -699,18 +470,15 @@ const print =() => {
 								/>
 							</div>
 
-							{/* OVERLAY */}
 							<div
 								className="absolute inset-0 cursor-pointer bg-neutral-900 bg-opacity-20 opacity-0 transition-opacity hover:opacity-100"
-								onClick={handleOpenModalImageGallery}
-							/>
+								onClick={handleOpenModalImageGallery} />
 						</div>
-					))}
+					))} */}
 
 					<button
 						className="absolute bottom-3 left-3 z-10 hidden rounded-xl bg-neutral-100 px-4 py-2 text-neutral-500 hover:bg-neutral-200 md:flex md:items-center md:justify-center"
-						onClick={handleOpenModalImageGallery}
-					>
+						onClick={handleOpenModalImageGallery} >
 						<Squares2X2Icon className="h-5 w-5" />
 						<span className="ml-2 text-sm font-medium text-neutral-800">
 							{translations.showAllPhotos}
@@ -720,32 +488,56 @@ const print =() => {
 			</header>
 
 			{/* MAIN */}
-			<main className="relative z-10 mt-0 flex flex-col lg:flex-row">
+			<main className="relative z-10 mt-0 flex flex-col lg:flex-row pb-10">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-4/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
 
 					{renderSection1()}
+<<<<<<< HEAD
+
+					{!loading && (
+						<DescriptionSection
+							className=""
+							description={listingDetail.description}
+						/>
+					)}
+
+					{!loading && (
+						<AmenitiesSection
+							className=""
+							amenities={listingDetail.amenities} 
+							loading={true}						
+						/>
+					)}
+
+=======
 					{renderSection2()}
 					{/* {renderSection3()} */}
 					
+>>>>>>> main
 					<Reviews
 						className=""
 						id={listingId}
 						type="listing"
 					/>
+
 					{!loading && (
-					<SectionDateRange
-						sDate={listingDetail.availabilityDate}
-						eDate={listingDetail.availabilityDate}
-					/>)}
+						<SectionDateRange
+							sDate={listingDetail.availabilityDate}
+							eDate={listingDetail.availabilityDate}
+						/>
+					)}
 					{renderSection5()}
-					{/* {renderSection6()} */}
 					{renderSection7()}
-					{/* {renderSection8()} */}
+
 				</div>
 
+<<<<<<< HEAD
+				<div className="mt-14 hidden flex-grow lg:mt-0 lg:block">
+=======
 				{/* SIDEBAR */}
 				<div className="mt-14 hidden flex-grow max-w-[420px] lg:mt-0 lg:block">
+>>>>>>> main
 					<div className="sticky top-28">{renderSidebar()}</div>
 				</div>
 			</main>

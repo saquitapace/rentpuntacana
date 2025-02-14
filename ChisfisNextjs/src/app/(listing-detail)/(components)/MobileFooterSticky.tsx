@@ -17,7 +17,7 @@ const MobileFooterSticky = () => {
           <span className="block text-xl font-semibold">
             $311
             <span className="ml-1 text-sm font-normal text-neutral-500 dark:text-neutral-400">
-              /night
+              /month
             </span>
           </span>
           <ModalSelectDate
@@ -37,7 +37,7 @@ const MobileFooterSticky = () => {
               sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
               onClick={openModal}
             >
-              Reserve
+              Contact todo**
             </ButtonPrimary>
           )}
         />

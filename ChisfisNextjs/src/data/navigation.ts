@@ -1,17 +1,7 @@
-import { MegamenuItem, NavItemType } from '@/shared/Navigation/NavigationItem'
-import ncNanoId from '@/utils/ncNanoId'
-import { Route } from '@/routers/types'
-
-
+import {NavItemType } from '@/shared/Navigation/NavigationItem';
+import ncNanoId from '@/utils/ncNanoId';
 
 const demoChildMenus: NavItemType[] = [
-
-	{
-		id: ncNanoId(),
-		href: '/home-1',
-		name: 'Home 1',
-		isNew: true,
-	},
 	{
 		id: ncNanoId(),
 		href: '/home-2',

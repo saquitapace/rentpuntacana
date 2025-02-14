@@ -4,7 +4,6 @@ import React, { FC, Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import GuestsInput from "@/app/(client-components)/(HeroSearchForm2Mobile)/GuestsInput";
 
 interface ModalSelectGuestsProps {
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
@@ -68,7 +67,6 @@ const ModalSelectGuests: FC<ModalSelectGuestsProps> = ({ renderChildren }) => {
                           <div
                             className={`flex-1 relative flex z-10 overflow-hidden`}
                           >
-                            <GuestsInput />
                           </div>
                         </div>
                       </div>

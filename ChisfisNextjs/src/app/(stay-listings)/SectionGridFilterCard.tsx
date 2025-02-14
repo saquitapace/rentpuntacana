@@ -1,53 +1,31 @@
 "use client";
-
 import React, { FC, useState, useEffect } from "react";
-import { StayDataType } from "@/data/types";
+import { ListingDataType } from "@/dataTypes/ListingDataType";
 import Pagination from "@/shared/Pagination";
 import TabFilters from "./TabFilters";
-import MapContainer from '@/components/MapContainer';
-import axios from 'axios'
-import StayCard from '@/components/StayCard'
-import ToggleSwitch from '@/shared/ToggleSwitch';
+import MapContainer from "@/components/MapContainer";
+import axios from "axios";
+import useFetchListings from "@/hooks/useFetchListings";
+import StayCard from "@/components/cards/StayCard";
+import ToggleSwitch from "@/shared/ToggleSwitch";
 import NoResultsFound from "../../app/noResultsFound";
 import SearchResultsLoading from "@/components/SearchResultsLoading";
 import { useSession } from "next-auth/react";
 
-export interface SectionGridFilterCardProps {}
+export interface SectionGridFilterCardProps {};
 
 const SectionGridFilterCard: FC<SectionGridFilterCardProps> = () => {
 const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
-const [listings, setListings] = useState([]); // initials state of listings
-const [limit, setLimit] = useState(50); // initials state of listings
 const [loading, setLoading] = useState(true);
-const [responseError, setReponseError] = useState(false);
 const [mapData, setMapData] = useState([]);
 const [formData, setFormData] = useState();
+const [listings, setListings] = useState([]); // todo: rename data to listings
+const [limit, setLimit] = useState(8);
+const [isLoading, setIsLoading] = useState(true);
+const [responseError, setReponseError] = useState(false);
+
 const { data: session } = useSession();
 const user = session?.user;
-
-useEffect(() => {
-  if (listings) {
-	loadListingsData();
-  }
-}, [])
-
-const loadListingsData = async () => {
- const data = await fetchListingsData();
- if (data) {
-    (data).map((d: { map: string; }) => {
-      if(d.map !== null){
-        d.map = JSON.parse(d.map); 
-      }
-      data.key=data.listingId;
-    });
-  
-  const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
-    //console.log(DEMO_DATA2)
-    setMapData(DEMO_DATA2);
-    setListings(data);
-    setLoading(false);
-  } 
-};
 
 const renderFilteredListingsData = async (data) => {
   //const data = await fetchListingsData();
@@ -58,31 +36,46 @@ const renderFilteredListingsData = async (data) => {
        }
      });
    
-    const DEMO_DATA2: StayDataType[] = data.filter((d: { map: null; }) => d.map !==null);
+    const DEMO_DATA2: ListingDataType[] = data.filter((d: { map: null; }) => d.map !==null);
       setMapData(DEMO_DATA2);
       setListings(data);
       setLoading(false);
    }
  };
 
-const fetchListingsData = async () => {
-  try {
-  const userId =  user ? user.userId : 'guest';
-	const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/listings/get`, {userId:userId});
-  
-	if (response) {
-  console.log(response);
-	 return await response.data[0];
-	}
-  } catch (error) {
-    console.error('Error fetching listings data:', error);
-    setLoading(false);
-    setReponseError(true);
 
-    // alert("Loading listings failed. Network error. Please contact helpdesk. Error code: 500.");
-  } finally {
-  } 
-};
+function useListings() {
+
+  const { data, loading, error } = useFetchListings();
+
+  useEffect(() => {
+    if (!loading && !error) {
+      setListings(data);
+
+      if (data) {
+        console.log(data);
+        (data).map((d: { map: string; }) => {
+          if(d.map !== null){
+            d.map = JSON.parse(d.map); 
+          }
+          data['key'] = data['listingId'];
+        });
+      
+      const DEMO_DATA2: ListingDataType[] = data.filter((d: { map: null; }) => d.map !==null);
+        //console.log(DEMO_DATA2)
+        setMapData(DEMO_DATA2);
+        setListings(data);
+        setLoading(false);
+      } 
+
+      setIsLoading(false);
+    }
+  }, [data, loading, error]);
+
+  return { data, loading, error };
+}
+
+useListings();
 
   const fullClass ="mx-9"
   const halfClass ="nc-SectionGridFilterCard container pb-24 lg:pb-28";
@@ -121,7 +114,7 @@ const fetchListingsData = async () => {
   
    let a = 0;
    let moreQry = ''; 
-   let moreOr = " OR amenitites LIKE";
+   let moreOr = " OR amenities LIKE";
 
    (more).forEach(item => {
     moreQry += " '%"+item.field +"%' ";
@@ -129,7 +122,7 @@ const fetchListingsData = async () => {
       (a > 0 && a < (more).length) ? moreQry += moreOr : ''
     });
 
-    const whereMore = " amenitites LIKE";
+    const whereMore = " amenities LIKE";
     let moreQuery = (whereMore).concat(moreQry);
 
     if(!moreQry){
@@ -215,7 +208,6 @@ const fetchListingsData = async () => {
 
       <div className="flex">
           <div className={cardClass}>
-
 
       {loading && ( 
         <SearchResultsLoading />

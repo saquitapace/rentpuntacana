@@ -6,7 +6,7 @@ import pluginReact from "eslint-plugin-react";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [ //saquita temp code to test build
-  // {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
+  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
   // {files: ["**/*.js"], languageOptions: {sourceType: "script"}},
   {languageOptions: { globals: globals.browser }},
   pluginJs.configs.recommended,
