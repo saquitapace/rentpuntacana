@@ -48,6 +48,7 @@
     "framer-motion": "^10.18.0",
     "geist": "^1.2.1",
     "instead": "^1.0.3",
+    "json-aggregate": "^0.1.2",
     "libphonenumber-js": "^1.11.15",
     "lodash": "^4.17.21",
     "lucide-react": "^0.462.0",
