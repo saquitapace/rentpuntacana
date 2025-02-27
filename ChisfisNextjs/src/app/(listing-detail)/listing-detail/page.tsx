@@ -1,44 +1,43 @@
 //saquita
-"use client";
-import { useEffect, useState } from 'react';
+'use client'
+import { useEffect, useState } from 'react'
 // types
-import { ListingDetailDataType} from '@/dataTypes/ListingDetailDataType';
+import { ListingDetailDataType } from '@/dataTypes/ListingDetailDataType'
 //components
-import ContactForm  from '@/components/ContactForm';
-import Price from '@/components/Price';
-import StartRating from '@/components/StartRating';
-import BtnLikeIcon from '@/components/FormElements/BtnLikeIcon';
-import ShareBtn from '@/components/ShareBtn';
-import Reviews from '@/components/Reviews';
-import AmenitiesSection from '../../../components/amenitiesSection';
-import DescriptionSection from '../../../components/descriptionSection';
+import ContactForm from '@/components/ContactForm'
+import Price from '@/components/Price'
+import StartRating from '@/components/StartRating'
+import BtnLikeIcon from '@/components/FormElements/BtnLikeIcon'
+import ShareBtn from '@/components/ShareBtn'
+import Reviews from '@/components/Reviews'
+import AmenitiesSection from '../../../components/amenitiesSection'
+import DescriptionSection from '../../../components/descriptionSection'
 //shared ** move to components
-import Avatar from '@/shared/Avatar';
-import ButtonSecondary from '@/shared/ButtonSecondary';
+import Avatar from '@/shared/Avatar'
+import ButtonSecondary from '@/shared/ButtonSecondary'
 //hooks
-import useFetchListingDetail from '@/hooks/useFetchListingDetail';
+import useFetchListingDetail from '@/hooks/useFetchListingDetail'
 //icons
-import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline';
+import { Squares2X2Icon, PrinterIcon } from '@heroicons/react/24/outline'
 
 //? temporary - to delete...
-import { PHOTOS } from '../constant';
-import SectionDateRange from '../SectionDateRange';
-import { formatPhoneNumberIntl } from "react-phone-number-input";
+import { PHOTOS } from '../constant'
+import SectionDateRange from '../SectionDateRange'
+import { formatPhoneNumberIntl } from 'react-phone-number-input'
 //? useSearchParams, useParams
-import { usePathname, useRouter } from 'next/navigation';
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { Route } from 'next';
+import { usePathname, useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
+import { Route } from 'next'
 
 const ListingStayDetailPage = ({
 	params,
 	searchParams,
-	} : {
-	params: { lid: string };
-	searchParams?: { [key: string]: string | string[] | undefined };
-	}) => {
-
-	let [listingDetail, setListingDetail]= useState<ListingDetailDataType>({
+}: {
+	params: { lid: string }
+	searchParams?: { [key: string]: string | string[] | undefined }
+}) => {
+	let [listingDetail, setListingDetail] = useState<ListingDetailDataType>({
 		id: '',
 		href: '/',
 		title: '',
@@ -60,7 +59,7 @@ const ListingStayDetailPage = ({
 		isAds: false,
 		map: {
 			lat: 0,
-			lng: 0
+			lng: 0,
 		},
 		author: {
 			firstName: '',
@@ -74,38 +73,40 @@ const ListingStayDetailPage = ({
 			href: '/',
 			listingsCount: 0,
 			phoneNumber: '',
-			fullName: ''
+			fullName: '',
 		},
-	});
+	})
 
-	const thisPathname = usePathname();
-	const router = useRouter();
-	const listingId = searchParams.lid;
-	const shareUrl = (process.env.NEXT_PUBLIC_API_URL).concat(thisPathname);
-	const [galleryPhotos, setGalleryPhotos]= useState([PHOTOS]);
-	const [loading, setLoading] = useState(true);
+	const thisPathname = usePathname()
+	const router = useRouter()
+	const listingId = searchParams.lid
+	const shareUrl = process.env.NEXT_PUBLIC_API_URL.concat(thisPathname)
+	const [galleryPhotos, setGalleryPhotos] = useState([PHOTOS])
+	const [loading, setLoading] = useState(true)
 
 	const { translations, isLoading, error } = useSelector(
-		(state: RootState) => state.translations
-	);
-	
-    function useFetchDetail() {
-		const { data, loading, error } = useFetchListingDetail({listingId:listingId});
+		(state: RootState) => state.translations,
+	)
+
+	function useFetchDetail() {
+		const { data, loading, error } = useFetchListingDetail({
+			listingId: listingId,
+		})
 		//console.log(data);
 		//const dataObj = data?: ListingDetailDataType[] ;
 		useEffect(() => {
 			if (data && !loading && !error) {
-				setListingDetail(data);
-				setLoading(false);
+				setListingDetail(data)
+				setLoading(false)
 				//setGalleryPhotos(listingDetail['galleryImgs']);
-				setListingDetail((listingDetail) => ({ ...listingDetail, data }));
+				setListingDetail((listingDetail) => ({ ...listingDetail, data }))
 			}
-		}, [data, loading, error]);
-		
-		return { data, loading, error };
+		}, [data, loading, error])
+
+		return { data, loading, error }
 	}
-	
-	useFetchDetail();
+
+	useFetchDetail()
 
 	const handleOpenModalImageGallery = () => {
 		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
@@ -113,35 +114,38 @@ const ListingStayDetailPage = ({
 
 	const renderSection1 = () => {
 		return (
-			
 			<div className="listingSection__wrap !space-y-6">
-				<div className="flex items-center justify-between">	
+				<div className="flex items-center justify-between">
 					<h2 className="text-1xl sm:text-2xl lg:text-3xl">
 						{listingDetail.title}
 					</h2>
-					<div className="flow-root ">
-						<div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
+					<div className="flow-root">
+						<div className="-mx-3 -my-1.5 flex text-sm text-neutral-700 dark:text-neutral-300">
 							<ShareBtn
 								text={translations.share}
 								url={shareUrl}
 								title={translations.checkoutThisListing}
 							/>
 							<div className="flex items-center">
-
-							{!loading && (
-        						<BtnLikeIcon isLiked={listingDetail.likes} id={listingId} className="" colorClass="text-gray-700"      
-							/>)}
-							<span>
-								{translations.save}
-							</span>
-
+								{!loading && (
+									<BtnLikeIcon
+										isLiked={listingDetail.likes}
+										id={listingId}
+										className=""
+										colorClass="text-gray-700"
+									/>
+								)}
+								<span>{translations.save}</span>
 							</div>
 						</div>
 					</div>
 				</div>
 				{/* 3 */}
 				<div className="flex items-center space-x-4">
-				<StartRating reviewCount={listingDetail.reviewCount} point={listingDetail.reviewStart} />
+					<StartRating
+						reviewCount={listingDetail.reviewCount}
+						point={listingDetail.reviewStart}
+					/>
 					<span>·</span>
 					<span>
 						<i className="las la-map-marker-alt"></i>
@@ -173,21 +177,29 @@ const ListingStayDetailPage = ({
 					<div className="flex items-center space-x-3">
 						<i className="las la-bed text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bedrooms} 
-							<span className="hidden sm:inline-block pl-2">{listingDetail.bedrooms > 1 ? translations.bedrooms : translations.bedroom }</span>
+							{listingDetail.bedrooms}
+							<span className="hidden pl-2 sm:inline-block">
+								{listingDetail.bedrooms > 1
+									? translations.bedrooms
+									: translations.bedroom}
+							</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-bath text-2xl"></i>
 						<span className=" ">
-							{listingDetail.bathrooms} 
-							<span className="hidden sm:inline-block pl-2">{listingDetail.bathrooms > 1 ? translations.bathrooms : translations.bathroom }</span>
+							{listingDetail.bathrooms}
+							<span className="hidden pl-2 sm:inline-block">
+								{listingDetail.bathrooms > 1
+									? translations.bathrooms
+									: translations.bathroom}
+							</span>
 						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-expand-arrows-alt text-lg"></i>
 						<span className=" ">
-						{listingDetail.sqft} m<sup>2</sup>
+							{listingDetail.sqft} m<sup>2</sup>
 						</span>
 					</div>
 
@@ -197,8 +209,10 @@ const ListingStayDetailPage = ({
 					</div>
 					<div className="flex items-center space-x-3">
 						<i className="las la-smoking-ban text-lg"></i>
-						<span className="hidden sm:inline-block">{translations.noSmoking}</span>
-          			</div>
+						<span className="hidden sm:inline-block">
+							{translations.noSmoking}
+						</span>
+					</div>
 				</div>
 			</div>
 		)
@@ -210,14 +224,14 @@ const ListingStayDetailPage = ({
 				{/* HEADING */}
 				<div>
 					<h2 className="text-2xl font-semibold">Room Rates </h2>
-					<span className="mt-2 block text-neutral-500 dark:text-neutral-400 text-red-700">
+					<span className="mt-2 block text-neutral-500 text-red-700 dark:text-neutral-400">
 						Prices may increase on weekends or holidays
 					</span>
 				</div>
 				<div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 				{/* CONTENT */}
 				<div className="flow-root">
-					<div className="-mb-4 text-sm text-neutral-6000 dark:text-neutral-300 sm:text-base text-red-700">
+					<div className="-mb-4 text-sm text-neutral-6000 text-red-700 dark:text-neutral-300 sm:text-base">
 						<div className="flex items-center justify-between space-x-4 rounded-lg bg-neutral-100 p-4 dark:bg-neutral-800">
 							<span>Monday - Thursday</span>
 							<span>$199</span>
@@ -257,7 +271,6 @@ const ListingStayDetailPage = ({
 
 				{/* host */}
 				<div className="flex items-center space-x-4">
-
 					<Avatar
 						imgUrl={listingDetail.author.avatar}
 						userName={listingDetail.author.firstName}
@@ -267,20 +280,29 @@ const ListingStayDetailPage = ({
 						radius="rounded-full"
 					/>
 					<div>
-						<a className="block text-xl font-medium" href={`/publicProfile?uid=${listingDetail.author.id}`}>
-							{listingDetail.author.firstName} { } {listingDetail.author.lastName}
+						<a
+							className="block text-xl font-medium"
+							href={`/publicProfile?uid=${listingDetail.author.id}`}
+						>
+							{listingDetail.author.firstName} {}{' '}
+							{listingDetail.author.lastName}
 						</a>
 						<div className="mt-1.5 flex items-center text-sm text-neutral-500 dark:text-neutral-400">
 							<StartRating />
 							<span className="mx-2">·</span>
-							<a className="underline" href={`/publicProfile?uid=${listingDetail.author.id}`}>{listingDetail.author.listingsCount} {translations.listings}</a>
+							<a
+								className="underline"
+								href={`/publicProfile?uid=${listingDetail.author.id}`}
+							>
+								{listingDetail.author.listingsCount} {translations.listings}
+							</a>
 						</div>
 					</div>
 				</div>
 
 				{/* desc */}
 				<span className="block text-neutral-6000 dark:text-neutral-300">
-				{listingDetail.author.about}
+					{listingDetail.author.about}
 				</span>
 
 				{/* info */}
@@ -300,7 +322,10 @@ const ListingStayDetailPage = ({
 								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 							/>
 						</svg>
-						<span>{translations.joinedIn} {translations.space}{listingDetail.author.createdAt}</span>
+						<span>
+							{translations.joinedIn} {translations.space}
+							{listingDetail.author.createdAt}
+						</span>
 					</div>
 					<div className="flex items-center space-x-3">
 						<svg
@@ -341,8 +366,12 @@ const ListingStayDetailPage = ({
 
 				<div>
 					<ButtonSecondary
-						href={`/publicProfile?uid=${listingDetail.author.id}` as Route<string>}
-					>{translations.seeAgentProfile}</ButtonSecondary>
+						href={
+							`/publicProfile?uid=${listingDetail.author.id}` as Route<string>
+						}
+					>
+						{translations.seeAgentProfile}
+					</ButtonSecondary>
 				</div>
 			</div>
 		)
@@ -375,64 +404,68 @@ const ListingStayDetailPage = ({
 			</div>
 		)
 	}
-		
-	const print =() => {
+
+	const print = () => {
 		window.print
 	}
 
 	const renderSidebar = () => {
 		return (
 			<>
-			<div className="listingSectionSidebar__wrap shadow-xl max-w-[400px]">
-				<span className="text-3xl font-semibold">
-					{!!listingDetail.price || listingDetail.price == null && (
-						<Price className="text-3xl font-semibold" price={listingDetail.price} />
-					)}
-					{listingDetail.price && (
-						<div>${listingDetail.price}
-							<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-								/{translations.month}
-							</span>
+				<div className="listingSectionSidebar__wrap max-w-[400px] shadow-xl">
+					<span className="text-3xl font-semibold">
+						{!!listingDetail.price ||
+							(listingDetail.price == null && (
+								<Price
+									className="text-3xl font-semibold"
+									price={listingDetail.price}
+								/>
+							))}
+						{listingDetail.price && (
+							<div>
+								${listingDetail.price}
+								<span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
+									/{translations.month}
+								</span>
+							</div>
+						)}
+					</span>
+
+					<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
+
+					<div className="flex">
+						<Avatar
+							imgUrl={listingDetail.author.avatar}
+							hasChecked
+							hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
+							sizeClass="h-16 w-16"
+							userName={listingDetail.author.firstName}
+						/>
+
+						<div className="ml-3 space-y-1 sm:ml-4">
+							<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
+								{listingDetail.author.firstName} {listingDetail.author.lastName}
+							</p>
+							<p className="text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+								{formatPhoneNumberIntl(listingDetail.author.phoneNumber)}
+							</p>
+							<p className="text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+								{listingDetail.author.companyName}
+							</p>
 						</div>
-					)}
-				</span>
-
-				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-
-				<div className="flex">
-					<Avatar
-						imgUrl={listingDetail.author.avatar}
-						hasChecked
-						hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
-						sizeClass="h-16 w-16"
-						userName={listingDetail.author.firstName} />
-
-					<div className="ml-3 sm:ml-4 space-y-1">
-						<p className="text-sm font-medium text-gray-900 dark:text-gray-200">
-							{listingDetail.author.firstName}{" "}{listingDetail.author.lastName}
-						</p>
-						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{formatPhoneNumberIntl(listingDetail.author.phoneNumber)}
-						</p>
-						<p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-							{listingDetail.author.companyName}
-						</p>
 					</div>
+					<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
+					{!loading && <ContactForm data={listingId} />}
 				</div>
-				<div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-				{!loading && (
-					<ContactForm
-						data={listingId}
-					/>
-				)}
-			</div>
-			
-            <div className="flex pt-5 justify-center">
-				<ButtonSecondary className="border-0" onClick={print}>
-					<PrinterIcon className="h-6 w-6" />
-					<div className="pl-5">{translations.print} {translations.space} {translations.listing}</div>
-				</ButtonSecondary>
-            </div>
+
+				<div className="flex justify-center pt-5">
+					<ButtonSecondary className="border-0" onClick={print}>
+						<PrinterIcon className="h-6 w-6" />
+						<div className="pl-5">
+							{translations.print} {translations.space} {translations.listing}
+						</div>
+					</ButtonSecondary>
+				</div>
 			</>
 		)
 	}
@@ -440,8 +473,8 @@ const ListingStayDetailPage = ({
 	return (
 		<div className="nc-ListingStayDetailPage">
 			{/*  HEADER */}
-			<header className="rounded-md sm:rounded-xl p-4">
-				<div className="relative grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2 min-h-[280px]">
+			<header className="rounded-md p-4 sm:rounded-xl">
+				<div className="relative grid min-h-[280px] grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-2">
 					{/* <div
 						className="relative col-span-2 row-span-3 cursor-pointer overflow-hidden rounded-md sm:row-span-2 sm:rounded-xl"
 						onClick={handleOpenModalImageGallery} >
@@ -478,7 +511,8 @@ const ListingStayDetailPage = ({
 
 					<button
 						className="absolute bottom-3 left-3 z-10 hidden rounded-xl bg-neutral-100 px-4 py-2 text-neutral-500 hover:bg-neutral-200 md:flex md:items-center md:justify-center"
-						onClick={handleOpenModalImageGallery} >
+						onClick={handleOpenModalImageGallery}
+					>
 						<Squares2X2Icon className="h-5 w-5" />
 						<span className="ml-2 text-sm font-medium text-neutral-800">
 							{translations.showAllPhotos}
@@ -488,19 +522,14 @@ const ListingStayDetailPage = ({
 			</header>
 
 			{/* MAIN */}
-			<main className="relative z-10 mt-0 flex flex-col lg:flex-row pb-10">
+			<main className="relative z-10 mt-0 flex flex-col pb-10 lg:flex-row">
 				{/* CONTENT */}
 				<div className="w-full space-y-8 lg:w-4/5 lg:space-y-10 lg:pr-10 xl:w-2/3">
-
 					{renderSection1()}
-					{renderSection2()}
+					{/* {renderSection2()} */}
 					{/* {renderSection3()} */}
-					
-					<Reviews
-						className=""
-						id={listingId}
-						type="listing"
-					/>
+
+					<Reviews className="" id={listingId} type="listing" />
 
 					{!loading && (
 						<SectionDateRange
@@ -510,11 +539,10 @@ const ListingStayDetailPage = ({
 					)}
 					{renderSection5()}
 					{renderSection7()}
-
 				</div>
 
 				{/* SIDEBAR */}
-				<div className="mt-14 hidden flex-grow max-w-[420px] lg:mt-0 lg:block">
+				<div className="mt-14 hidden max-w-[420px] flex-grow lg:mt-0 lg:block">
 					<div className="sticky top-28">{renderSidebar()}</div>
 				</div>
 			</main>
@@ -522,4 +550,4 @@ const ListingStayDetailPage = ({
 	)
 }
 
-export default ListingStayDetailPage;
+export default ListingStayDetailPage

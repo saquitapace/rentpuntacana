@@ -20,12 +20,12 @@ export async function POST(request) {
     l.PurchasePrice,
     l.sqft,
     l.href,
-    JSON_OBJECT(CASE WHEN li.category = 'gallery' THEN li.url END) AS galleryImgs,
+    JSON_ARRAYAGG(CASE WHEN li.category = 'gallery' THEN li.url END) AS galleryImgs,
     MAX(CASE WHEN li.category = 'feature' THEN li.url END) AS featuredImage,
     COUNT(DISTINCT lv.id) AS viewCount,
     COUNT(DISTINCT lr.id) AS reviewCount,
     ROUND(AVG(lr.rating), 1) AS reviewStart,
-    SUM(CASE WHEN sp.userId = ? THEN 1 ELSE 0 END) AS likes
+    SUM(CASE WHEN sp.userId IS NOT NULL THEN 1 ELSE 0 END) AS likes
 FROM 
     listings l
 LEFT JOIN 
@@ -37,7 +37,8 @@ LEFT JOIN
 LEFT JOIN 
     saved_properties sp ON l.listingId = sp.property_id
 GROUP BY 
-    l.listingId 
+    l.listingId, l.title, l.bedrooms, l.bathrooms, l.description, l.address, l.map, 
+    l.userId, l.shortTermPrice, l.longTermPrice, l.PurchasePrice, l.sqft, l.href;
 `,[userId]
   );
   return NextResponse.json(response);
