@@ -458,14 +458,14 @@ const ListingStayDetailPage = ({
 					{!loading && <ContactForm data={listingId} />}
 				</div>
 
-				<div className="flex justify-center pt-5">
+				{/* <div className="flex justify-center pt-5">
 					<ButtonSecondary className="border-0" onClick={print}>
 						<PrinterIcon className="h-6 w-6" />
 						<div className="pl-5">
 							{translations.print} {translations.space} {translations.listing}
 						</div>
 					</ButtonSecondary>
-				</div>
+				</div> */}
 			</>
 		)
 	}

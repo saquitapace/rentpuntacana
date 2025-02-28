@@ -18,6 +18,7 @@ import { getDefaultTranslations } from '@/utils/helpers'
 import axios from 'axios'
 // import Footer from '@/app/Layout/Footer'
 // import FooterNav from '@/app/Layout/FooterNav'
+import { Toaster } from 'react-hot-toast'
 
 const Footer = dynamic(() => import('@/app/Layout/Footer'), { ssr: false })
 const FooterNav = dynamic(() => import('@/app/Layout/FooterNav'), {
@@ -101,6 +102,7 @@ export default async function RootLayout({
 	return (
 		<html lang={langPref} className={poppins.className}>
 			<body className="bg-white text-base text-neutral-900 dark:bg-neutral-900 dark:text-neutral-200">
+				<Toaster />
 				<Providers session={session} preloadedState={preloadedState}>
 					<div>
 						<NewHeader />
