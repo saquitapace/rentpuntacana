@@ -33,7 +33,7 @@ export default function GallerySlider({
 	const [loaded, setLoaded] = useState(false)
 	const [index, setIndex] = useState(0)
 	const [direction, setDirection] = useState(0)
-	const images = galleryImgs.length > 0 ? galleryImgs.splice(0, 2) : []
+	const images = galleryImgs.length > 2 ? galleryImgs.splice(0, 2) : galleryImgs
 	// console.log('images', images)
 	function changePhotoId(newVal: number) {
 		if (newVal > index) {
