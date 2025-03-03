@@ -10,7 +10,6 @@ import rightImg from '@/images/SVG-subcribe2.png'
 import Badge from '@/shared/Badge'
 import Input from '@/shared/Input'
 import Image from 'next/image'
-import toast from 'react-hot-toast'
 import axios from '@/config/axios'
 
 export interface SectionSubscribeProps {
