@@ -7,9 +7,15 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const lid = searchParams.get("lid");
 
-    const [response] = await pool.query(`SELECT id,url FROM listing_images WHERE listingId = ?`, [lid]);
+    const [response] = await pool.query(`SELECT id, url FROM listing_images WHERE listingId = ?`, [lid]);
 
-    return NextResponse.json(response);
+    // Start id from 0 and increment
+    const updatedResponse = response.map((item, index) => ({
+      id: index,
+      url: item.url,
+    }));
+
+    return NextResponse.json(updatedResponse);
   } catch (error) {
     console.error("Error fetching listing images:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
