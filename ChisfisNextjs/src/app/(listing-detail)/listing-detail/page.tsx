@@ -163,7 +163,7 @@ const ListingStayDetailPage = ({
 	}
 
 	const handleOpenModalImageGallery = () => {
-		router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route)
+		router.push(`${thisPathname}/?lid=${ listingId }&modal=PHOTO_TOUR_SCROLLABLE` as Route)
 	}
 
 	const renderSection1 = () => {
