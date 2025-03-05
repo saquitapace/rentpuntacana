@@ -33,6 +33,8 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 		axios
 			.post('auth/newsletter/create', data)
 			.then((response: any) => {
+				//TODO: use the API message
+				
 				console.log('first', response)
 				if (response.status == 201) {
 					alert('SuccessFull')
