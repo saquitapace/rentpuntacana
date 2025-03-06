@@ -55,6 +55,7 @@ const ContactForm: FC<ContactFormProps> = ({
 			message: translations.contactAgentPlaceholder || '',
 		},
 	})
+
 	const formSubmit = (data: ContactFormInputs) => {
 		axios
 			.post('auth/contact/create', data)
@@ -73,6 +74,7 @@ const ContactForm: FC<ContactFormProps> = ({
 				alert('Something Wrong')
 			})
 	}
+
 	useEffect(() => {
 		if (userProfile.userId != '') {
 			// setContactName(`${userProfile.firstName} ${userProfile.lastName}`)
@@ -82,6 +84,20 @@ const ContactForm: FC<ContactFormProps> = ({
 		setListingRE(`${translations.regardingListing || ''} ${_Data}`)
 		setValue('subject', `${translations.regardingListing || ''} ${_Data}`)
 	}, [userProfile, translations, _Data])
+
+	const handleTermsCheckboxChange = () => {
+		const fullName = watch('fullname')?.trim() || ''
+		const email = watch('email')?.trim() || ''
+		const phoneNo = watch('phoneNo')?.trim() || ''
+		const message = watch('message')?.trim() || ''
+
+		if (!fullName || !email || !phoneNo || !message) {
+			alert('Please fill all the fields first')
+			return
+		}
+
+		setTermCheck((prev) => !prev) // ✅ Correct way to toggle state
+	}
 
 	return (
 		<div className="flex w-full flex-col space-y-6 xl:space-y-7">
@@ -142,19 +158,7 @@ const ContactForm: FC<ContactFormProps> = ({
 				name="termsAndConditions"
 				label={translations.contactTerms}
 				defaultChecked={termChecked}
-				onChange={() => {
-					const fullName = watch('fullname')?.trim() || ''
-					const email = watch('email')?.trim() || ''
-					const phoneNo = watch('phoneNo')?.trim() || ''
-					const message = watch('message')?.trim() || ''
-
-					if (!fullName || !email || !phoneNo || !message) {
-						alert('Please fill all the fields first')
-						return
-					}
-
-					setTermCheck((prev) => !prev) // ✅ Correct way to toggle state
-				}}
+				onChange={handleTermsCheckboxChange}
 			/>
 			<ButtonPrimary
 				className="stretch flex flex-1"
