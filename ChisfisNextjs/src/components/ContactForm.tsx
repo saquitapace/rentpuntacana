@@ -11,7 +11,7 @@ import Checkbox from '@/shared/Checkbox'
 import { useForm } from 'react-hook-form'
 import axios from '@/config/axios'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
-
+import { notify } from 'reapop'
 export interface ContactFormProps {
 	data?: any
 	className?: string
@@ -60,11 +60,10 @@ const ContactForm: FC<ContactFormProps> = ({
 			.post('auth/contact/create', data)
 			.then((response: any) => {
 				//TODO: use the API message
-				
+
 				console.log('first', response)
 				if (response.status == 201) {
 					alert('SuccessFull')
-
 					reset()
 				} else {
 					alert(response?.data?.message)
@@ -143,7 +142,19 @@ const ContactForm: FC<ContactFormProps> = ({
 				name="termsAndConditions"
 				label={translations.contactTerms}
 				defaultChecked={termChecked}
-				onChange={() => setTermCheck(!termChecked)}
+				onChange={() => {
+					const fullName = watch('fullname')?.trim() || ''
+					const email = watch('email')?.trim() || ''
+					const phoneNo = watch('phoneNo')?.trim() || ''
+					const message = watch('message')?.trim() || ''
+
+					if (!fullName || !email || !phoneNo || !message) {
+						alert('Please fill all the fields first')
+						return
+					}
+
+					setTermCheck((prev) => !prev) // ✅ Correct way to toggle state
+				}}
 			/>
 			<ButtonPrimary
 				className="stretch flex flex-1"
