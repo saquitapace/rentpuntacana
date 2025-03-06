@@ -11,7 +11,7 @@ import Checkbox from '@/shared/Checkbox'
 import { useForm } from 'react-hook-form'
 import axios from '@/config/axios'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
-import { notify } from 'reapop'
+import { notify, useNotifications } from 'reapop'
 export interface ContactFormProps {
 	data?: any
 	className?: string
@@ -55,23 +55,26 @@ const ContactForm: FC<ContactFormProps> = ({
 			message: translations.contactAgentPlaceholder || '',
 		},
 	})
+	const { notify } = useNotifications();
 
 	const formSubmit = (data: ContactFormInputs) => {
 		axios
 			.post('auth/contact/create', data)
 			.then((response: any) => {
-				//TODO: use the API message
-
-				console.log('first', response)
 				if (response.status == 201) {
-					alert('SuccessFull')
+					notify(response?.data?.message, 'success', {
+						dismissAfter : 3000
+					});
+
 					reset()
 				} else {
-					alert(response?.data?.message)
+					notify(response?.data?.message, 'error', {
+						dismissAfter : 3000
+					});
 				}
 			})
 			.catch((error: any) => {
-				alert('Something Wrong')
+				console.log('Something Wrong')
 			})
 	}
 
@@ -92,7 +95,9 @@ const ContactForm: FC<ContactFormProps> = ({
 		const message = watch('message')?.trim() || ''
 
 		if (!fullName || !email || !phoneNo || !message) {
-			alert('Please fill all the fields first')
+			notify('Please fill all the fields first', 'info', {
+				dismissAfter : 3000
+			});
 			return
 		}
 
@@ -135,6 +140,7 @@ const ContactForm: FC<ContactFormProps> = ({
 					{...register('phoneNo', {
 						required: 'Phone Number is required',
 					})}
+					limitMaxLength={14}
 				/>
 				{/* <PhoneNumberInput
 					className="mt-1.5"

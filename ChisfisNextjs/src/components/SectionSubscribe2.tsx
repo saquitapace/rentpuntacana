@@ -8,6 +8,8 @@ import Input from '@/shared/Input'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import axios from '@/config/axios'
+import { useNotifications } from 'reapop'
+
 
 export interface SectionSubscribe2Props {
 	className?: string
@@ -28,26 +30,29 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 			email: '',
 		},
 	})
+	const { notify } = useNotifications();
 
 	const formSubmit = (data: NEWSLETTER_ADD) => {
 		axios
 			.post('auth/newsletter/create', data)
 			.then((response: any) => {
-				//TODO: use the API message
-				
-				console.log('first', response)
 				if (response.status == 201) {
-					alert('SuccessFull')
+					notify(response?.data?.message, 'success', {
+						dismissAfter : 3000
+					});
 
 					reset()
 				} else {
-					alert(response?.data?.message)
+					notify(response?.data?.message, 'error', {
+						dismissAfter : 3000
+					});
 				}
 			})
 			.catch((error: any) => {
-				alert('Something Wrong')
+				console.log('Something Wrong')
 			})
 	}
+
 	return (
 		<div
 			className={`nc-SectionSubscribe2 relative flex flex-col lg:flex-row lg:items-center ${className}`}
