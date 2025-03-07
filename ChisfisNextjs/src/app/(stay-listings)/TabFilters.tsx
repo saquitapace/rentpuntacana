@@ -1,10 +1,10 @@
 'use client'
 //saquita -tabfilters
-import { FC, Fragment, useState } from 'react';
-import PriceRangeInput from "../../components/PriceRangeInput";
-import PropertyTypeSelect from "../../components/PropertyTypeSelect";
-import BedBathSelect from "../../components/BedBathSelect";
-import options from '@/utils/options';
+import { FC, Fragment, useState } from 'react'
+import PriceRangeInput from '../../components/PriceRangeInput'
+import PropertyTypeSelect from '../../components/PropertyTypeSelect'
+import BedBathSelect from '../../components/BedBathSelect'
+import options from '@/utils/options'
 import {
 	Dialog,
 	//DialogTitle,
@@ -14,67 +14,68 @@ import {
 	Transition,
 	TransitionChild,
 } from '@headlessui/react'
-import NcInputNumber from '@/components/NcInputNumber';
-import ButtonPrimary from '@/shared/ButtonPrimary';
-import ButtonSecondary from '@/shared/ButtonSecondary';
-import ButtonThird from '@/shared/ButtonThird';
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import ButtonClose from '@/shared/ButtonClose';
-import Checkbox from '@/shared/Checkbox';
-import DateRangeInput from "../../components/DateRangeInput";
-import Slider from 'rc-slider';
+import NcInputNumber from '@/components/NcInputNumber'
+import ButtonPrimary from '@/shared/ButtonPrimary'
+import ButtonSecondary from '@/shared/ButtonSecondary'
+import ButtonThird from '@/shared/ButtonThird'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import ButtonClose from '@/shared/ButtonClose'
+import Checkbox from '@/shared/Checkbox'
+import DateRangeInput from '../../components/DateRangeInput'
+import Slider from 'rc-slider'
 //import Link from 'next/link';
-import convertNumbThousand from '@/utils/convertNumbThousand';
-import MoreFiltersSelect from "../../components/MoreFiltersSelect";
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import convertNumbThousand from '@/utils/convertNumbThousand'
+import MoreFiltersSelect from '../../components/MoreFiltersSelect'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
-export interface TabFiltersProps  {
-	onChange: (e: any) => void; 
-	viewAll?:boolean;
+export interface TabFiltersProps {
+	onChange: (e: any) => void
+	viewAll?: boolean
 }
 const TabFilters: FC<TabFiltersProps> = ({
-	onChange = (e) => { return formData},
-	viewAll
-	}) => {
-		
+	onChange = (e) => {
+		return formData
+	},
+	viewAll,
+}) => {
 	// input fields
-	const[type,setType] = useState([]);
-	const[price,setPrice] = useState([]);
-	const[bedBath,setBedBath] = useState([]);
-	const[more1,setMore1] = useState([]);
-	const[more2,setMore2] = useState([]);
-	const[more3,setMore3] = useState([]);
-	const[more4,setMore4] = useState([]);
-	const[date,setDate] = useState([]);
+	const [type, setType] = useState([])
+	const [price, setPrice] = useState([])
+	const [bedBath, setBedBath] = useState([])
+	const [more1, setMore1] = useState([])
+	const [more2, setMore2] = useState([])
+	const [more3, setMore3] = useState([])
+	const [more4, setMore4] = useState([])
+	const [date, setDate] = useState([])
 
-	const [rangePrices, setRangePrices] = useState([0, 1000]);
+	const [rangePrices, setRangePrices] = useState([0, 1000])
 
 	const { translations, isLoading, error } = useSelector(
-		(state: RootState) => state.translations
-	  );
-	
-	const moreFilter1 = options.getGeneralAmenities();
-	const moreFilter2 = options.getOtherAmenities();
-	const moreFilter3 = options.getSafeAmenities();
-	const moreFilter4 = options.getHouseRulesAmenities();
-	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
-	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
-	const closeModalMoreFilter = () => setisOpenMoreFilter(false);
-	const openModalMoreFilter = () => setisOpenMoreFilter(true);
-	const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false);
-	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true);
-	
+		(state: RootState) => state.translations,
+	)
+
+	const moreFilter1 = options.getGeneralAmenities()
+	const moreFilter2 = options.getOtherAmenities()
+	const moreFilter3 = options.getSafeAmenities()
+	const moreFilter4 = options.getHouseRulesAmenities()
+	const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false)
+	const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false)
+	const closeModalMoreFilter = () => setisOpenMoreFilter(false)
+	const openModalMoreFilter = () => setisOpenMoreFilter(true)
+	const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false)
+	const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true)
+
 	const [formData, setFormData] = useState({
-        type: [],
-        price: {},
-        bedBath: [],
-        more1: [],
+		type: [],
+		price: {},
+		bedBath: [],
+		more1: [],
 		more2: [],
 		more3: [],
 		more4: [],
-        date: ""
-    });
+		date: '',
+	})
 
 	const renderXClear = () => {
 		return (
@@ -213,13 +214,13 @@ const TabFilters: FC<TabFiltersProps> = ({
 			defaultChecked?: boolean
 		}[],
 	) => {
-
 		const list1 = data.filter((_, i) => i < data.length / 3)
-		const list2 = data.filter((_, i) => i > list1.length-1 && i <list1.length*2)
-		const list3 = data.filter((_, i) => i > (list1.length + list2.length) -1)
+		const list2 = data.filter(
+			(_, i) => i > list1.length - 1 && i < list1.length * 2,
+		)
+		const list3 = data.filter((_, i) => i > list1.length + list2.length - 1)
 
 		return (
-
 			<div className="grid grid-cols-3 gap-4">
 				<div className="flex flex-col space-y-5">
 					{list1.map((item) => (
@@ -257,32 +258,28 @@ const TabFilters: FC<TabFiltersProps> = ({
 
 	const renderTabMoreFilter = () => {
 		return (
-			<Popover className="flex relative flex-1">
+			<Popover className="relative flex flex-1">
 				{({ open, close }) => (
 					<>
 						<Popover.Button
-            className={`flex z-10 text-left w-full flex-shrink-0 [ nc-hero-field-padding ] space-x-3 focus:outline-none cursor-pointer ${
-				open ? "text-primary-6000" : ""
-			}`}
-						  >
-
-<div className="text-neutral-300 dark:text-neutral-400">
-<i className="las la-bed text-2xl w-5 h-5 lg:w-7 lg:h-7"></i>
-            </div>
-            <div className="flex-1">
-			<span className="block xl:text-sm font-semibold truncate">
-			<span className="line-clamp-1">
-                  <span>More filters</span>
-				{/*}  {renderXClear()} */}
-                </span>
-              </span>
-              <span className="block mt-1 text-sm text-neutral-400 leading-none font-light ">
-                More / Filters 			
-              </span>
-            </div>
-
-
-
+							className={`[ nc-hero-field-padding ] z-10 flex w-full flex-shrink-0 cursor-pointer space-x-3 text-left focus:outline-none ${
+								open ? 'text-primary-6000' : ''
+							}`}
+						>
+							<div className="text-neutral-300 dark:text-neutral-400">
+								<i className="las la-bed h-5 w-5 text-2xl lg:h-7 lg:w-7"></i>
+							</div>
+							<div className="flex-1">
+								<span className="block truncate font-semibold xl:text-sm">
+									<span className="line-clamp-1">
+										<span>More filters</span>
+										{/*}  {renderXClear()} */}
+									</span>
+								</span>
+								<span className="mt-1 block text-sm font-light leading-none text-neutral-400">
+									More / Filters
+								</span>
+							</div>
 						</Popover.Button>
 						<Transition
 							as={Fragment}
@@ -293,23 +290,19 @@ const TabFilters: FC<TabFiltersProps> = ({
 							leaveFrom="opacity-100 translate-y-0"
 							leaveTo="opacity-0 translate-y-1"
 						>
+							{/*h-full w-full max-w-4xl transform flex-col overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all dark:border dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 */}
 
-
-{/*h-full w-full max-w-4xl transform flex-col overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all dark:border dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 */}
-
-<PopoverPanel className="absolute left-1/2 z-20 mt-3 top-full w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
-
-						{/*	<PopoverPanel className="absolute h-full w-full max-w-4xl transform flex-col left-0 z-10 mt-3 w-screen max-w-4xl px-4 sm:px-0 lg:max-w-lg
+							<PopoverPanel className="absolute left-1/2 top-full z-20 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl">
+								{/*	<PopoverPanel className="absolute h-full w-full max-w-4xl transform flex-col left-0 z-10 mt-3 w-screen max-w-4xl px-4 sm:px-0 lg:max-w-lg
 							"> */}
 
-								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900
-								
-								">
-									
-								<div className="flex-grow overflow-y-auto">
+								<div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-700 dark:bg-neutral-900">
+									<div className="flex-grow overflow-y-auto">
 										<div className="divide-y divide-neutral-200 px-10 dark:divide-neutral-800">
 											<div className="py-7">
-												<h3 className="text-xl font-medium">General Amenities</h3>
+												<h3 className="text-xl font-medium">
+													General Amenities
+												</h3>
 												<div className="relative mt-6">
 													{renderMoreFilterItem(moreFilter1)}
 												</div>
@@ -339,7 +332,9 @@ const TabFilters: FC<TabFiltersProps> = ({
 						</Transition>
 					</>
 				)}
-			</Popover>	)}
+			</Popover>
+		)
+	}
 
 	const renderTabMoreFilterMobile = () => {
 		return (
@@ -403,7 +398,6 @@ const TabFilters: FC<TabFiltersProps> = ({
 
 									<div className="flex-grow overflow-y-auto">
 										<div className="divide-y divide-neutral-200 px-4 dark:divide-neutral-800 sm:px-6">
-
 											{/* ---- */}
 											<div className="py-7">
 												<h3 className="text-xl font-medium">Range Prices</h3>
@@ -540,131 +534,138 @@ const TabFilters: FC<TabFiltersProps> = ({
 		)
 	}
 	const renderViewAllButton = () => {
-		return(
-			<div className="hidden sm:block flex-shrink-0">
-				<ButtonSecondary href="/listing-search" className="!leading-none mr-3">
+		return (
+			<div className="hidden flex-shrink-0 sm:block">
+				<ButtonSecondary href="/listing-search" className="mr-3 !leading-none">
 					<div className="flex items-center justify-center self-end">
-					<span>{translations.viewAll}</span>
-					<ArrowRightIcon className="w-5 h-5 ml-3" />
+						<span>{translations.viewAll}</span>
+						<ArrowRightIcon className="ml-3 h-5 w-5" />
 					</div>
 				</ButtonSecondary>
 			</div>
 		)
 	}
 
-	const propertyTypeChanged = (e) =>{
-		const selectedPropertyTypes = e.filter((f) => f.checked);
-		setType(selectedPropertyTypes);
-		formData.type = selectedPropertyTypes;
+	const propertyTypeChanged = (e) => {
+		const selectedPropertyTypes = e.filter((f) => f.checked)
+		setType(selectedPropertyTypes)
+		formData.type = selectedPropertyTypes
 		setFormData({
-		...formData,
+			...formData,
 			['type']: selectedPropertyTypes,
-		});
-		
+		})
 	}
-	const moreChanged = (e) =>{
-		
-		const amenities1 = e.filter((f) => f.category == "general_amenities").filter((f) => f.checked);
-			setMore1(amenities1);
-			formData.more1 = amenities1;
-			setFormData({
+	const moreChanged = (e) => {
+		const amenities1 = e
+			.filter((f) => f.category == 'general_amenities')
+			.filter((f) => f.checked)
+		setMore1(amenities1)
+		formData.more1 = amenities1
+		setFormData({
 			...formData,
-				['more1']: amenities1
-			});
+			['more1']: amenities1,
+		})
 
-		const amenities2 = e.filter((f) => f.category == "other_amenities").filter((f) => f.checked);
-			setMore2(amenities2);
-			formData.more2 = amenities2;
-			setFormData({
+		const amenities2 = e
+			.filter((f) => f.category == 'other_amenities')
+			.filter((f) => f.checked)
+		setMore2(amenities2)
+		formData.more2 = amenities2
+		setFormData({
 			...formData,
-				['more2']: amenities2
-			});
+			['more2']: amenities2,
+		})
 
-		const amenities3 = e.filter((f) => f.category == "safe_amenities").filter((f) => f.checked);
-			setMore3(amenities3);
-			formData.more3 = amenities3;
-			setFormData({
+		const amenities3 = e
+			.filter((f) => f.category == 'safe_amenities')
+			.filter((f) => f.checked)
+		setMore3(amenities3)
+		formData.more3 = amenities3
+		setFormData({
 			...formData,
-				['more3']: amenities3
-			});
+			['more3']: amenities3,
+		})
 
-		const amenities4 = e.filter((f) => f.category == "house_options").filter((f) => f.checked);
-			setMore4(amenities4);
-			formData.more4 = amenities4;
-			setFormData({
+		const amenities4 = e
+			.filter((f) => f.category == 'house_options')
+			.filter((f) => f.checked)
+		setMore4(amenities4)
+		formData.more4 = amenities4
+		setFormData({
 			...formData,
-				['more4']: amenities4
-			});
-	}
-
-	const bedBathChanged = (e) =>{
-		const selectedBedBath = e;
-		console.log(e);
-		setBedBath(selectedBedBath);
-			formData.bedBath = e;
-			setFormData({
-			...formData,
-				['bedBath']: e
-			});
-
-		onChange(formData);	// trigger event to filters
+			['more4']: amenities4,
+		})
 	}
 
-	const dateChanged = (e) =>{
-		alert("date")
+	const bedBathChanged = (e) => {
+		const selectedBedBath = e
+		console.log(e)
+		setBedBath(selectedBedBath)
+		formData.bedBath = e
+		setFormData({
+			...formData,
+			['bedBath']: e,
+		})
+
+		onChange(formData) // trigger event to filters
+	}
+
+	const dateChanged = (e) => {
+		alert('date')
 		console.log(e)
 	}
 
-	const priceRangeInputChanged = (e) =>{
-		alert("range change")
+	const priceRangeInputChanged = (e) => {
+		alert('range change')
 		console.log(e)
 	}
-	
-	const sendFormData = (e) =>{
 
+	const sendFormData = (e) => {
 		console.log(formData)
-		onChange(formData);	
+		onChange(formData)
 	}
 
 	return (
-		<form 
+		<form
 			onChange={sendFormData}
-	className="w-full relative xl:mt-8 flex flex-col lg:flex-row lg:items-center dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"
+			className="relative flex w-full flex-col divide-y divide-neutral-200 dark:divide-neutral-700 dark:bg-neutral-800 lg:flex-row lg:items-center lg:divide-y-0 xl:mt-8"
 		>
-			<div className="space-x-2 w-full relative divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0"
-			>
-				<div className="hidden space-x-2 lg:flex"
-				>
+			<div className="relative w-full space-x-2 divide-y divide-neutral-200 dark:divide-neutral-700 lg:divide-y-0">
+				<div className="hidden space-x-2 lg:flex">
 					<PropertyTypeSelect
-						onChange={(e) => { propertyTypeChanged(e)}}
+						onChange={(e) => {
+							propertyTypeChanged(e)
+						}}
 					/>
-					<PriceRangeInput 
-						//onChange={(e) => { priceRangeInputChanged(e)}}
+					<PriceRangeInput
+					//onChange={(e) => { priceRangeInputChanged(e)}}
 					/>
 					<BedBathSelect
-						onChange={(e) => { bedBathChanged(e)}}
+						onChange={(e) => {
+							bedBathChanged(e)
+						}}
 					/>
 					<MoreFiltersSelect
-						onChange={(e) => { moreChanged(e)}}
+						onChange={(e) => {
+							moreChanged(e)
+						}}
 					/>
 					{/* {renderTabMoreFilter()} */}
 					<DateRangeInput
-						//onChange={(e) => { dateChanged(e)}}
+					//onChange={(e) => { dateChanged(e)}}
 					/>
 
 					{/*spacer */}
-					{viewAll && (	
-						<div className="flex justify-items hidden sm:block flex-shrink-0 mr-0 grow justify-end place-self-end flex-row-reverse">&nbsp;
+					{viewAll && (
+						<div className="justify-items mr-0 flex hidden flex-shrink-0 grow flex-row-reverse justify-end place-self-end sm:block">
+							&nbsp;
 						</div>
 					)}
-					{viewAll && (	
-						renderViewAllButton()
-					)}
-					
+					{viewAll && renderViewAllButton()}
 				</div>
 				{renderTabMoreFilterMobile()}
 			</div>
 		</form>
 	)
 }
-export default TabFilters;
+export default TabFilters
