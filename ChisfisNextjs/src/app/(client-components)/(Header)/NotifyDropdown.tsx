@@ -8,6 +8,9 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import moment from "moment";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+
 //import { useSelector, UseSelector } from "react-redux";
 //import { getUserId } from "@/store/slices/userProfileSlice";
 
@@ -16,7 +19,11 @@ interface Props {
 }
 
 const NotifyDropdown: FC<Props> = ({ className = "" }) => {
-
+  
+  const { translations, isLoading, error } = useSelector(
+    (state: RootState) => state.translations
+  );
+  
   const { data: session } = useSession();
   const user = session?.user;
   const userId = user.userId;
@@ -158,7 +165,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
 
                     <h3 className="text-xl font-semibold flex border-b-solid border-b-2">
                     <BellIcon className="h-6 w-6 mr-3" />
-                      Notifications
+                    {translations.notifications}
                     {notifications.filter(t => t.status == 0).length  > 0  || newNotifications && newNotifications > 0? (
                       <span>(
                         {notifications.filter(t => t.status == 0).length}
@@ -169,7 +176,7 @@ const NotifyDropdown: FC<Props> = ({ className = "" }) => {
                     </h3>
 
                     {notifications.length == 0 && (
-                      <div>You have 0 notifications</div>
+                      <div>{translations.zeroNotifications}</div>
                     )}
                     {notifications.map((item, index) => (
                       <div
