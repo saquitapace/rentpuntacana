@@ -1,15 +1,17 @@
 'use client'
 
-import React, { FC, useState } from 'react'
-import ButtonCircle from '@/shared/ButtonCircle'
-import rightImg from '@/images/SVG-subcribe2.png'
-import Badge from '@/shared/Badge'
-import Input from '@/shared/Input'
-import Image from 'next/image'
-import { useForm } from 'react-hook-form'
-import axios from '@/config/axios'
-import { useNotifications } from 'reapop'
+import React, { FC, useState } from 'react';
+import ButtonCircle from '@/shared/ButtonCircle';
+import rightImg from '@/images/SVG-subcribe2.png';
+import Badge from '@/shared/Badge';
+import Input from '@/shared/Input';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import axios from '@/config/axios';
+import { useNotifications } from 'reapop';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
 
 export interface SectionSubscribe2Props {
 	className?: string
@@ -18,8 +20,8 @@ export interface NEWSLETTER_ADD {
 	email?: string
 }
 const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
-	const [isLoading, setIsLoading] = useState(false)
-	const [error, setError] = useState('')
+	//const [isLoading, setIsLoading] = useState(false) todo: conflict with translations & not being used
+	//const [error, setError] = useState('') todo: conflict with translations & not being used
 	const {
 		register,
 		handleSubmit,
@@ -30,6 +32,11 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 			email: '',
 		},
 	})
+
+	const { translations, isLoading, error } = useSelector(
+		(state: RootState) => state.translations
+	  );
+
 	const { notify } = useNotifications();
 
 	const formSubmit = (data: NEWSLETTER_ADD) => {
@@ -49,7 +56,7 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 				}
 			})
 			.catch((error: any) => {
-				console.log('Something Wrong')
+				console.log('An error occurred - subscribing to newsletter')
 			})
 	}
 
@@ -59,22 +66,21 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 			data-nc-id="SectionSubscribe2"
 		>
 			<div className="mb-10 flex-shrink-0 lg:mb-0 lg:mr-10 lg:w-2/5">
-				<h2 className="text-4xl font-semibold">Join our newsletter 🎉</h2>
-				<span className="mt-5 block text-neutral-500 dark:text-neutral-400">
-					Read and share new perspectives on just about any topic. Everyone’s
-					welcome.
+				<h2 className="text-4xl font-semibold">{translations.joinOurNewsletter} 🎉</h2>
+				<span className="mt-5 block text-neutral-500 dark:text-neutral-400">	
+					{translations.newsletterSubtitle}
 				</span>
 				<ul className="mt-10 space-y-4">
 					<li className="flex items-center space-x-4">
 						<Badge name="01" />
 						<span className="font-medium text-neutral-700 dark:text-neutral-300">
-							Get more discount
+							{translations.newsletterBulletOne}
 						</span>
 					</li>
 					<li className="flex items-center space-x-4">
 						<Badge color="red" name="02" />
 						<span className="font-medium text-neutral-700 dark:text-neutral-300">
-							Get premium magazines
+							{translations.newsletterBulletTwo}
 						</span>
 					</li>
 				</ul>
@@ -85,11 +91,11 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 					<Input
 						name="email"
 						aria-required
-						placeholder="Enter your email"
+						placeholder={translations.newsletterPlaceholder}
 						type="email"
 						rounded="rounded-full"
 						sizeClass="h-12 px-5 py-3"
-						{...register('email', { required: 'email is required' })}
+						{...register('email', { required: translations.email  + translations.space + translations.isRequired })}
 					/>
 					<ButtonCircle
 						type="submit"

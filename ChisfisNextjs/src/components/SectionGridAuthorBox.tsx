@@ -5,7 +5,7 @@ import { DEMO_AUTHORS } from "@/data/authors";
 import { AuthorType } from "@/data/types";
 import React, { FC } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";
-import ButtonSecondary from "@/shared/ButtonSecondary";
+// import ButtonSecondary from "@/shared/ButtonSecondary";
 
 export interface SectionGridAuthorBoxProps {
   className?: string;
