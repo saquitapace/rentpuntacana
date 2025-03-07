@@ -31,7 +31,7 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 		defaultValues: {
 			email: '',
 		},
-	})
+	});
 
 	const { translations, isLoading, error } = useSelector(
 		(state: RootState) => state.translations
