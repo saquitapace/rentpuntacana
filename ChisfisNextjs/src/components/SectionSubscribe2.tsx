@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form'
 import axios from '@/config/axios'
 import { useNotifications } from 'reapop'
 
-
 export interface SectionSubscribe2Props {
 	className?: string
 }
@@ -30,7 +29,7 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 			email: '',
 		},
 	})
-	const { notify } = useNotifications();
+	const { notify } = useNotifications()
 
 	const formSubmit = (data: NEWSLETTER_ADD) => {
 		axios
@@ -38,14 +37,14 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 			.then((response: any) => {
 				if (response.status == 201) {
 					notify(response?.data?.message, 'success', {
-						dismissAfter : 3000
-					});
+						dismissAfter: 3000,
+					})
 
 					reset()
 				} else {
 					notify(response?.data?.message, 'error', {
-						dismissAfter : 3000
-					});
+						dismissAfter: 3000,
+					})
 				}
 			})
 			.catch((error: any) => {
@@ -100,7 +99,9 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = '' }) => {
 					</ButtonCircle>
 				</form>
 				{errors.email && (
-					<div className="text-sm text-red-600">{errors.email.message}</div>
+					<div className="px-5 py-3 text-sm text-red-600">
+						{errors.email.message}
+					</div>
 				)}
 			</div>
 			<div className="flex-grow">
