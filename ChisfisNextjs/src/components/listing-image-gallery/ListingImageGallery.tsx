@@ -148,7 +148,7 @@ const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE }) => {
 							>
 								<ArrowLeftIcon className="h-6 w-6" />
 							</button>
-							<LikeSaveBtns />
+							{/* <LikeSaveBtns /> */}
 						</div>
 
 						<div className="flex min-h-full items-center justify-center pt-0 text-center sm:p-4">
