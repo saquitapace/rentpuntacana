@@ -2,7 +2,8 @@
 
 import { Popover, Transition } from "@headlessui/react";
 import Input from "@/shared/Input";
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -10,6 +11,21 @@ interface Props {
 
 const SearchDropdown: FC<Props> = ({ className = "" }) => {
   const inputRef = React.createRef<HTMLInputElement>();
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (searchQuery.length > 2) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+    else
+    {
+      //TODO:
+      alert('Less than 3 Character length');
+    }
+  };
 
   return (
     <React.Fragment>
@@ -41,12 +57,14 @@ const SearchDropdown: FC<Props> = ({ className = "" }) => {
                   static
                   className="absolute right-0 z-10 top-full w-screen max-w-sm"
                 >
-                  <form action="" method="POST">
+                  <form action="" onSubmit={handleSubmit}>
                     <Input
                       ref={inputRef}
                       rounded="rounded-full"
                       type="search"
                       placeholder="Type and press enter"
+                      value={ searchQuery }
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <input type="submit" hidden value="" />
                   </form>

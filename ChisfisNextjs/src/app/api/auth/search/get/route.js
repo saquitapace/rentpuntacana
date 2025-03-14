@@ -12,9 +12,9 @@ export async function GET(request) {
     const sql = `
       SELECT u.userId, u.firstName, u.lastName, 
             l.id AS listingId, l.title
-      FROM users u 
+      FROM users u
       LEFT JOIN listings l ON u.userId = l.userId
-      WHERE 
+      WHERE
         (MATCH(u.firstName, u.lastName) AGAINST (? IN BOOLEAN MODE) 
         OR MATCH(l.title) AGAINST (? IN BOOLEAN MODE)) 
         OR (u.firstName LIKE ? OR u.lastName LIKE ? OR l.title LIKE ?)

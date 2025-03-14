@@ -58,7 +58,6 @@ const SearchPage: FC = () => {
 								<p>title: {item.title}</p>
 							</div>
 					))}
-
 				</div>
 			</div>
 			</div>
